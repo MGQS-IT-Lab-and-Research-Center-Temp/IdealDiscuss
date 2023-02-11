@@ -1,6 +1,8 @@
-﻿namespace IdealDiscuss.Repository.Interfaces
+﻿using IdealDiscuss.Entities;
+
+namespace IdealDiscuss.Repository.Interfaces
 {
-    public interface ICommentReportRepository
+    public interface ICommentReportRepository : IRepository<CommentReport>
     {
     }
 }
