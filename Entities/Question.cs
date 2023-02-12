@@ -4,7 +4,7 @@
     {
         public int UserId { get; set; }
         public User User { get; set; }
-        public String QuestionText { get; set; }
+        public string QuestionText { get; set; }
         public string ImageUrl { get; set; }
         public bool IsClosed { get; set; }
         public ICollection<CategoryQuestion> CategoryQuestions { get; set; } = new HashSet<CategoryQuestion>();
