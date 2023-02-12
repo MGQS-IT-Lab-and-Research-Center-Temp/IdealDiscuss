@@ -13,4 +13,8 @@
     </PackageReference>
     <PackageReference Include="MySql.EntityFrameworkCore" Version="6.0.10" />  </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\Category\" />
+  </ItemGroup>
+
 </Project>
