@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dtos\Category\**" />
+    <Content Remove="Dtos\Category\**" />
+    <EmbeddedResource Remove="Dtos\Category\**" />
+    <None Remove="Dtos\Category\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.13" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.13">
       <PrivateAssets>all</PrivateAssets>
@@ -14,7 +21,6 @@
     <PackageReference Include="MySql.EntityFrameworkCore" Version="6.0.10" />  </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Category\" />
     <Folder Include="Service\Implementations\" />
     <Folder Include="Service\Interface\" />
   </ItemGroup>
