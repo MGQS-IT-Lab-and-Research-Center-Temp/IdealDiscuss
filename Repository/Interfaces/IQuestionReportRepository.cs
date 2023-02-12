@@ -2,7 +2,7 @@
 
 namespace IdealDiscuss.Repository.Interfaces
 {
-    public interface IQuestionReportRepository : IRepository<QuestionReport> , IQuestionRepository
+    public interface IQuestionReportRepository : IRepository<QuestionReport>
     {
     }
 }
