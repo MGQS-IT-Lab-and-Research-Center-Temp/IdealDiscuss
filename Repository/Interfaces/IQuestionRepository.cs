@@ -1,6 +1,8 @@
-﻿namespace IdealDiscuss.Repository.Interfaces
+﻿using IdealDiscuss.Entities;
+
+namespace IdealDiscuss.Repository.Interfaces
 {
-    public interface IQuestionRepository
+    public interface IQuestionRepository : IRepository<Question>
     {
     }
 }
