@@ -1,4 +1,6 @@
-﻿namespace IdealDiscuss.Dtos.QuestionDto
+﻿using IdealDiscuss.Entities;
+
+namespace IdealDiscuss.Dtos.QuestionDto
 {
     public class ViewQuestionDetail
     {
@@ -10,6 +12,7 @@
         public int UserId { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime DateCreated { get; set; }
+        public User User { get; set; }
 
     }
 }
