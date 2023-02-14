@@ -1,6 +1,6 @@
 ﻿namespace IdealDiscuss.Dtos.CategoryDto
 {
-    public class CreateCategory
+    public class CreateCategoryDto
     {
         public string Name { get; set; }
         public string Description { get; set; }
