@@ -10,6 +10,7 @@ namespace IdealDiscuss.Dtos.QuestionDto
         public DateTime LastModified { get; set; }
         public string CreatedBy { get; set; }
         public int UserId { get; set; }
+        public int Id { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime DateCreated { get; set; }
         public User User { get; set; }
