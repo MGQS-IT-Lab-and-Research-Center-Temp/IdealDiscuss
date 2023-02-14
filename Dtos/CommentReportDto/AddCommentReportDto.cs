@@ -2,7 +2,7 @@
 
 namespace IdealDiscuss.Dtos.CommentReport
 {
-    public class AddComment
+    public class AddCommentReportDto
     {
         public string AdditionalComment { get; set; }
         public int CommentId { get; set; }

@@ -3,7 +3,7 @@ using IdealDiscuss.Entities;
 
 namespace IdealDiscuss.Dtos.CommentReport
 {
-    public class ViewCommentReportDetail
+    public class ViewCommentReportDetailDto
     {
         public string AdditionalComment { get; set; }
         public int CommentId { get; set; }
