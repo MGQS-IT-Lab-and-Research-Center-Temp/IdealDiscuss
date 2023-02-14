@@ -2,7 +2,7 @@
 
 namespace IdealDiscuss.Dtos.CommentDto
 {
-    public class ViewAll
+    public class ViewAllCommentDto
     {
         public string CommentText { get; set; }
         public User User { get; set; }

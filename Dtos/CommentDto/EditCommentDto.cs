@@ -1,6 +1,6 @@
 ﻿namespace IdealDiscuss.Dtos.CommentDto
 {
-    public class EditComment
+    public class EditCommentDto
     {
         public string CommentText { get; set; }
         public string ModifiedBy { get; set; }

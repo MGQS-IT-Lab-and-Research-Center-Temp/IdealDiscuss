@@ -2,7 +2,7 @@
 
 namespace IdealDiscuss.Dtos.CommentDto
 {
-    public class MakeComment
+    public class AddCommentDto
     {
 
         public string CommentText { get; set; }
