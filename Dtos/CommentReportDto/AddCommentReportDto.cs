@@ -10,7 +10,6 @@ namespace IdealDiscuss.Dtos.CommentReport
         public Comment Comment { get; set; }
         public int UserId { get; set; }
         public string CreatedBy { get; set; }
-        public int Id { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime DateCreated { get; set; }
     }

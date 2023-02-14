@@ -1,5 +1,4 @@
-﻿
-using IdealDiscuss.Entities;
+﻿using IdealDiscuss.Entities;
 
 namespace IdealDiscuss.Dtos.CommentReport
 {
@@ -8,6 +7,7 @@ namespace IdealDiscuss.Dtos.CommentReport
         public string AdditionalComment { get; set; }
         public int CommentId { get; set; }
         public int UserId { get; set; }
+        public int Id { get; set; }
         public User User { get; set; }
         public Comment Comment { get; set; }
         public string CreatedBy { get; set; }

@@ -6,5 +6,6 @@
         public string ModifiedBy { get; set; }
         public DateTime LastModified { get; set; }
         public bool IsDeleted { get; set; }
+        public int Id { get; set; }
     }
 }
