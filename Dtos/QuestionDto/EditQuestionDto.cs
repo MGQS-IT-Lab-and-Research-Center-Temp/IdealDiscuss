@@ -1,6 +1,6 @@
 ﻿namespace IdealDiscuss.Dtos.QuestionDto
 {
-    public class EditQuestion
+    public class EditQuestionDto
     {
         public string QuestionText { get; set; }
         public string ImageUrl { get; set; }
