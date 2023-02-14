@@ -9,7 +9,6 @@ namespace IdealDiscuss.Dtos.QuestionReportDto
         public int QuestionId { get; set; }
         public Question Question { get; set; }
         public string AdditionalComment { get; set; }
-        public int Id { get; set; }
         public string CreatedBy { get; set; } 
         public DateTime DateCreated { get; set; }
         public bool IsDeleted { get; set; }
