@@ -2,7 +2,7 @@
 
 namespace IdealDiscuss.Dtos.QuestionReportDto
 {
-    public class Editquestionreport
+    public class EditQuestionReportDto
     {
         public int UserId { get; set; }
         public User User { get; set; }
