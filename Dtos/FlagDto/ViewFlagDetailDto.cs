@@ -1,6 +1,6 @@
 ﻿namespace IdealDiscuss.Dtos.FlagDto
 {
-    public class ViewFlagDetail
+    public class ViewFlagDetailDto
     {
         public bool IsDeleted { get; set; }
         public string FlagName { get; set; }
