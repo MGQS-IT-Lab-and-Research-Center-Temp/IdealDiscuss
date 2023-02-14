@@ -1,6 +1,6 @@
 ﻿namespace IdealDiscuss.Dtos.UserDto
 {
-    public class ViewUserDeatail
+    public class ViewUserDeatailDto
     {
         public string UserName { get; set; }
         public string Password { get; set; }
