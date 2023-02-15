@@ -20,9 +20,4 @@
     </PackageReference>
     <PackageReference Include="MySql.EntityFrameworkCore" Version="6.0.10" />  </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Service\Implementations\" />
-    <Folder Include="Service\Interface\" />
-  </ItemGroup>
-
 </Project>
