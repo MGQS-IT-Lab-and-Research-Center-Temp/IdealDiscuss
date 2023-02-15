@@ -4,9 +4,9 @@ using IdealDiscuss.Repository.Interfaces;
 
 namespace IdealDiscuss.Repository.Implementations
 {
-    public class CategoryRepository : BaseRepository<Category> , ICategoryRepository
+    public class CategoryRepository : BaseRepository<Category>, ICategoryRepository
     {
-        public CategoryRepository(IdealDiscussContext context) 
+        public CommentReportRepository(IdealDiscussContext context) 
         { 
             _context = context;
         }
