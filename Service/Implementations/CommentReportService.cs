@@ -49,21 +49,20 @@ namespace IdealDiscuss.Service.Implementations
                 DateCreated = DateTime.Now,
             };
 
+            var flags = _flagRepository.GetAllByIds(createCommentReportDto.FlagIds);
+
             var commentFlags = new HashSet<CommentReportFlag>();
-            foreach(var flagId in createCommentReportDto.FlagIds)
+
+            foreach(var flag in flags)
             {
-                var flag = _flagRepository.Get(flagId);
-                if(flag is not null)
+                var commentReportFlag = new CommentReportFlag
                 {
-                    var commentReportFlag = new CommentReportFlag
-                    {
-                        FlagId = flagId,
-                        CommentReportId = commentReport.Id,
-                        Flag = flag,
-                        CommentReport = commentReport
-                    };
-                    commentFlags.Add(commentReportFlag);
-                }
+                    FlagId = flag.Id,
+                    CommentReportId = commentReport.Id,
+                    Flag = flag,
+                    CommentReport = commentReport
+                };
+                commentFlags.Add(commentReportFlag);                
             }
             commentReport.CommentReportFlags = commentFlags;
 
@@ -83,17 +82,59 @@ namespace IdealDiscuss.Service.Implementations
 
         public BaseResponseModel DeleteCommentReport(int commentReportId)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponseModel();
+
+            if (!_commentReportRepository.Exists(c => c.Id == commentReportId))
+            {
+                response.Message = "Comment report does not exist.";
+                return response;
+            }
+
+            var commentReport = _commentReportRepository.Get(commentReportId);
+            commentReport.IsDeleted = true;
+
+            try
+            {
+                _commentReportRepository.Update(commentReport);
+            }
+            catch(Exception ex)
+            {
+                response.Message = "Comment report delete failed.";
+                return response;
+            }
+
+            response.Status = true;
+            response.Message = "Comment report deleted successfully.";
+            return response;
         }
 
         public CommentReportsResponseModel GetAllCommentReport()
         {
-            throw new NotImplementedException();
+            var response = new CommentReportsResponseModel();
+
+            var commentReports = _commentReportRepository.GetAll();
+
+            response.Reports = commentReports.Select(commentReport => new ViewCommentReportDto
+            {
+                Id = commentReport.Id,
+                AdditionalComment = commentReport.AdditionalComment,
+                CommentId = commentReport.Comment.Id,
+                CommentReporter = commentReport.User.UserName,
+                CommentText = commentReport.Comment.CommentText,
+                FlagNames = commentReport.CommentReportFlags.Select(f => f.Flag.FlagName).ToList(),
+
+            }).ToList();
+
+            response.Status = true;
+            response.Message = "Success";
+
+            return response;
+
         }
 
-        public CommentReportReesponseModel GetCommentReport(int commentReportId)
+        public CommentReportResponseModel GetCommentReport(int commentReportId)
         {
-            var response = new CommentReportReesponseModel();
+            var response = new CommentReportResponseModel();
 
             if(!_commentReportRepository.Exists(c => c.Id == commentReportId))
             {
@@ -119,7 +160,29 @@ namespace IdealDiscuss.Service.Implementations
 
         public BaseResponseModel UpdateCommentReport(int commentReportId, UpdateCommentReportDto updateCommentReportDto)
         {
-            throw new NotImplementedException();
+            var response = new BaseResponseModel();
+
+            if(!_commentReportRepository.Exists(c => c.Id == commentReportId))
+            {
+                response.Message = "Comment report does not exist.";
+                return response;
+            }
+
+            var commentReport = _commentReportRepository.Get(commentReportId);
+
+            commentReport.AdditionalComment = updateCommentReportDto.AdditionalComment;
+
+            try
+            {
+                _commentReportRepository.Update(commentReport);
+            }
+            catch(Exception ex)
+            {
+                response.Message = $"Could not update the comment report: {ex.Message}";
+                return response;
+            }
+            response.Message = "Comment report updated successfully.";
+            return response;
         }
     }
 }
