@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Service\Implementations\" />
-    <Folder Include="Service\Interface\" />
   </ItemGroup>
 
 </Project>
