@@ -9,7 +9,8 @@ namespace IdealDiscuss.Dtos.CommentReport
         public int CommentId { get; set; }
         public int UserId { get; set; }
         public int FlagId { get; set; }
-        public User User { get; set; }
-        public Comment Comment { get; set; }
+        public string CommentReporter { get; set; }
+        public string CommentText { get; set; }
+        public List<string> FlagNames { get; set; } = new List<string>();
     }
 }
