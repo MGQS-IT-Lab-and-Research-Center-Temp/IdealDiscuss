@@ -9,6 +9,6 @@ namespace IdealDiscuss.Service.Interface
         BaseResponseModel DeleteCommentReport(int commentReportId);
         BaseResponseModel UpdateCommentReport(int commentReportId, UpdateCommentReportDto updateCommentReportDto);
         CommentReportReesponseModel GetCommentReport(int commentReportId);
-        BaseResponseModel GetAllCommentReport();
+        CommentReportsResponseModel GetAllCommentReport();
     }
 }

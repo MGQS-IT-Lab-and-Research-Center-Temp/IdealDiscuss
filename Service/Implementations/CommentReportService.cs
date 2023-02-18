@@ -14,11 +14,11 @@ namespace IdealDiscuss.Service.Implementations
         private readonly ICommentReportRepository _commentReportRepository;
 
         public CommentReportService(ICommentReportRepository commentReportRepository, IUserRepository userRepository, ICommentRepository commentRepository, IFlagRepository flagRepository)
-        {
-            _commentReportRepository = commentReportRepository;
-            _userRepository = userRepository;
-            _commentRepository = commentRepository;
+        {            
+            _userRepository = userRepository;            
             _flagRepository = flagRepository;
+            _commentRepository = commentRepository;
+            _commentReportRepository = commentReportRepository;
         }
 
         public BaseResponseModel CreateCommentReport(CreateCommentReportDto createCommentReportDto)
@@ -86,7 +86,7 @@ namespace IdealDiscuss.Service.Implementations
             throw new NotImplementedException();
         }
 
-        public BaseResponseModel GetAllCommentReport()
+        public CommentReportsResponseModel GetAllCommentReport()
         {
             throw new NotImplementedException();
         }
