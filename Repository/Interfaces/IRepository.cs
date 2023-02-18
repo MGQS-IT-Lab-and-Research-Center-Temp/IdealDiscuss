@@ -10,6 +10,7 @@ namespace IdealDiscuss.Repository
         T Get(int id);
         T Update(T entity);
         void Remove(T entity);
+        List<T> GetAllByIds(List<int> ids);
         T Get(Expression<Func<T, bool>> expression);
         IEnumerable<T> GetAll(Expression<Func<T, bool>> expression = null);
         bool Exists(Expression<Func<T, bool>> expression);

@@ -1,12 +1,12 @@
 ﻿namespace IdealDiscuss.Dtos.CommentReport
 {
-    public class CommentReportReesponseModel: BaseResponseModel
+    public class CommentReportResponseModel: BaseResponseModel
     {
         public ViewCommentReportDto Report { get; set; }
     }
 
     public class CommentReportsResponseModel : BaseResponseModel
     {
-        public List<CommentReportReesponseModel> Reports { get; set; }
+        public List<ViewCommentReportDto> Reports { get; set; }
     }
 }
