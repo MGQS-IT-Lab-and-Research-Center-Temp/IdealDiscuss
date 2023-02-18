@@ -6,7 +6,7 @@ namespace IdealDiscuss.Dtos.CommentReport
     {
         public int CommentId { get; set; }
         public int UserId { get; set; }
-        public int FlagId { get; set; }
+        public List<int> FlagIds { get; set; } = new List<int>();
         public string AdditionalComment { get; set; }
     }
 }

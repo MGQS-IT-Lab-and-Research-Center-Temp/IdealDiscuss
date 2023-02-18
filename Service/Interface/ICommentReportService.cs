@@ -6,9 +6,9 @@ namespace IdealDiscuss.Service.Interface
     public interface ICommentReportService
     {
         BaseResponseModel CreateCommentReport(CreateCommentReportDto createCommentReportDto);
-        BaseResponseModel DeleteCommentReport(string commentReportId);
-        BaseResponseModel UpdateCommentReport(string commentReportId, UpdateCommentReportDto updateCommentReportDto);
-        BaseResponseModel GetCommentReport(string commentReportId);
-        BaseResponseModel GetAllCommentReport();
+        BaseResponseModel DeleteCommentReport(int commentReportId);
+        BaseResponseModel UpdateCommentReport(int commentReportId, UpdateCommentReportDto updateCommentReportDto);
+        CommentReportReesponseModel GetCommentReport(int commentReportId);
+        CommentReportsResponseModel GetAllCommentReport();
     }
 }
