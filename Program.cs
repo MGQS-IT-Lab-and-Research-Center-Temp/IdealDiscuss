@@ -1,12 +1,29 @@
 using IdealDiscuss.Context;
+using IdealDiscuss.Repository.Implementations;
+using IdealDiscuss.Repository.Interfaces;
+using IdealDiscuss.Service.Implementations;
+using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<IdealDiscussContext>(option => option.UseMySQL(builder.Configuration.GetConnectionString("IdealDiscussContext")));
-
+//builder.Services.AddSession();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+               .AddCookie(config =>
+               {
+                   config.LoginPath = "/home/login";
+                   config.Cookie.Name = "IdealDiscussion";
+                   config.ExpireTimeSpan = TimeSpan.FromDays(1);
+                   config.AccessDeniedPath = "/home/login";
+               });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -21,7 +38,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+//app.UseSession();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

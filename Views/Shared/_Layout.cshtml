@@ -28,6 +28,30 @@
                     </ul>
                 </div>
             </div>
+            <div class="collapse navbar-collapse mr-3 " id="navbarNav">
+                <ul class="navbar-nav">
+                    @if (User != null && User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item active mr-1 float-right">
+                            <a class="nav-link text-success" href="#">@User.Identity.Name</a>
+                        </li>
+                        <li class="nav-item mr-3 float-right">
+                            <a class="nav-link text-success  mr-1" asp-area="" asp-controller="Home" asp-action="Logout"><i class="fas fa-user"></i> Logout</a>
+                        </li>
+                    }
+                    else
+                    {
+                        
+                        <li class="nav-item float-right">
+                            <a class="nav-link text-success  mr-1" asp-area="" asp-controller="Home" asp-action="Login"><i class="fas fa-user"></i>Login</a>
+                        </li>
+                        <li class="nav-item float-right">
+                            <a class="nav-link text-success " asp-area="" asp-controller="Home" asp-action="SignUp"><i class="fas fa-user"></i>Sign up</a>
+                        </li>
+                    }
+                   
+                </ul>
+            </div>
         </nav>
     </header>
     <div class="container">

@@ -1,0 +1,26 @@
+﻿
+
+<div>
+    <form asp-action="Login">
+        <div class="mb-3 mt-3">
+            <label for="UserName" class="form-label">UserName:</label>
+            <input type="text" class="form-control" placeholder="Enter UserName" name="UserName">
+        </div>
+        <div class="mb-3">
+            <label for="Password" class="form-label">Password:</label>
+            <input type="password" class="form-control" placeholder="Enter password" name="Password">
+        </div>
+        <div class="form-check mb-3">
+            <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" name="remember"> Remember me
+            </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
