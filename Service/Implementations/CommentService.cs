@@ -1,13 +1,8 @@
 ﻿using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.CommentDto;
-using IdealDiscuss.Dtos.CommentReport;
 using IdealDiscuss.Entities;
-using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
-using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.Design;
-using System.Linq.Expressions;
 using static IdealDiscuss.Dtos.CommentDto.CommentResponse;
 
 namespace IdealDiscuss.Service.Implementations
