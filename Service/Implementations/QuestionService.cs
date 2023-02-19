@@ -119,8 +119,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 Id = question.Id,
                 QuestionText = question.QuestionText,
-                UserId = question.User.Id,
-                User = question.User.UserName,
+                UserName = question.User.UserName,
                 ImageUrl = question.ImageUrl
             }).ToList();
 
@@ -147,8 +146,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 Id = question.Id,
                 QuestionText = question.QuestionText,
-                UserId = question.User.Id,
-                User = question.User.UserName,
+                UserName = question.User.UserName,
                 ImageUrl = question.ImageUrl
             };
 

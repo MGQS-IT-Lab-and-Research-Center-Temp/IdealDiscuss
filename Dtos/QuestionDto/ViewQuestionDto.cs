@@ -7,7 +7,6 @@ namespace IdealDiscuss.Dtos.QuestionDto
         public int Id { get; set; }
         public string QuestionText { get; set; }
         public string ImageUrl { get; set; }
-        public int UserId { get; set; }
-        public string User { get; set; }
+        public string UserName { get; set; }
     }
 }
