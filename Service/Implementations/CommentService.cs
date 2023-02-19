@@ -14,13 +14,13 @@ namespace IdealDiscuss.Service.Implementations
 {
     public class CommentService : ICommentService
     {
-        private readonly ICommentReportRepository _commentReportRepository;
+        
         private readonly IUserRepository _userRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IQuestionRepository _questionRepository;
-        public CommentService(ICommentReportRepository commentReportRepository, IUserRepository userRepository, ICommentRepository commentRepository, IQuestionRepository questionRepository)
+        public CommentService( IUserRepository userRepository, ICommentRepository commentRepository, IQuestionRepository questionRepository)
         {
-            _commentReportRepository = commentReportRepository;
+           
             _userRepository = userRepository;
             _commentRepository = commentRepository;
             _questionRepository = questionRepository;
@@ -51,8 +51,7 @@ namespace IdealDiscuss.Service.Implementations
                 CreatedBy = user.Id.ToString(),
                 DateCreated = DateTime.Now,
             };
-            var commentreport = _commentReportRepository.GetAllByIds(createCommentDto.CommentReportIds);
-            comment.CommentReports = commentreport;
+
         
             try
             {
@@ -71,8 +70,8 @@ namespace IdealDiscuss.Service.Implementations
         public BaseResponseModel DeleteComment(int commentId)
         {
             var response = new BaseResponseModel();
-
-            if (!_commentRepository.Exists(c => c.Id == commentId))
+            var commentexist = _commentRepository.Exists(c => c.Id == commentId);
+            if (!commentexist)
             {
                 response.Message = "Comment  does not exist.";
                 return response;
@@ -123,8 +122,8 @@ namespace IdealDiscuss.Service.Implementations
         public CommentResponseModel GetComment(int commentId)
         {
             var response = new CommentResponseModel();
-
-            if (!_commentRepository.Exists(c => c.Id == commentId))
+            var commentexist = _commentRepository.Exists(c => c.Id == commentId);
+            if (!commentexist)
             {
                 response.Message = $"Comment with id {commentId} does not exist.";
                 return response;
@@ -147,8 +146,8 @@ namespace IdealDiscuss.Service.Implementations
         {
 
             var response = new BaseResponseModel();
-
-            if (!_commentReportRepository.Exists(c => c.Id == commentId))
+            var commentexist = _commentRepository.Exists(c => c.Id == commentId);
+            if (!commentexist)
             {
                 response.Message = "Comment  does not exist.";
                 return response;
