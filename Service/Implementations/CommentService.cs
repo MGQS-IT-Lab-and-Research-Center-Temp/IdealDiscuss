@@ -107,8 +107,8 @@ namespace IdealDiscuss.Service.Implementations
               
                     Id = comment.Id,
                     CommentText = comment.CommentText,
-                    QuestionId = comment.Question.Id,
-                    UserId = comment.User.Id,
+                    QuestionId = comment.QuestionId,
+                    UserId = comment.UserId,
 
                 }).ToList();
 
@@ -136,8 +136,8 @@ namespace IdealDiscuss.Service.Implementations
             {
                 Id = commentId,
                 CommentText = comment.CommentText,
-                QuestionId = comment.Question.Id,
-                UserId = comment.User.Id,   
+                QuestionId = comment.QuestionId,
+                UserId = comment.UserId,   
             };
             return response;
         }
