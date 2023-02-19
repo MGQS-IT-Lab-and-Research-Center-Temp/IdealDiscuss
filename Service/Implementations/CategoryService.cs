@@ -7,35 +7,34 @@ using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using System.Collections.Generic;
 using System.Linq;
+
 namespace IdealDiscuss.Service.Implementations
 {
      public class CategoryService : ICategoryService
      {
           private readonly ICategoryRepository _categoryRepository;        
 
-
           public CategoryService(ICategoryRepository categoryRepository)
           {
                _categoryRepository = categoryRepository;
-              
           }
 
           public BaseResponseModel CreateCategory(CreateCategoryDto createCategoryDto)
           {
                var response = new BaseResponseModel();
-               var reporter = _categoryRepository.Get(createCategoryDto.Id);
+
+               var isCategoryExist = _categoryRepository.Exists(c => c.Name == createCategoryDto.Name);
                        
-               if (reporter is null)
+               if(isCategoryExist)
                {
-                    response.Message = "Category not found.";
+                    response.Message = "Category already exist!";
                     return response;
                }
 
                var category = new Category
                {
-                    Name = reporter.Id.ToString(),
-                    Description = reporter.Description.ToString()
-                    
+                    Name = createCategoryDto.Name,
+                    Description = createCategoryDto.Description
                };
 
                try
@@ -44,9 +43,10 @@ namespace IdealDiscuss.Service.Implementations
                }
                catch (Exception ex)
                {
-                    response.Message = $"can not create category. {ex.Message}";
+                    response.Message = $"Failed to create category at this time: {ex.Message}";
                     return response;
                }
+
                response.Status = true;
                response.Message = "Category created successfully.";
 
@@ -74,7 +74,7 @@ namespace IdealDiscuss.Service.Implementations
                }
                catch (Exception ex)
                {
-                    response.Message = "Can not delete category.";
+                    response.Message = $"Can not delete category: {ex.Message}";
                     return response;
                }
 
@@ -93,7 +93,7 @@ namespace IdealDiscuss.Service.Implementations
                {
                     Id = category.Id,
                     Name = category.Name,
-                    Description = category.Description,
+                    Description = category.Description
                }).ToList();
 
                response.Status = true;
@@ -124,15 +124,13 @@ namespace IdealDiscuss.Service.Implementations
                return response;
           }
 
-          
-
           public BaseResponseModel UpdateCategory(int categoryId, UpdateCategoryDto updateCategoryDto)
           {
                var response = new BaseResponseModel();
 
                if (!_categoryRepository.Exists(c => c.Id == categoryId))
                {
-                    response.Message = "Category report does not exist.";
+                    response.Message = "Category does not exist.";
                     return response;
                }
 
@@ -152,7 +150,6 @@ namespace IdealDiscuss.Service.Implementations
                response.Message = "Category updated successfully.";
                return response;
           }
-
           
      }
 }
