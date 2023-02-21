@@ -21,12 +21,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
             var user = _userRepository.Get(createQuestionDto.UserId);
-            if (user is null)
-            {
-                response.Message = "User not found.";
-                return response;
-            }
-
+            
             var question = new Question
             {
                 UserId = createQuestionDto.UserId,
