@@ -128,7 +128,7 @@ namespace IdealDiscuss.Service.Implementations
                 CommentId = commentReport.Comment.Id,
                 CommentReporter = commentReport.User.UserName,
                 CommentText = commentReport.Comment.CommentText,
-                FlagNames = commentReport.CommentReportFlags.Select(f => f.Flag.FlagName).ToList(),
+               FlagNames = commentReport.CommentReportFlags.Select(f => f.Flag.FlagName).ToList(),
 
             }).ToList();
 
