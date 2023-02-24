@@ -1,5 +1,4 @@
 ﻿using IdealDiscuss.Entities;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace IdealDiscuss.Repository.Interfaces

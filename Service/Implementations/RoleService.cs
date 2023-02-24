@@ -62,7 +62,7 @@ namespace IdealDiscuss.Service.Implementations
             }
             catch (Exception ex)
             {
-                response.Message = "Role delete failed.";
+                response.Message = $"Role delete failed: {ex.Message}";
                 return response;
             }
 
