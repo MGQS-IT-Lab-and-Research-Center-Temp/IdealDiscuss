@@ -13,9 +13,13 @@ namespace IdealDiscuss.Service.Implementations
         private readonly ICommentRepository _commentRepository;
         private readonly ICommentReportRepository _commentReportRepository;
 
-        public CommentReportService(ICommentReportRepository commentReportRepository, IUserRepository userRepository, ICommentRepository commentRepository, IFlagRepository flagRepository)
-        {            
-            _userRepository = userRepository;            
+        public CommentReportService(
+            ICommentReportRepository commentReportRepository,
+            IUserRepository userRepository,
+            ICommentRepository commentRepository,
+            IFlagRepository flagRepository)
+        {
+            _userRepository = userRepository;
             _flagRepository = flagRepository;
             _commentRepository = commentRepository;
             _commentReportRepository = commentReportRepository;
@@ -32,9 +36,9 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             var comment = _commentRepository.Get(createCommentReportDto.UserId);
-            if(comment is null)
+            if (comment is null)
             {
-                response.Message = "Comment does not exist.";
+                response.Message = "Comment does not exist!";
                 return response;
             }
 
@@ -53,7 +57,7 @@ namespace IdealDiscuss.Service.Implementations
 
             var commentFlags = new HashSet<CommentReportFlag>();
 
-            foreach(var flag in flags)
+            foreach (var flag in flags)
             {
                 var commentReportFlag = new CommentReportFlag
                 {
@@ -62,21 +66,24 @@ namespace IdealDiscuss.Service.Implementations
                     Flag = flag,
                     CommentReport = commentReport
                 };
-                commentFlags.Add(commentReportFlag);                
+
+                commentFlags.Add(commentReportFlag);
             }
             commentReport.CommentReportFlags = commentFlags;
 
             try
             {
                 _commentReportRepository.Create(commentReport);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
-                response.Message = $"Failed to create comment report. {ex.Message}";
+                response.Message = $"Failed to create comment report: {ex.Message}";
                 return response;
             }
+
             response.Status = true;
-            response.Message = "Comment Report created successfully.";
-            
+            response.Message = "Comment Report created successfully!";
+
             return response;
         }
 
@@ -86,7 +93,7 @@ namespace IdealDiscuss.Service.Implementations
 
             if (!_commentReportRepository.Exists(c => c.Id == commentReportId))
             {
-                response.Message = "Comment report does not exist.";
+                response.Message = "Comment report does not exist!";
                 return response;
             }
 
@@ -97,14 +104,14 @@ namespace IdealDiscuss.Service.Implementations
             {
                 _commentReportRepository.Update(commentReport);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                response.Message = "Comment report delete failed.";
+                response.Message = $"Comment report delete failed: {ex.Message}";
                 return response;
             }
 
             response.Status = true;
-            response.Message = "Comment report deleted successfully.";
+            response.Message = "Comment report deleted successfully!";
             return response;
         }
 
@@ -121,7 +128,7 @@ namespace IdealDiscuss.Service.Implementations
                 CommentId = commentReport.Comment.Id,
                 CommentReporter = commentReport.User.UserName,
                 CommentText = commentReport.Comment.CommentText,
-                FlagNames = commentReport.CommentReportFlags.Select(f => f.Flag.FlagName).ToList(),
+               FlagNames = commentReport.CommentReportFlags.Select(f => f.Flag.FlagName).ToList(),
 
             }).ToList();
 
@@ -129,16 +136,15 @@ namespace IdealDiscuss.Service.Implementations
             response.Message = "Success";
 
             return response;
-
         }
 
         public CommentReportResponseModel GetCommentReport(int commentReportId)
         {
             var response = new CommentReportResponseModel();
 
-            if(!_commentReportRepository.Exists(c => c.Id == commentReportId))
+            if (!_commentReportRepository.Exists(c => c.Id == commentReportId))
             {
-                response.Message = $"CommentReport with id {commentReportId} does not exist.";
+                response.Message = $"CommentReport with id {commentReportId} does not exist!";
                 return response;
             }
             var commentReport = _commentReportRepository.Get(commentReportId);
@@ -162,9 +168,9 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
 
-            if(!_commentReportRepository.Exists(c => c.Id == commentReportId))
+            if (!_commentReportRepository.Exists(c => c.Id == commentReportId))
             {
-                response.Message = "Comment report does not exist.";
+                response.Message = "Comment report does not exist!";
                 return response;
             }
 
@@ -176,12 +182,12 @@ namespace IdealDiscuss.Service.Implementations
             {
                 _commentReportRepository.Update(commentReport);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.Message = $"Could not update the comment report: {ex.Message}";
                 return response;
             }
-            response.Message = "Comment report updated successfully.";
+            response.Message = "Comment report updated successfully!";
             return response;
         }
     }

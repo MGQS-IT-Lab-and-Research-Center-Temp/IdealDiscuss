@@ -1,6 +1,4 @@
-﻿using IdealDiscuss.Entities;
-
-namespace IdealDiscuss.Dtos.CommentReport
+﻿namespace IdealDiscuss.Dtos.CommentReport
 {
     public class CreateCommentReportDto
     {
