@@ -29,7 +29,7 @@ namespace IdealDiscuss.Service.Implementations
                 QuestionText = createQuestionDto.QuestionText,
                 ImageUrl = createQuestionDto.ImageUrl,
                 CreatedBy = user.Id.ToString(),
-                DateCreated = DateTime.Now,
+                DateCreated = DateTime.Now
             };
 
 

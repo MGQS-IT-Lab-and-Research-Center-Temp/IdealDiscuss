@@ -6,7 +6,7 @@ namespace IdealDiscuss.Repository.Implementations
 {
     public class CategoryRepository : BaseRepository<Category>, ICategoryRepository
     {
-        public CommentReportRepository(IdealDiscussContext context) 
+        public CategoryRepository(IdealDiscussContext context) 
         { 
             _context = context;
         }

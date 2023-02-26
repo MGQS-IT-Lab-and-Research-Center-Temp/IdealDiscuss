@@ -6,6 +6,7 @@ namespace IdealDiscuss.Dtos.QuestionReportDto
     {
         public int UserId { get; set; }
         public int QuestionId { get; set; }
+        public List<int> FlagIds { get; set; } = new List<int>();
         public string AdditionalComment { get; set; }
     }
 }
