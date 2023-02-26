@@ -6,5 +6,6 @@
         public int UserId { get; set; }
         public string QuestionText { get; set; }
         public string ImageUrl { get; set; }
+        public string UserName { get; set; }
     }
 }
