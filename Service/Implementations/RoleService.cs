@@ -1,13 +1,8 @@
 ﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.CommentReport;
 using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
-using IdealDiscuss.Repository;
-using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
-using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace IdealDiscuss.Service.Implementations
 {

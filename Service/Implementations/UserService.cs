@@ -27,7 +27,7 @@ namespace IdealDiscuss.Service.Implementations
                 {
                     return new BaseResponseModel
                     {
-                        Message = $"User with {request.UserName} already exist",
+                        Message = $"User with {request.UserName} or {request.Email} already exist",
                         Status = false
                     };
                 }

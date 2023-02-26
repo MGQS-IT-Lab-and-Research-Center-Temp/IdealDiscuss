@@ -71,7 +71,7 @@ namespace IdealDiscuss.Controllers
 
             var claims = new List<Claim>
                 {
-                     new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.GivenName, user.UserName),
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Email, user.Email),
@@ -97,15 +97,20 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Login");
         }
 
+        public IActionResult AdminDashboard()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }
