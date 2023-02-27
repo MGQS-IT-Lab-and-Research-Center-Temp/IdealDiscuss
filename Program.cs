@@ -24,6 +24,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                    config.ExpireTimeSpan = TimeSpan.FromDays(1);
                    config.AccessDeniedPath = "/home/login";
                });
+builder.Services.AddHttpContextAccessor();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

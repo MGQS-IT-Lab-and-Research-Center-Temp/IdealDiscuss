@@ -53,8 +53,6 @@ namespace IdealDiscuss.Service.Implementations
                return response;
           }
 
-          
-
           public BaseResponseModel DeleteCategory(int categoryId)
           {
                var response = new BaseResponseModel();
@@ -101,6 +99,7 @@ namespace IdealDiscuss.Service.Implementations
 
                return response;
           }
+
           public CategoryResponseModel GetCategory(int categoryId)
           {
                var response = new CategoryResponseModel();
@@ -149,7 +148,6 @@ namespace IdealDiscuss.Service.Implementations
                }
                response.Message = "Category updated successfully.";
                return response;
-          }
-          
+          }  
      }
 }

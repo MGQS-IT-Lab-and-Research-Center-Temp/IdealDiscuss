@@ -1,6 +1,4 @@
-﻿using IdealDiscuss.Dtos.CommentReport;
-
-namespace IdealDiscuss.Dtos.RoleDto
+﻿namespace IdealDiscuss.Dtos.RoleDto
 {
     public class RoleResponseModel : BaseResponseModel
     {
@@ -9,6 +7,6 @@ namespace IdealDiscuss.Dtos.RoleDto
 
     public class RolesResponseModel : BaseResponseModel
     {
-        public List<ViewRoleDto> Role { get; set; }
+        public List<ViewRoleDto> Roles { get; set; }
     }
 }

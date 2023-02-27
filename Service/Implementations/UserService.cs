@@ -27,7 +27,7 @@ namespace IdealDiscuss.Service.Implementations
                 {
                     return new BaseResponseModel
                     {
-                        Message = $"User with {request.UserName} or {request.Email} already exist",
+                        Message = $"User with <b>{request.UserName}</b> or <b>{request.Email}</b> already exist",
                         Status = false
                     };
                 }
@@ -35,6 +35,7 @@ namespace IdealDiscuss.Service.Implementations
                 roleName ??= "AppUser";
 
                 var role = _roleRepository.Get(x => x.RoleName == roleName);
+
                 var user = new User
                 {
                     UserName = request.UserName,
@@ -52,6 +53,7 @@ namespace IdealDiscuss.Service.Implementations
                     Message = $"Unable to create user: {ex.Message}"
                 };
             }
+
             return new BaseResponseModel
             {
                 Message = $"User with {request.UserName} added succesfully",

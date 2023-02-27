@@ -77,9 +77,13 @@ namespace IdealDiscuss.Controllers
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.RoleName),
                 };
+
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
             var authenticationProperties = new AuthenticationProperties();
+
             var principal = new ClaimsPrincipal(claimsIdentity);
+
             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authenticationProperties);
 
             if (user.RoleName == "Admin")
@@ -98,11 +102,6 @@ namespace IdealDiscuss.Controllers
         }
 
         public IActionResult AdminDashboard()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }
