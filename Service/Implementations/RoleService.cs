@@ -94,6 +94,12 @@ namespace IdealDiscuss.Service.Implementations
 
             var role = _roleRepository.GetAll();
 
+            if (role.Count == 0)
+            {
+                response.Message = "No records found!";
+                return response;
+            }
+
             response.Roles = role.Select(r => new ViewRoleDto
             {
                 Id = r.Id,

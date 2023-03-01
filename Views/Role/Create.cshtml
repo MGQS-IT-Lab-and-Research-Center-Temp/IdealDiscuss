@@ -2,9 +2,16 @@
     ViewData["Title"] = "Create New Role";
 }
 
-@if (ViewBag.Message != null)
+@if (ViewBag.Message != null && ViewBag.Status == false)
 {
     <div class="alert alert-danger alert-dismissible" role="alert">
+        @ViewBag.Message
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (ViewBag.Message != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
         @ViewBag.Message
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
@@ -22,7 +29,7 @@
             <label for="Description" class="form-label">Description:</label>
             <textarea class="form-control" placeholder="Enter UserName" name="Description"></textarea>
         </div>
-      
+
         <div class="col-md-12">
             <button type="submit" class="btn btn-primary">Create Role</button>
         </div>
