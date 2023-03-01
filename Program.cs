@@ -5,6 +5,7 @@ using IdealDiscuss.Service.Implementations;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<IdealDiscussContext>(option => option.UseMySQL(builder.Configuration.GetConnectionString("IdealDiscussContext")));
-//builder.Services.AddSession();
+builder.Services.AddScoped<DbInitializer>();
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(config =>
                {
@@ -28,6 +30,8 @@ builder.Services.AddHttpContextAccessor();
 
 
 var app = builder.Build();
+
+app.UseItToSeedSqlServer();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -48,6 +52,5 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-AppDbinitializer.Seed(app);
 
 app.Run();
