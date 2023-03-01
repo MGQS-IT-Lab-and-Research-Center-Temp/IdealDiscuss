@@ -3,6 +3,7 @@ using System;
 using IdealDiscuss.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdealDiscuss.Migrations
 {
     [DbContext(typeof(IdealDiscussContext))]
-    partial class IdealDiscussContextModelSnapshot : ModelSnapshot
+    [Migration("20230221095654_CHANGE PASSWORD")]
+    partial class CHANGEPASSWORD
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
