@@ -1,0 +1,11 @@
+﻿@using System.Security.Claims;
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p class="lead">
+        <span class="badge rounded-pill bg-success">@User.Identity.Name</span>
+    </p>
+</div>

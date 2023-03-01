@@ -5,9 +5,8 @@ namespace IdealDiscuss.Dtos.QuestionReportDto
     public class CreateQuestionReportDto
     {
         public int UserId { get; set; }
-        public User User { get; set; }
         public int QuestionId { get; set; }
-        public Question Question { get; set; }
+        public List<int> FlagIds { get; set; } = new List<int>();
         public string AdditionalComment { get; set; }
     }
 }

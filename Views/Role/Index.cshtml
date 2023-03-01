@@ -1,0 +1,37 @@
+﻿@model List<IdealDiscuss.Dtos.RoleDto.ViewRoleDto>
+
+@{
+    ViewData["Title"] = "Role List";
+    int count = 1;
+}
+
+<h3>Total Roles: (@Model.Count)</h3>
+<a asp-controller="Role" asp-action="Create" class="btn btn-outline-primary">Add New Role</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Role Name</th>
+            <th scope="col">Role Description</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">@count</th>
+                <td>@item.RoleName</td>
+                <td>@item.Description</td>
+                <td>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-primary">View</a>
+                        <a href="#" class="btn btn-danger">Delete</a>
+                    </div>
+                </td>
+            </tr>
+            count++;
+        }
+    </tbody>
+</table>

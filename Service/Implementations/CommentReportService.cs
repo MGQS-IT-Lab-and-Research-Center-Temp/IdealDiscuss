@@ -29,13 +29,14 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
             var reporter = _userRepository.Get(createCommentReportDto.UserId);
+            var comment = _commentRepository.Get(createCommentReportDto.CommentId);
+
             if (reporter is null)
             {
                 response.Message = "User not found.";
                 return response;
             }
 
-            var comment = _commentRepository.Get(createCommentReportDto.UserId);
             if (comment is null)
             {
                 response.Message = "Comment does not exist!";

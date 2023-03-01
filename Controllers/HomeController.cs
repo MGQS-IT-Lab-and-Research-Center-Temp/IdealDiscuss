@@ -40,7 +40,15 @@ namespace IdealDiscuss.Controllers
                 Email = model.Email,
                 Password = model.Password,
             };
+
             var result = _userService.AddUser(user);
+
+            if (result.Status == false)
+            {
+                ViewBag.Message = result.Message;
+                return View();
+            }
+
             return View(result);
         }
 
@@ -53,55 +61,55 @@ namespace IdealDiscuss.Controllers
         [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {
-           
             var user = _userService.Login(model.UserName, model.Password);
-            if(user is null)
+
+            if (user.Status == false)
             {
                 ViewBag.Message = user.Message;
-                return RedirectToAction("Login", "Home");
+                return View();
             }
-            /*HttpContext.Session.SetInt32("userId", user.Id);
-            HttpContext.Session.SetString("username", user.UserName);
-            HttpContext.Session.SetString("email", user.Email);
-            HttpContext.Session.SetString("role", user.RoleName);*/
+
             var claims = new List<Claim>
                 {
-                     new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.GivenName, user.UserName),
                     new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.RoleName),
                 };
+
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
             var authenticationProperties = new AuthenticationProperties();
+
             var principal = new ClaimsPrincipal(claimsIdentity);
+
             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authenticationProperties);
 
-            
             if (user.RoleName == "Admin")
             {
                 return RedirectToAction("AdminDashboard", "Home");
             }
+
             return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
         public IActionResult LogOut()
         {
-            //HttpContext.Session.Clear();
             HttpContext.SignOutAsync();
             return RedirectToAction("Login");
         }
 
-        public IActionResult Privacy()
+        public IActionResult AdminDashboard()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }

@@ -1,48 +1,63 @@
 ﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.CommentReport;
 using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
-using IdealDiscuss.Repository;
-using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
-using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace IdealDiscuss.Service.Implementations
 {
     public class RoleService : IRoleService
     {
         private readonly IRoleRepository _roleRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RoleService(IRoleRepository roleRepository)
+        public RoleService(IRoleRepository roleRepository, IHttpContextAccessor httpContextAccessor)
         {
             _roleRepository = roleRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public BaseResponseModel CreateRole(CreateRoleDto createRoleDto)
         {
-            var roleResponse = new RoleResponseModel();
+            var response = new RoleResponseModel();
+
+            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+
+            var roleExist = _roleRepository.Exists(r => r.RoleName == createRoleDto.RoleName);
+
+            if (roleExist)
+            {
+                response.Message = $"Role with name {createRoleDto.RoleName} already exist!";
+                return response;
+            }
+
+            if (string.IsNullOrWhiteSpace(createRoleDto.RoleName))
+            {
+                response.Message = "Role name is required!";
+                return response;
+            }
+
             var role = new Role()
             {
                 RoleName = createRoleDto.RoleName,
                 Description = createRoleDto.Description,
-                CreatedBy = "Admin",
+                CreatedBy = createdBy,
                 DateCreated = DateTime.Now
             };
+
             try
             {
                 _roleRepository.Create(role);
-                _roleRepository.SaveChanges();
             }
             catch (Exception ex)
             {
-                roleResponse.Message = $"Failed to create role.{ex.Message}";
-                return roleResponse;
-            } 
-            roleResponse.Status = true;
-            roleResponse.Message = "Role created successfully.";
-            return roleResponse;
+                response.Message = $"Failed to create role.{ex.Message}";
+                return response;
+            }
+
+            response.Status = true;
+            response.Message = "Role created successfully.";
+            return response;
         }
 
         public BaseResponseModel DeleteRole(int roleId)
@@ -54,15 +69,17 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = "Role does not exist.";
                 return response;
             }
+
             var role = _roleRepository.Get(roleId);
             role.IsDeleted = true;
+
             try
             {
                 _roleRepository.Update(role);
             }
             catch (Exception ex)
             {
-                response.Message = "Role delete failed.";
+                response.Message = $"Role delete failed: {ex.Message}";
                 return response;
             }
 
@@ -75,13 +92,19 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new RolesResponseModel();
 
-            var roles = _roleRepository.GetAll();
+            var role = _roleRepository.GetAll();
 
-            response.Role = roles.Select(role => new ViewRoleDto
+            if (role.Count == 0)
             {
-                Id = role.Id,
-                Description = role.Description,
-                RoleName = role.RoleName
+                response.Message = "No records found!";
+                return response;
+            }
+
+            response.Roles = role.Select(r => new ViewRoleDto
+            {
+                Id = r.Id,
+                RoleName = r.RoleName,
+                Description = r.Description
             }).ToList();
 
             response.Status = true;
@@ -94,20 +117,24 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new RoleResponseModel();
 
-            if (!_roleRepository.Exists(c => c.Id == roleId))
+            var roleExist = _roleRepository.Exists(c => c.Id == roleId);
+
+            if (!roleExist)
             {
                 response.Message = $"Role with id {roleId} does not exist.";
                 return response;
             }
+
             var roles = _roleRepository.Get(roleId);
 
             response.Message = "Success";
             response.Status = true;
+
             response.Role = new ViewRoleDto
             {
                 Id = roleId,
                 Description = roles.Description,
-                RoleName = roles.RoleName,
+                RoleName = roles.RoleName
             };
 
             return response;

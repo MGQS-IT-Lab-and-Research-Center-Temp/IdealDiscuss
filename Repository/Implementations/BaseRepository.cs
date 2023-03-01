@@ -47,8 +47,11 @@ namespace IdealDiscuss.Repository.Implementations
             _context.SaveChanges();
             return entity;
         }
-
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> expression = null)
+        public List<T> GetAll()
+        {
+            return _context.Set<T>().ToList();
+        }
+        public List<T> GetAll(Expression<Func<T, bool>> expression = null)
         {
             return _context.Set<T>().Where(expression).ToList();
         }
