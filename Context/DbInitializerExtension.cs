@@ -2,7 +2,7 @@
 {
     internal static class DbInitializerExtension
     {
-        public static IApplicationBuilder UseItToSeedSqlServer(this IApplicationBuilder app)
+        public static IApplicationBuilder SeedToDatabase(this IApplicationBuilder app)
         {
             ArgumentNullException.ThrowIfNull(app, nameof(app));
 

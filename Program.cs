@@ -31,7 +31,7 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-app.UseItToSeedSqlServer();
+app.SeedToDatabase();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
