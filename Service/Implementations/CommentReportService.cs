@@ -92,13 +92,12 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
 
-            if (!_commentReportRepository.Exists(c => c.Id == commentReportId))
+            var commentReport = _commentReportRepository.Get(commentReportId);
+            if (commentReport is null)
             {
-                response.Message = "Comment report does not exist!";
+                response.Message = $"CommentReport with id {commentReportId} does not exist!";
                 return response;
             }
-
-            var commentReport = _commentReportRepository.Get(commentReportId);
             commentReport.IsDeleted = true;
 
             try
@@ -120,7 +119,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new CommentReportsResponseModel();
 
-            var commentReports = _commentReportRepository.GetAll();
+            var commentReports = _commentReportRepository.GetCommentReports();
 
             response.Reports = commentReports.Select(commentReport => new ViewCommentReportDto
             {
@@ -143,13 +142,12 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new CommentReportResponseModel();
 
-            if (!_commentReportRepository.Exists(c => c.Id == commentReportId))
+            var commentReport = _commentReportRepository.GetComment(commentReportId);
+            if (commentReport is null)
             {
                 response.Message = $"CommentReport with id {commentReportId} does not exist!";
                 return response;
             }
-            var commentReport = _commentReportRepository.Get(commentReportId);
-
             response.Message = "Success";
             response.Status = true;
             response.Report = new ViewCommentReportDto
@@ -169,13 +167,12 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
 
-            if (!_commentReportRepository.Exists(c => c.Id == commentReportId))
+            var commentReport = _commentReportRepository.Get(commentReportId);
+            if (commentReport is null)
             {
-                response.Message = "Comment report does not exist!";
+                response.Message = $"CommentReport with id {commentReportId} does not exist!";
                 return response;
             }
-
-            var commentReport = _commentReportRepository.Get(commentReportId);
 
             commentReport.AdditionalComment = updateCommentReportDto.AdditionalComment;
 
