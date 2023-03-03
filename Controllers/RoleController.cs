@@ -1,6 +1,7 @@
 ﻿using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace IdealDiscuss.Controllers
 {
@@ -35,6 +36,14 @@ namespace IdealDiscuss.Controllers
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
 
+            return View(response);
+        }
+       
+
+        
+        public IActionResult GetRoleDetail(int id) 
+        {
+            var response = _roleService.GetRole(id);
             return View(response);
         }
     }
