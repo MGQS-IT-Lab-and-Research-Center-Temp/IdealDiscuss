@@ -7,15 +7,12 @@ namespace IdealDiscuss.Controllers
     public class CommentController : Controller
     {
         private readonly ICommentService _commentService;
-        private readonly IUserService _userService;
         private readonly ILogger<CommentController> _logger;
 
-
-        public CommentController(ICommentService commentService, IUserService userService, ILogger<CommentController> logger)
+        public CommentController(ICommentService commentService,ILogger<CommentController> logger)
         {
             _commentService = commentService;
-            _userService = userService;
-            _logger = logger;
+            _logger = logger;  
         }
         // GET: CommentController
         public IActionResult Index()
