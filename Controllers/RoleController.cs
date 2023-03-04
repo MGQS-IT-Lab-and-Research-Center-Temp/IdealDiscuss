@@ -37,5 +37,38 @@ namespace IdealDiscuss.Controllers
 
             return View(response);
         }
+        [HttpGet]
+        public IActionResult Update()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Update(UpdateRoleDto updateRoleDto,int id)
+        {
+              var roleUpdate = _roleService.UpdateRole(id,updateRoleDto);
+            ViewBag.Message = roleUpdate.Message;
+            ViewBag.Status = roleUpdate.Status;
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost("role/{id}/delete")]
+        public IActionResult DeleteRole([FromRoute] int id)
+        {
+            try
+            {
+                var response = _roleService.DeleteRole(id);
+                return RedirectToAction("Index", "Role");
+            }
+            catch
+            {
+                return Ok(new
+                {
+                    status = "error",
+                    message = "Something happened. Please try again later."
+                });
+            }
+        }
     }
 }

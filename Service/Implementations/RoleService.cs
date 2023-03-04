@@ -3,6 +3,7 @@ using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdealDiscuss.Service.Implementations
 {
@@ -140,21 +141,13 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateRole(int roleId, UpdateRoleDto updateRoleDto)
+        public BaseResponseModel UpdateRole(int Id, UpdateRoleDto updateRoleDto)
         {
             var response = new RoleResponseModel();
-
-            if (!_roleRepository.Exists(c => c.Id == roleId))
-            {
-                response.Message = "Role does not exist.";
-                return response;
-            }
-
-            var role = _roleRepository.Get(roleId);
+            var role = _roleRepository.Get(Id);
 
             role.RoleName = updateRoleDto.RoleName;
             role.Description = updateRoleDto.Description;
-
             try
             {
                 _roleRepository.Update(role);
