@@ -17,9 +17,9 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult Index()
         {
-            var roles = _roleService.GetAllRole().Roles;
+            var roles = _roleService.GetAllRole();
 
-            return View(roles);
+            return View(roles.Roles);
         }
 
         public IActionResult Create()
@@ -41,6 +41,9 @@ namespace IdealDiscuss.Controllers
         public IActionResult GetRoleDetail(int id) 
         {
             var response = _roleService.GetRole(id);
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+
             return View(response.Role);
         }
        

@@ -1,6 +1,18 @@
 ﻿@model IdealDiscuss.Dtos.RoleDto.ViewRoleDto
 
+@{
+    ViewData["Title"] = "Role Detail";
+    var status = ViewBag.Status == false ? false : true;
+}
+
 <div class="body">
+
+    @if (status is false)
+    {
+        <span class="badge text-center bg-danger">@ViewBag.Message</span>
+        <a asp-controller="Role" asp-action="Index" class="btn btn-outline-secondary">Go back to list</a>
+        return;
+    }
     <dl class="row">
         <dt class="col-sm-4">
             Role Name:
@@ -18,6 +30,7 @@
             @Model.Description
         </dd>
     </dl>
+    
 </div>
 
 

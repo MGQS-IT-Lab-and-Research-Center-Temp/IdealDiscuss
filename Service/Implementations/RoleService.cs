@@ -15,7 +15,7 @@ namespace IdealDiscuss.Service.Implementations
         private readonly ILogger<RoleService> _logger;
 
         public RoleService(
-            IRoleRepository roleRepository, 
+            IRoleRepository roleRepository,
             IHttpContextAccessor httpContextAccessor,
             ILogger<RoleService> logger)
         {
@@ -76,7 +76,13 @@ namespace IdealDiscuss.Service.Implementations
 
             if (!roleIdExist)
             {
-                response.Message = "Role does not exist.";
+                response.Message = "Role does not exist!";
+                return response;
+            }
+
+            if(roleId == 1 || roleId == 2)
+            {
+                response.Message = "Role cannot be deleted!";
                 return response;
             }
 
@@ -110,12 +116,15 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            response.Roles = role.Select(r => new ViewRoleDto
+            response.Roles = role
+                .Where(r => r.IsDeleted == false)
+                .Select(r => new ViewRoleDto
             {
                 Id = r.Id,
                 RoleName = r.RoleName,
                 Description = r.Description
-            }).ToList();
+            })
+            .ToList();
 
             response.Status = true;
             response.Message = "Success";
@@ -131,7 +140,7 @@ namespace IdealDiscuss.Service.Implementations
 
             if (!roleExist)
             {
-                response.Message = $"Role with id {roleId} does not exist.";
+                response.Message = $"Role does not exist!";
                 return response;
             }
 
