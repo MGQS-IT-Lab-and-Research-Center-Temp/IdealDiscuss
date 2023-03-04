@@ -80,7 +80,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            if(roleId == 1 || roleId == 2)
+            if (roleId == 1 || roleId == 2)
             {
                 response.Message = "Role cannot be deleted!";
                 return response;
@@ -108,26 +108,34 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new RolesResponseModel();
 
-            var role = _roleRepository.GetAll();
-
-            if (role.Count == 0)
+            try
             {
-                response.Message = "No records found!";
+                var role = _roleRepository.GetAll();
+
+                if (role.Count == 0)
+                {
+                    response.Message = "No records found!";
+                    return response;
+                }
+
+                response.Roles = role
+                    .Where(r => r.IsDeleted == false)
+                    .Select(r => new ViewRoleDto
+                    {
+                        Id = r.Id,
+                        RoleName = r.RoleName,
+                        Description = r.Description
+                    })
+                .ToList();
+
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.Message = $"An error occured: {ex.Message}";
                 return response;
             }
-
-            response.Roles = role
-                .Where(r => r.IsDeleted == false)
-                .Select(r => new ViewRoleDto
-            {
-                Id = r.Id,
-                RoleName = r.RoleName,
-                Description = r.Description
-            })
-            .ToList();
-
-            response.Status = true;
-            response.Message = "Success";
 
             return response;
         }
