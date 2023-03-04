@@ -37,8 +37,6 @@ namespace IdealDiscuss.Controllers
 
             return View(response);
         }
-       
-
         
         public IActionResult GetRoleDetail(int id) 
         {
@@ -46,16 +44,28 @@ namespace IdealDiscuss.Controllers
             return View(response);
         }
        
-
-        
-        public IActionResult GetView(int id) 
+        [HttpGet]
+        public IActionResult Update()
         {
-            var response = _roleService.GetRole(id);
+            return View();
+        }
 
+        [HttpPost]
+        public IActionResult Update(UpdateRoleDto updateRoleDto, int id)
+        {
+            var roleUpdate = _roleService.UpdateRole(id, updateRoleDto);
+            ViewBag.Message = roleUpdate.Message;
+            ViewBag.Status = roleUpdate.Status;
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost("role/{id}/delete")]
+        public IActionResult DeleteRole([FromRoute] int id)
+        {
+            var response = _roleService.DeleteRole(id);
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
-
-            return View(response);
+            return RedirectToAction("Index", "Role");
         }
     }
 }

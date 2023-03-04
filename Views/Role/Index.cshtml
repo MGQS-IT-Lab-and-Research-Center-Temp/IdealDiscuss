@@ -3,9 +3,10 @@
 @{
     ViewData["Title"] = "Role List";
     int count = 1;
+    var counts = Model.Count;
 }
 
-<h3>Total Roles: (@Model.Count)</h3>
+<h3>Total Roles: (@counts)</h3>
 <a asp-controller="Role" asp-action="Create" class="btn btn-outline-primary">Add New Role</a>
 <table class="table">
     <thead>
@@ -27,7 +28,10 @@
                 <td>
                     <div class="btn-group">
                         <a asp-controller="Role" asp-action="GetRoleDetail" class="btn btn-primary">View</a>
-                        <a href="#" class="btn btn-danger">Delete</a>
+                        <a asp-controller="Role" asp-action="Update" asp-route-id="@item.Id" class="btn btn-success">Update</a>
+                        <form asp-action="DeleteRole" asp-route-id="@item.Id">
+								          <button type="submit" class="btn btn-danger">Delete</button>
+						            </form>
                     </div>
                 </td>
             </tr>

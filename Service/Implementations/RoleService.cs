@@ -1,8 +1,10 @@
-﻿using IdealDiscuss.Dtos;
+﻿using IdealDiscuss.Controllers;
+using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdealDiscuss.Service.Implementations
 {
@@ -10,16 +12,21 @@ namespace IdealDiscuss.Service.Implementations
     {
         private readonly IRoleRepository _roleRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<RoleService> _logger;
 
-        public RoleService(IRoleRepository roleRepository, IHttpContextAccessor httpContextAccessor)
+        public RoleService(
+            IRoleRepository roleRepository, 
+            IHttpContextAccessor httpContextAccessor,
+            ILogger<RoleService> logger)
         {
             _roleRepository = roleRepository;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         public BaseResponseModel CreateRole(CreateRoleDto createRoleDto)
         {
-            var response = new RoleResponseModel();
+            var response = new BaseResponseModel();
 
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
 
@@ -51,12 +58,14 @@ namespace IdealDiscuss.Service.Implementations
             }
             catch (Exception ex)
             {
-                response.Message = $"Failed to create role.{ex.Message}";
+                _logger.LogError(ex.Message + "-" + ex.StackTrace);
+                response.Message = $"Failed to create role:";
                 return response;
             }
 
             response.Status = true;
             response.Message = "Role created successfully.";
+            _logger.LogInformation(response.Message);
             return response;
         }
 
@@ -140,21 +149,17 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateRole(int roleId, UpdateRoleDto updateRoleDto)
+        public BaseResponseModel UpdateRole(int Id, UpdateRoleDto updateRoleDto)
         {
             var response = new RoleResponseModel();
-
-            if (!_roleRepository.Exists(c => c.Id == roleId))
+            if (!_roleRepository.Exists(c => c.Id == Id))
             {
                 response.Message = "Role does not exist.";
                 return response;
             }
-
-            var role = _roleRepository.Get(roleId);
-
+            var role = _roleRepository.Get(Id);
             role.RoleName = updateRoleDto.RoleName;
             role.Description = updateRoleDto.Description;
-
             try
             {
                 _roleRepository.Update(role);

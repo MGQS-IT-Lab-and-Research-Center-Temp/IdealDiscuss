@@ -8,7 +8,7 @@ namespace IdealDiscuss.Service.Interface
     {
         BaseResponseModel CreateRole(CreateRoleDto createRoleDto);
         BaseResponseModel DeleteRole(int roleId);
-        BaseResponseModel UpdateRole(int roleId, UpdateRoleDto updateRoelDto);
+        BaseResponseModel UpdateRole(int roleId, UpdateRoleDto updateRoleDto);
         RoleResponseModel GetRole(int roleId);
         RolesResponseModel GetAllRole();
     }
