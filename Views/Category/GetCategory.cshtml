@@ -1,0 +1,50 @@
+﻿@model IdealDiscuss.Dtos.CategoryDto.ViewCategoryDto
+
+@{
+    ViewData["Title"] = "Category Detail";
+    var status = ViewBag.Status == false ? false : true;
+}
+
+<div class="body">
+
+    @if (status is false)
+    {
+         <span class="badge text-center bg-danger">@ViewBag.Message</span>
+         <a asp-controller="Role" asp-action="Index" class="btn btn-outline-secondary">Go back to list</a>
+        return;
+    }
+     <dl class="row">
+          <dt class="col-sm-4">
+               Category Id:
+          </dt>
+
+          <dd class="col-sm-8">
+            @Model.Id
+          </dd>
+          
+          class="row">
+          <dt class="col-sm-4">
+               Category Name:
+          </dt>
+
+          <dd class="col-sm-8">
+            @Model.Name
+          </dd>
+
+          <dt class="col-sm-4">
+               Description:
+          </dt>
+
+          <dd class="col-sm-8">
+            @Model.Description
+          </dd>
+     </dl>
+     <br />
+</div>
+
+
+
+
+
+
+
