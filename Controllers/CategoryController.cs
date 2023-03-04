@@ -1,4 +1,6 @@
-﻿using IdealDiscuss.Service.Implementations;
+﻿using IdealDiscuss.Dtos.CategoryDto;
+using IdealDiscuss.Dtos.RoleDto;
+using IdealDiscuss.Service.Implementations;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,5 +25,13 @@ namespace IdealDiscuss.Controllers
                 return View(response.Data);
             }
 
-    }
+		[HttpPost]
+		public IActionResult Update(int id, UpdateCategoryDto updateCategoryDto)
+		{
+			var categoryUpdate = _categoryService.UpdateCategory(id, updateCategoryDto);
+			ViewBag.Message = categoryUpdate.Message;
+			ViewBag.Status = categoryUpdate.Status;
+			return RedirectToAction("Index", "Category");
+		}
+	}
 }
