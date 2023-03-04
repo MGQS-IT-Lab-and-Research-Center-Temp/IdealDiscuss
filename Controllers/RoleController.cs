@@ -44,31 +44,21 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateRoleDto updateRoleDto,int id)
+        public IActionResult Update(UpdateRoleDto updateRoleDto, int id)
         {
-              var roleUpdate = _roleService.UpdateRole(id,updateRoleDto);
+            var roleUpdate = _roleService.UpdateRole(id, updateRoleDto);
             ViewBag.Message = roleUpdate.Message;
             ViewBag.Status = roleUpdate.Status;
-
             return RedirectToAction("Index");
         }
 
         [HttpPost("role/{id}/delete")]
         public IActionResult DeleteRole([FromRoute] int id)
         {
-            try
-            {
-                var response = _roleService.DeleteRole(id);
-                return RedirectToAction("Index", "Role");
-            }
-            catch
-            {
-                return Ok(new
-                {
-                    status = "error",
-                    message = "Something happened. Please try again later."
-                });
-            }
+            var response = _roleService.DeleteRole(id);
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+            return RedirectToAction("Index", "Role");
         }
     }
 }

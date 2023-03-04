@@ -144,8 +144,12 @@ namespace IdealDiscuss.Service.Implementations
         public BaseResponseModel UpdateRole(int Id, UpdateRoleDto updateRoleDto)
         {
             var response = new RoleResponseModel();
+            if (!_roleRepository.Exists(c => c.Id == Id))
+            {
+                response.Message = "Role does not exist.";
+                return response;
+            }
             var role = _roleRepository.Get(Id);
-
             role.RoleName = updateRoleDto.RoleName;
             role.Description = updateRoleDto.Description;
             try
