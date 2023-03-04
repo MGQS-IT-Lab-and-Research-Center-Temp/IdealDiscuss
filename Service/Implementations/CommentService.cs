@@ -81,7 +81,7 @@ namespace IdealDiscuss.Service.Implementations
             }
             catch (Exception ex)
             {
-                response.Message = "Comment  delete failed.";
+                response.Message = "Comment  delete failed";
                 return response;
             }
 
