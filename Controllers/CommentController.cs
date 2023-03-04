@@ -1,20 +1,38 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdealDiscuss.Controllers
 {
     public class CommentController : Controller
     {
+        private readonly ICommentService _commentService;
+        private readonly IUserService _userService;
+        private readonly ILogger<CommentController> _logger;
+
+
+        public CommentController(ICommentService commentService, IUserService userService, ILogger<CommentController> logger)
+        {
+            _commentService = commentService;
+            _userService = userService;
+            _logger = logger;
+        }
         // GET: CommentController
         public IActionResult Index()
         {
-            return View();
+            var comments = _commentService.GetAllComment();
+            return View(comments.Comments);
         }
 
         // GET: CommentController/Details/5
-        public IActionResult Details(int id)
+        public IActionResult GetCommentDetail(int id)
         {
-            return View();
+            var response = _commentService.GetComment(id);
+
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+
+            return View(response.Comment);
         }
 
         // GET: CommentController/Create
