@@ -1,6 +1,7 @@
 ﻿using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.CategoryDto;
 using IdealDiscuss.Dtos.CommentReport;
+using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
@@ -27,11 +28,17 @@ namespace IdealDiscuss.Service.Implementations
                        
                if(isCategoryExist)
                {
-                    response.Message = "Category already exist!";
+                    response.Message = $"Category with name {createCategoryDto} already exist!";
                     return response;
                }
 
-               var category = new Category
+                if (string.IsNullOrWhiteSpace(createCategoryDto.Name))
+                {
+                    response.Message = "Role name is required!";
+                    return response;
+                }
+
+            var category = new Category
                {
                     Name = createCategoryDto.Name,
                     Description = createCategoryDto.Description
