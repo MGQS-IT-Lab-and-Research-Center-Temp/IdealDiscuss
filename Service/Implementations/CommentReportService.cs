@@ -148,6 +148,7 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"CommentReport with id {commentReportId} does not exist!";
                 return response;
             }
+
             response.Message = "Success";
             response.Status = true;
             response.Report = new ViewCommentReportDto

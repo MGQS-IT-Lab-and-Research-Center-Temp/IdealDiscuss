@@ -21,11 +21,9 @@ namespace IdealDiscuss.Repository.Implementations
 
         public List<CommentReport> GetCommentReports()
         {
-            var commentReports =_context.CommentReports.Include(c => c.User).Include(c => c.Comment).Include(c => c.CommentReportFlags).ToList();
+            var commentReports = _context.CommentReports.Include(c => c.User).Include(c => c.Comment).Include(c => c.CommentReportFlags).ToList();
 
             return commentReports;
         }
-
-
     }
 }

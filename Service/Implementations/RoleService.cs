@@ -1,4 +1,5 @@
-﻿using IdealDiscuss.Dtos;
+﻿using IdealDiscuss.Controllers;
+using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
@@ -10,16 +11,21 @@ namespace IdealDiscuss.Service.Implementations
     {
         private readonly IRoleRepository _roleRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger<RoleService> _logger;
 
-        public RoleService(IRoleRepository roleRepository, IHttpContextAccessor httpContextAccessor)
+        public RoleService(
+            IRoleRepository roleRepository, 
+            IHttpContextAccessor httpContextAccessor,
+            ILogger<RoleService> logger)
         {
             _roleRepository = roleRepository;
             _httpContextAccessor = httpContextAccessor;
+            _logger = logger;
         }
 
         public BaseResponseModel CreateRole(CreateRoleDto createRoleDto)
         {
-            var response = new RoleResponseModel();
+            var response = new BaseResponseModel();
 
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
 
@@ -51,12 +57,14 @@ namespace IdealDiscuss.Service.Implementations
             }
             catch (Exception ex)
             {
-                response.Message = $"Failed to create role.{ex.Message}";
+                _logger.LogError(ex.Message + "-" + ex.StackTrace);
+                response.Message = $"Failed to create role:";
                 return response;
             }
 
             response.Status = true;
             response.Message = "Role created successfully.";
+            _logger.LogInformation(response.Message);
             return response;
         }
 
