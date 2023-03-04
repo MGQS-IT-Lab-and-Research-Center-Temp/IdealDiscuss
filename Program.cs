@@ -5,7 +5,6 @@ using IdealDiscuss.Service.Implementations;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 

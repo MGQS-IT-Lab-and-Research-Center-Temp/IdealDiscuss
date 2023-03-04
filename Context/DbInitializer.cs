@@ -11,7 +11,9 @@ namespace IdealDiscuss.Context
             context.Database.EnsureCreated();
 
             if (context.Roles.Any())
+            {
                 return;
+            }
 
             var roles = new Role[]
             {
@@ -22,8 +24,8 @@ namespace IdealDiscuss.Context
                     CreatedBy = "System",
                     DateCreated = DateTime.Now,
                     IsDeleted = false,
-                    ModifiedBy = "System",
-                    LastModified = DateTime.Now
+                    ModifiedBy = "",
+                    LastModified = new DateTime() //0001-01-01 00:00:00:00
                 },
                 new Role()
                 {
@@ -32,8 +34,8 @@ namespace IdealDiscuss.Context
                     CreatedBy = "System",
                     DateCreated = DateTime.Now,
                     IsDeleted = false,
-                    ModifiedBy = "System",
-                    LastModified = DateTime.Now
+                    ModifiedBy = "",
+                    LastModified = new DateTime()
                 }
             };
 
