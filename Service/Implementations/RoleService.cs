@@ -72,8 +72,9 @@ namespace IdealDiscuss.Service.Implementations
         public BaseResponseModel DeleteRole(int roleId)
         {
             var response = new RoleResponseModel();
+            var roleIdExist = _roleRepository.Exists(c => c.Id == roleId);
 
-            if (!_roleRepository.Exists(c => c.Id == roleId))
+            if (!roleIdExist)
             {
                 response.Message = "Role does not exist.";
                 return response;
@@ -149,17 +150,23 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateRole(int Id, UpdateRoleDto updateRoleDto)
+        public BaseResponseModel UpdateRole(int id, UpdateRoleDto updateRoleDto)
         {
-            var response = new RoleResponseModel();
-            if (!_roleRepository.Exists(c => c.Id == Id))
+            var response = new BaseResponseModel();
+
+            var roleIdExist = _roleRepository.Exists(c => c.Id == id);
+
+            if (!roleIdExist)
             {
                 response.Message = "Role does not exist.";
                 return response;
             }
-            var role = _roleRepository.Get(Id);
+
+            var role = _roleRepository.Get(id);
+
             role.RoleName = updateRoleDto.RoleName;
             role.Description = updateRoleDto.Description;
+
             try
             {
                 _roleRepository.Update(role);

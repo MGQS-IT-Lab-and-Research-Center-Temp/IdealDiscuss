@@ -44,7 +44,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(UpdateRoleDto updateRoleDto, int id)
+        public IActionResult Update(int id, UpdateRoleDto updateRoleDto)
         {
             var roleUpdate = _roleService.UpdateRole(id, updateRoleDto);
             ViewBag.Message = roleUpdate.Message;
