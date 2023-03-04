@@ -19,7 +19,7 @@
         </dt>
 
         <dd class="col-sm-8">
-           @Model.RoleName
+            @Model.RoleName
         </dd>
 
         <dt class="col-sm-4">
@@ -30,7 +30,16 @@
             @Model.Description
         </dd>
     </dl>
-    
+    <br />
+    <div btn-group>
+        <a asp-controller="Role" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-secondary">Update</a>
+        &nbsp;
+        <a asp-controller="Role" asp-action="Index" class="btn btn-primary">IndexPage</a>
+        &nbsp;
+        <a asp-controller="Role" asp-action="DeleteRole" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+        &nbsp;
+    </div>
+
 </div>
 
 
