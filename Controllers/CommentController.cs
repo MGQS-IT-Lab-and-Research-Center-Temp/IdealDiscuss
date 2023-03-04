@@ -1,10 +1,20 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using IdealDiscuss.Dtos.CommentDto;
+using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdealDiscuss.Controllers
 {
     public class CommentController : Controller
     {
+        private readonly ICommentService _commentService;
+        private readonly ILogger<CommentController> _logger;
+
+        public CommentController(ILogger<CommentController> logger, ICommentService commentService)
+        {
+            _logger = logger;
+            _commentService = commentService;
+        }
         // GET: CommentController
         public ActionResult Index()
         {
@@ -25,17 +35,12 @@ namespace IdealDiscuss.Controllers
 
         // POST: CommentController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(CreateCommentDto request)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var response = _commentService.CreateComment(request);
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+            return View(response);
         }
 
         // GET: CommentController/Edit/5
