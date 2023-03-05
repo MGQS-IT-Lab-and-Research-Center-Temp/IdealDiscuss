@@ -43,7 +43,7 @@ namespace IdealDiscuss.Controllers
         public IActionResult UpdateFlag(int id)
         {
             var response = _flagService.GetFlag(id);
-            return View(response);
+            return View(response.Report);
         }
         [HttpPost]
         public IActionResult UpdateFlag(int id,UpdateFlagDto request)
