@@ -1,6 +1,7 @@
 ﻿using IdealDiscuss.Service.Interface;
 using IdealDiscuss.Dtos.CommentDto;
 using Microsoft.AspNetCore.Mvc;
+using IdealDiscuss.Service.Implementations;
 
 namespace IdealDiscuss.Controllers
 {
@@ -67,13 +68,14 @@ namespace IdealDiscuss.Controllers
         }
 
         // POST: CommentController/Edit/5
-        [HttpPost]
-        public ActionResult Delete(int id)
+
+        [HttpPost("comment/{id}/delete")]
+        public IActionResult DeleteComment([FromRoute] int id)
         {
-            var commentDelete = _commentService.DeleteComment(id);
-            ViewBag.Message = commentDelete.Message;
-            ViewBag.Status = commentDelete.Status;
-            return RedirectToAction("Index");
+            var response = _commentService.DeleteComment(id);
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+            return RedirectToAction("Index", "Comment");
         }
     }
 }
