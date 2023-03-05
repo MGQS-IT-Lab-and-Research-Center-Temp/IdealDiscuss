@@ -4,6 +4,7 @@ using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdealDiscuss.Service.Implementations
 {
@@ -24,22 +25,17 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-            var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-
             var user = _userRepository.Get(createQuestionDto.UserId);
-            
+
             var question = new Question
             {
                 UserId = createQuestionDto.UserId,
                 User = user,
                 QuestionText = createQuestionDto.QuestionText,
                 ImageUrl = createQuestionDto.ImageUrl,
-                CreatedBy= createdBy,
-                ModifiedBy= modifiedBy, 
-                DateCreated = DateTime.Now,
-                LastModified = DateTime.Now,
+                CreatedBy = createdBy,
+                DateCreated = DateTime.Now
             };
-
 
             try
             {
@@ -57,9 +53,16 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
+        public BaseResponseModel Update(int Id)
+        {
+            var response = new BaseResponseModel();
+        }
+
+        [HttpPost]
         public BaseResponseModel Update(int questionId, UpdateQuestionDto updateQuestionDto)
         {
             var response = new BaseResponseModel();
+            var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
 
             if (!_questionRepository.Exists(c => c.Id == questionId))
             {
@@ -70,6 +73,8 @@ namespace IdealDiscuss.Service.Implementations
             var question = _questionRepository.Get(questionId);
 
             question.QuestionText = updateQuestionDto.QuestionText;
+            question.ModifiedBy = modifiedBy;
+            question.LastModified = DateTime.Now;
 
             try
             {
@@ -115,43 +120,43 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-		public QuestionsResponseModel GetAllQuestion()
-		{
-			var response = new QuestionsResponseModel();
+        public QuestionsResponseModel GetAllQuestion()
+        {
+            var response = new QuestionsResponseModel();
 
-			try
-			{
-				var questions = _questionRepository.GetAll();
+            try
+            {
+                var questions = _questionRepository.GetAll();
 
-				if (questions.Count == 0)
-				{
-					response.Message = "No question found!";
-					return response;
-				}
-                
+                if (questions.Count == 0)
+                {
+                    response.Message = "No question found!";
+                    return response;
+                }
 
-				response.Reports = questions.Select(question => new ViewQuestionDto
-				{
-					Id = question.Id,
-					QuestionText = question.QuestionText,
-					UserName = question.User.UserName,
-					ImageUrl = question.ImageUrl,
+
+                response.Reports = questions.Select(question => new ViewQuestionDto
+                {
+                    Id = question.Id,
+                    QuestionText = question.QuestionText,
+                    UserName = question.User.UserName,
+                    ImageUrl = question.ImageUrl,
 
                 }).ToList();
 
-				response.Status = true;
-				response.Message = "Success";
-			}
-			catch (Exception ex)
-			{
-				response.Message = $"An error occured: {ex.Message}";
-				return response;
-			}
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.Message = $"An error occured: {ex.Message}";
+                return response;
+            }
 
-			return response;
-		}
+            return response;
+        }
 
-		public QuestionResponseModel GetQuestion(int questionId)
+        public QuestionResponseModel GetQuestion(int questionId)
         {
             var response = new QuestionResponseModel();
 
