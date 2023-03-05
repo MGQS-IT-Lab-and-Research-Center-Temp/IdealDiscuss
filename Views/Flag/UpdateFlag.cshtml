@@ -3,29 +3,27 @@
     ViewData["Title"] = "Update Flag";
 }
 
-<div class="d-flex justify-content-center">
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6">
+		   <form asp-action="UpdateFlag">
+              	<div class="form-group">
+					<label asp-for="FlagName" class="control-label"></label>
+					<input asp-for="FlagName" type="text" class="form-control" value="@Model.FlagName" />
+                    <span asp-validation-for="FlagName" class="text-danger"></span>
+				</div>
 
-    <form asp-action="UpdateFlag" asp-controller="Flag">
-        <div class="col-md-12 mb-2">
-            <label for="FlagName" class="form-label">FlagName:</label>
-            <input type="text" class="form-control" placeholder="Enter Flag name" name="FlagName" value="@Model.FlagName">
-        </div>
-
-        <div class="col-md-12 mb-2">
-            <label for="Description" class="form-label">Description:</label>
-            <textarea class="form-control" placeholder="Enter description" name="Description" value="@Model.Description"></textarea>
-        </div>
-        <div class="form-row">
-            <div class="kt-form__actions">
-                <button type="submit" class="btn btn-primary">update</button>
-                &nbsp;
-                <a class="btn btn-primary"
-                   asp-action="Index">
-                    Return to  List
-                </a>
-            </div>
-        </div>
-    </form>
+				<div class="form-group"> 
+					<label asp-for="Description" class="control-label"></label>
+					<input asp-for="Description" type="text" class="form-control" value="@Model.Description" />
+					<span asp-validation-for="Description" class="text-danger"></span>
+				</div>
+             <div class="col-md-12">
+                 <button type="submit" class="btn btn-primary">Update</button>
+             </div>
+            </form>
+		</div>
+	</div>
 </div>
 
 

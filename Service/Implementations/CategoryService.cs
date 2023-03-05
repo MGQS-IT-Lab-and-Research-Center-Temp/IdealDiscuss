@@ -14,15 +14,18 @@ namespace IdealDiscuss.Service.Implementations
      public class CategoryService : ICategoryService
      {
           private readonly ICategoryRepository _categoryRepository;        
+          private readonly IHttpContextAccessor _httpContextAccessor;
 
-          public CategoryService(ICategoryRepository categoryRepository)
+          public CategoryService(ICategoryRepository categoryRepository,IHttpContextAccessor httpContextAccessor)
           {
+               _httpContextAccessor = httpContextAccessor;
                _categoryRepository = categoryRepository;
           }
 
           public BaseResponseModel CreateCategory(CreateCategoryDto createCategoryDto)
           {
                var response = new BaseResponseModel();
+               var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
 
                var isCategoryExist = _categoryRepository.Exists(c => c.Name == createCategoryDto.Name);
                        
@@ -41,7 +44,9 @@ namespace IdealDiscuss.Service.Implementations
             var category = new Category
                {
                     Name = createCategoryDto.Name,
-                    Description = createCategoryDto.Description
+                    Description = createCategoryDto.Description,
+                    CreatedBy = createdBy,
+                    DateCreated = DateTime.Now
                };
 
                try
@@ -133,6 +138,7 @@ namespace IdealDiscuss.Service.Implementations
           public BaseResponseModel UpdateCategory(int categoryId, UpdateCategoryDto updateCategoryDto)
           {
                var response = new BaseResponseModel();
+               string modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
 
                if (!_categoryRepository.Exists(c => c.Id == categoryId))
                {
@@ -141,9 +147,9 @@ namespace IdealDiscuss.Service.Implementations
                }
 
                var category = _categoryRepository.Get(categoryId);
-
                category.Description = updateCategoryDto.Description;
-
+               category.ModifiedBy = modifiedBy;
+               category.LastModified = DateTime.Now;
                try
                {
                     _categoryRepository.Update(category);

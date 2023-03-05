@@ -7,10 +7,13 @@
 <div>
     <a asp-controller="Flag" asp-action="CreateFlag" class="btn btn-outline-primary">Add New Flag</a>
 </div>
-
-@if(Model.Count > 0)
+@if(Model.Count == 0)
 {
-<table class="table">
+    <span>No records found</span>
+}
+else
+{
+    <table class="table">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -39,8 +42,7 @@
     </tbody>
 </table>
 }
-@if(Model.Count < 0)
-{
-    <span>No records found</span>
-}
+
+
+
 
