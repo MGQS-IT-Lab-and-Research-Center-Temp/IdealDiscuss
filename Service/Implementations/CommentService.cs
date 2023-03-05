@@ -3,6 +3,7 @@ using IdealDiscuss.Dtos.CommentDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using Org.BouncyCastle.Bcpg;
 using static IdealDiscuss.Dtos.CommentDto.CommentResponse;
 
 namespace IdealDiscuss.Service.Implementations
@@ -13,18 +14,22 @@ namespace IdealDiscuss.Service.Implementations
         private readonly IUserRepository _userRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IQuestionRepository _questionRepository;
-        public CommentService(IUserRepository userRepository, ICommentRepository commentRepository, IQuestionRepository questionRepository)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public CommentService(IUserRepository userRepository, ICommentRepository commentRepository, IQuestionRepository questionRepository, IHttpContextAccessor httpContextAccessor)
         {
 
             _userRepository = userRepository;
             _commentRepository = commentRepository;
             _questionRepository = questionRepository;
+            _httpContextAccessor = httpContextAccessor; 
         }
 
         public BaseResponseModel CreateComment(CreateCommentDto createCommentDto)
         {
             var response = new BaseResponseModel();
             var user = _userRepository.Get(createCommentDto.UserId);
+            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+            var createdDate = _httpContextAccessor.HttpContext.User;
             if (user is null)
             {
                 response.Message = "User not found";
@@ -43,7 +48,7 @@ namespace IdealDiscuss.Service.Implementations
                 QuestionId = question.Id,
                 Question = question,
                 CommentText = createCommentDto.CommentText,
-                CreatedBy = user.Id.ToString(),
+                CreatedBy = createdBy,
                 DateCreated = DateTime.Now,
             };
 
@@ -58,6 +63,7 @@ namespace IdealDiscuss.Service.Implementations
             }
             response.Status = true;
             response.Message = "Comment  created successfully.";
+    
             return response;
         }
 
@@ -95,17 +101,22 @@ namespace IdealDiscuss.Service.Implementations
                 var response = new CommentsResponseModel();
 
                 var comment = _commentRepository.GetAll();
+                var user = _userRepository.GetAll();
+               
 
-                response.Comments = comment.Select(comment => new ViewCommentDto
-                {
+               response.Comments = comment.Select(comment => new ViewCommentDto
+               {
 
                     Id = comment.Id,
                     CommentText = comment.CommentText,
                     QuestionId = comment.QuestionId,
-                    UserId = comment.UserId,
+                    UserId = comment.UserId
+                   
 
-                }).ToList();
+               }).ToList();
 
+
+                
                 response.Status = true;
                 response.Message = "Success";
 
@@ -123,7 +134,6 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
             var comment = _commentRepository.Get(commentId);
-
             response.Message = "Success";
             response.Status = true;
             response.Comment = new ViewCommentDto
@@ -164,5 +174,6 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
+        
     }
 }

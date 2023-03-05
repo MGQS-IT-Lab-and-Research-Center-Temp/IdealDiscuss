@@ -12,6 +12,6 @@ namespace IdealDiscuss.Service.Interface
         BaseResponseModel UpdateComment(int commentId, UpdateCommentDto updateCommentDto);
         CommentResponseModel GetComment(int commentId);
         CommentsResponseModel GetAllComment();
-        object UpdateComment(int id, object updateRoleDto);
+        
     }
 }

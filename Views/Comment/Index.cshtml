@@ -4,9 +4,12 @@
     ViewData["Title"] = "Comment List";
     int count = 1;
     var counts = Model.Count;
+    
 }
 
 <h3>Total Comments: (@counts)</h3>
+
+
 
 <div>
     <a asp-controller="Comment" asp-action="Create" class="btn btn-outline-primary">Add New Comment</a>
