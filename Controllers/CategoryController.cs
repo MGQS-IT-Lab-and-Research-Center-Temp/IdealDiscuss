@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using IdealDiscuss.Service.Interface;
+using IdealDiscuss.Dtos.CategoryDto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdealDiscuss.Controllers
@@ -6,8 +7,20 @@ namespace IdealDiscuss.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
-       
-        public ActionResult Index()
+
+
+        public CategoryController(ICategoryService categoryService)
+        {
+            _categoryService = categoryService; 
+        }
+        
+        public IActionResult Index()
+        {
+            var categories = _categoryService.GetAllCategory();
+            return View(categories.Data);
+        }
+
+        public IActionResult Create()
         {
             return View();
         }
@@ -21,5 +34,31 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index", "Category");
         }
 
-    }
+        [HttpPost]
+        public IActionResult Create(CreateCategoryDto request)
+        {
+            var response = _categoryService.CreateCategory(request);
+
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+
+            return View(response);
+        }
+
+        public IActionResult GetCategory(int id)
+        {
+            var response = _categoryService.GetCategory(id);
+            ViewBag.Message = response.Message;
+            return View(response.Data);
+        }
+
+		[HttpPost]
+		public IActionResult Update(int id, UpdateCategoryDto updateCategoryDto)
+		{
+			var categoryUpdate = _categoryService.UpdateCategory(id, updateCategoryDto);
+			ViewBag.Message = categoryUpdate.Message;
+			ViewBag.Status = categoryUpdate.Status;
+			return RedirectToAction("Index", "Category");
+		}
+	}
 }
