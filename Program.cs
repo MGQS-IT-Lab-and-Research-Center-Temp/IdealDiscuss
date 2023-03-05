@@ -16,9 +16,11 @@ builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IQuestionService, QuestionService>();
+builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<IdealDiscussContext>(option => option.UseMySQL(builder.Configuration.GetConnectionString("IdealDiscussContext")));
 builder.Services.AddScoped<DbInitializer>();
