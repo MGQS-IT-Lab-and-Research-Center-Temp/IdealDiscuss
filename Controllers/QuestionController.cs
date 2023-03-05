@@ -19,6 +19,15 @@ namespace IdealDiscuss.Controllers
         }
         public IActionResult Index()
         {
+            var questions = _questionService.GetAllQuestion();
+            ViewBag.Message = questions.Message;
+            ViewBag.Status = questions.Status;
+
+            return View(questions.Reports);
+        }
+
+        public IActionResult Create()
+        {
             return View();
         }
 
@@ -43,9 +52,10 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpGet]
-        public IActionResult Update()
+        public IActionResult Update(int id)
         {
-            return View();
+            var response = _questionService.GetQuestion(id);
+            return View(response.Report);
         }
 
         [HttpPost]
@@ -65,5 +75,7 @@ namespace IdealDiscuss.Controllers
             ViewBag.Status = response.Status;
             return RedirectToAction("Index", "Question");
         }
+
+        
     }
 }
