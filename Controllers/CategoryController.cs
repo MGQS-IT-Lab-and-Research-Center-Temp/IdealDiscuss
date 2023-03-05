@@ -36,5 +36,13 @@ namespace IdealDiscuss.Controllers
 
             return View(response);
         }
+        [HttpPost]
+        public IActionResult GetCategory(int id)
+        {
+            var response = _categoryService.GetCategory(id);
+            ViewBag.Message = response.Message;
+            return View(response.Data);
+        }
+
     }
 }
