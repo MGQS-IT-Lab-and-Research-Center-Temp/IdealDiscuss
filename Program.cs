@@ -13,6 +13,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IFlagRepository, FlagRepository>();
+builder.Services.AddScoped<IFlagService, FlagService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<IdealDiscussContext>(option => option.UseMySQL(builder.Configuration.GetConnectionString("IdealDiscussContext")));
 builder.Services.AddScoped<DbInitializer>();

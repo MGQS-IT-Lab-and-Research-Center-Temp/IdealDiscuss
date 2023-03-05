@@ -14,44 +14,46 @@ namespace IdealDiscuss.Controllers
             _flagService = flagService;
         }
 
-        [HttpGet("flag")]
         public IActionResult Index()
         {
             var instances = _flagService.GetAllFlag();
-            return View(instances);
+            return View(instances.Reports);
         }
-
-        [HttpPost("flag/create")]
-        public IActionResult CreateFlag([FromForm] CreateFlagDto createFlagDto)
+        public IActionResult CreateFlag()
         {
-            var response = _flagService.CreateFlag(createFlagDto);
-            return RedirectToAction("ViewMembers", "Member");
+            return View();
+        }
+        [HttpPost]
+        public IActionResult CreateFlag(CreateFlagDto request)
+        {
+            var response = _flagService.CreateFlag(request);
+
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+            return View(response);
         }
 
-        [HttpGet("flag/{id}")]
+
         public IActionResult GetFlagDetail(int id)
+        {
+            var response = _flagService.GetFlag(id);
+            return View(response.Report);
+        }
+
+        public IActionResult UpdateFlag(int id)
         {
             var response = _flagService.GetFlag(id);
             return View(response);
         }
-
-        [HttpGet("flag/{id}/edit")]
-        public IActionResult EditFlag(int id)
+        [HttpPost]
+        public IActionResult UpdateFlag(int id,UpdateFlagDto request)
         {
-            var instance = _flagService.GetFlag(id);
-            return View(instance);
+            var response = _flagService.UpdateFlag(id,request);
+            return View(response);
         }
 
-
-        [HttpPost("flag/{id}/edit")]
-        public IActionResult EditFlag([FromRoute] int id, [FromForm] UpdateFlagDto updateFlagDto)
-        {
-            var response = _flagService.UpdateFlag(id, updateFlagDto);
-            return RedirectToAction("Index", "Flag");
-        }
-
-        [HttpPost("flag/{id}/delete")]
-        public IActionResult DeleteFlag([FromRoute] int id)
+        [HttpPost]
+        public IActionResult DeleteFlag(int id)
         {
             var response = _flagService.DeleteFlag(id);
             return RedirectToAction("Index", "Flag");

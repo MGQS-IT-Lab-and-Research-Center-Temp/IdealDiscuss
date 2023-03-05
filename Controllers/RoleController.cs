@@ -62,7 +62,7 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost("role/{id}/delete")]
+        [HttpPost]
         public IActionResult DeleteRole([FromRoute] int id)
         {
             var response = _roleService.DeleteRole(id);

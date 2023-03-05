@@ -119,11 +119,11 @@ namespace IdealDiscuss.Service.Implementations
             response.Roles = role
                 .Where(r => r.IsDeleted == false)
                 .Select(r => new ViewRoleDto
-            {
-                Id = r.Id,
-                RoleName = r.RoleName,
-                Description = r.Description
-            })
+                {
+                    Id = r.Id,
+                    RoleName = r.RoleName,
+                    Description = r.Description
+                })
             .ToList();
 
             response.Status = true;
