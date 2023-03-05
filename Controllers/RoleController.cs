@@ -46,7 +46,7 @@ namespace IdealDiscuss.Controllers
 
             return View(response.Role);
         }
-        [HttpGet]
+
         public IActionResult Update(int id)
         {
             var response = _roleService.GetRole(id);
@@ -63,7 +63,7 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost("role/{id}/delete")]
+        [HttpPost]
         public IActionResult DeleteRole([FromRoute] int id)
         {
             var response = _roleService.DeleteRole(id);

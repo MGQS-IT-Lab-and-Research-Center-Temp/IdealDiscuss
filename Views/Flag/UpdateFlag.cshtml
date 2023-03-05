@@ -1,0 +1,31 @@
+﻿@model IdealDiscuss.Dtos.FlagDto.ViewFlagDto
+@{
+    ViewData["Title"] = "Update Flag";
+}
+
+<div class="d-flex justify-content-center">
+
+    <form asp-action="UpdateFlag" asp-controller="Flag">
+        <div class="col-md-12 mb-2">
+            <label for="FlagName" class="form-label">FlagName:</label>
+            <input type="text" class="form-control" placeholder="Enter Flag name" name="FlagName" value="@Model.FlagName">
+        </div>
+
+        <div class="col-md-12 mb-2">
+            <label for="Description" class="form-label">Description:</label>
+            <textarea class="form-control" placeholder="Enter description" name="Description" value="@Model.Description"></textarea>
+        </div>
+        <div class="form-row">
+            <div class="kt-form__actions">
+                <button type="submit" class="btn btn-primary">update</button>
+                &nbsp;
+                <a class="btn btn-primary"
+                   asp-action="Index">
+                    Return to  List
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+

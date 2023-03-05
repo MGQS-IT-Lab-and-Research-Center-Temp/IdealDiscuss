@@ -104,27 +104,41 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public QuestionsResponseModel GetAllQuestion()
-        {
-            var response = new QuestionsResponseModel();
+		public QuestionsResponseModel GetAllQuestion()
+		{
+			var response = new QuestionsResponseModel();
 
-            var questions = _questionRepository.GetAll();
+			try
+			{
+				var questions = _questionRepository.GetAll();
 
-            response.Reports = questions.Select(question => new ViewQuestionDto
-            {
-                Id = question.Id,
-                QuestionText = question.QuestionText,
-                UserName = question.User.UserName,
-                ImageUrl = question.ImageUrl
-            }).ToList();
+				if (questions.Count == 0)
+				{
+					response.Message = "No question found!";
+					return response;
+				}
 
-            response.Status = true;
-            response.Message = "Success";
+				response.Reports = questions.Select(question => new ViewQuestionDto
+				{
+					Id = question.Id,
+					QuestionText = question.QuestionText,
+					UserName = question.User.UserName,
+					ImageUrl = question.ImageUrl
+				}).ToList();
 
-            return response;
-        }
+				response.Status = true;
+				response.Message = "Success";
+			}
+			catch (Exception ex)
+			{
+				response.Message = $"An error occured: {ex.Message}";
+				return response;
+			}
 
-        public QuestionResponseModel GetQuestion(int questionId)
+			return response;
+		}
+
+		public QuestionResponseModel GetQuestion(int questionId)
         {
             var response = new QuestionResponseModel();
 
