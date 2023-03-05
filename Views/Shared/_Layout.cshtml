@@ -33,13 +33,13 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Manage Category</a>
                             </li>
                             
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Comment" asp-action="Index">Manage Comment</a>
+                            </li>
                               <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Flag" asp-action="Index">Manage Flag</a>
                             </li>
-                        }
-
-                        @if (User != null && User.Identity.IsAuthenticated)
-                        {
+                     
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Question" asp-action="Index">Question List</a>
                             </li>
