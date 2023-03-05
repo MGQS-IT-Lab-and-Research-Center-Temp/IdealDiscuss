@@ -1,7 +1,5 @@
 ﻿using IdealDiscuss.Service.Interface;
-using Microsoft.AspNetCore.Http;
-﻿using IdealDiscuss.Dtos.CategoryDto
-using IdealDiscuss.Service.Interface;
+using IdealDiscuss.Dtos.CategoryDto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdealDiscuss.Controllers
@@ -21,11 +19,6 @@ namespace IdealDiscuss.Controllers
         {
             var categories = _categoryService.GetAllCategory();
             return View(categories.Data);
-        }
-
-        public IActionResult Index()
-        {
-            return View();
         }
 
         public IActionResult Create()
