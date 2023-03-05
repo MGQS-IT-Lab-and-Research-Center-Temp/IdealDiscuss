@@ -1,5 +1,4 @@
-﻿using IdealDiscuss.Dtos.CommentDto;
-using IdealDiscuss.Service.Interface;
+﻿using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +9,27 @@ namespace IdealDiscuss.Controllers
         private readonly ICommentService _commentService;
         private readonly ILogger<CommentController> _logger;
 
-        public CommentController(ILogger<CommentController> logger, ICommentService commentService)
+        public CommentController(ICommentService commentService,ILogger<CommentController> logger)
         {
-            _logger = logger;
             _commentService = commentService;
+            _logger = logger;  
+        }
+        // GET: CommentController
+        public IActionResult Index()
+        {
+            var comments = _commentService.GetAllComment();
+            return View(comments.Comments);
+        }
+
+        // GET: CommentController/Details/5
+        public IActionResult GetCommentDetail(int id)
+        {
+            var response = _commentService.GetComment(id);
+
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+
+            return View(response.Comment);
         }
         // GET: CommentController
         // public ActionResult Index()

@@ -1,0 +1,35 @@
+﻿@model List<IdealDiscuss.Dtos.CommentDto.ViewCommentDto>
+
+@{
+    ViewData["Title"] = "Comment List";
+    int count = 1;
+    var counts = Model.Count;
+}
+
+<h3>Total Comments: (@counts)</h3>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Comment Text</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <th scope="row">@count</th>
+                <td>@item.CommentText</td>
+                <td>
+                    <div class="btn-group">
+                        <a asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                    </div>
+                </td>
+            </tr>
+            count++;
+        }
+    </tbody>
+</table>
