@@ -29,6 +29,8 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
 
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+           
+
 
             var roleExist = _roleRepository.Exists(r => r.RoleName == createRoleDto.RoleName);
 
@@ -49,7 +51,8 @@ namespace IdealDiscuss.Service.Implementations
                 RoleName = createRoleDto.RoleName,
                 Description = createRoleDto.Description,
                 CreatedBy = createdBy,
-                DateCreated = DateTime.Now
+                DateCreated = DateTime.Now,
+                             
             };
 
             try
@@ -169,6 +172,7 @@ namespace IdealDiscuss.Service.Implementations
         public BaseResponseModel UpdateRole(int id, UpdateRoleDto updateRoleDto)
         {
             var response = new BaseResponseModel();
+            var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
 
             var roleIdExist = _roleRepository.Exists(c => c.Id == id);
 
@@ -182,6 +186,9 @@ namespace IdealDiscuss.Service.Implementations
 
             role.RoleName = updateRoleDto.RoleName;
             role.Description = updateRoleDto.Description;
+            role.ModifiedBy = modifiedBy;
+            role.LastModified = DateTime.Now;
+
 
             try
             {

@@ -2,7 +2,7 @@
 {
     public class UpdateRoleDto
     {
-        public string RoleName { get; set; }
+        public string RoleName { get; }
         public string Description { get; set; }
     }
 }
