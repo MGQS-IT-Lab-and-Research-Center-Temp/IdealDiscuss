@@ -1,4 +1,7 @@
-﻿using IdealDiscuss.Service.Interface;
+﻿using IdealDiscuss.Dtos.CommentDto;
+using IdealDiscuss.Dtos.RoleDto;
+using IdealDiscuss.Service.Implementations;
+using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,17 +34,6 @@ namespace IdealDiscuss.Controllers
 
             return View(response.Comment);
         }
-        // GET: CommentController
-        // public ActionResult Index()
-        // {
-        //     return View();
-        // }
-
-        // // GET: CommentController/Details/5
-        // public ActionResult Details(int id)
-        // {
-        //     return View();
-        // }
 
         // GET: CommentController/Create
         public IActionResult Create()
@@ -59,46 +51,29 @@ namespace IdealDiscuss.Controllers
             return View(response);
         }
 
-        // GET: CommentController/Edit/5
-        // public ActionResult Edit(int id)
-        // {
-        //     return View();
-        // }
+        //GET: CommentController/Edit/5
+         public ActionResult Edit(int id)
+        {
+            return View();
+        }
 
-        // // POST: CommentController/Edit/5
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public ActionResult Edit(int id, IFormCollection collection)
-        // {
-        //     try
-        //     {
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     catch
-        //     {
-        //         return View();
-        //     }
-        // }
+        // POST: CommentController/Edit/5
+        [HttpPost]
+        public ActionResult Edit(int id, UpdateCommentDto updateCommentDto)
+        {
+            var commentUpdate = _commentService.UpdateComment(id, updateCommentDto);
+            ViewBag.Message = commentUpdate.Message;
+            ViewBag.Status = commentUpdate.Status;
+            return RedirectToAction("Index");
+        }
 
-        // // GET: CommentController/Delete/5
-        // public ActionResult Delete(int id)
-        // {
-        //     return View();
-        // }
-
-        // // POST: CommentController/Delete/5
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public ActionResult Delete(int id, IFormCollection collection)
-        // {
-        //     try
-        //     {
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     catch
-        //     {
-        //         return View();
-        //     }
-        // }
+        [HttpPost("comment/{id}/delete")]
+        public IActionResult DeleteComment([FromRoute] int id)
+        {
+            var response = _commentService.DeleteComment(id);
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+            return RedirectToAction("Index", "Role");
+        }
     }
 }
