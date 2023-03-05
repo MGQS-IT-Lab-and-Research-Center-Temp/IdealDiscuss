@@ -13,15 +13,19 @@ namespace IdealDiscuss.Service.Implementations
     public class FlagService : IFlagService
     {
         private readonly IFlagRepository _flagRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FlagService(IFlagRepository flagRepository)
+        public FlagService(IFlagRepository flagRepository, IHttpContextAccessor httpContextAccessor)
         {
             _flagRepository = flagRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public BaseResponseModel CreateFlag(CreateFlagDto createFlagDto)
         {
             var response = new BaseResponseModel();
+            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+            var createdDate = DateTime.Now;
 
             var isFlagExist = _flagRepository.Exists(c => c.FlagName == createFlagDto.FlagName);
 
@@ -40,7 +44,9 @@ namespace IdealDiscuss.Service.Implementations
             var flag = new Flag()
             {
                 FlagName = createFlagDto.FlagName,
-                Description = createFlagDto.Description
+                Description = createFlagDto.Description,
+                CreatedBy =  createdBy,
+                DateCreated = createdDate
             };
 
             try
@@ -135,7 +141,8 @@ namespace IdealDiscuss.Service.Implementations
         public BaseResponseModel UpdateFlag(int flagId, UpdateFlagDto updateFlagDto)
         {
             var response = new BaseResponseModel();
-
+            var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+            var modifiedDate = DateTime.Now;
             if (!_flagRepository.Exists(x => x.Id == flagId))
             {
                 response.Message = "Flag does not exist.";
@@ -146,6 +153,8 @@ namespace IdealDiscuss.Service.Implementations
 
             flag.FlagName = updateFlagDto.FlagName;
             flag.Description = updateFlagDto.Description;
+            flag.ModifiedBy = modifiedBy;
+            flag.LastModified = modifiedDate;
             
             try
             {
