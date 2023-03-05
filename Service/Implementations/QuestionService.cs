@@ -3,6 +3,7 @@ using IdealDiscuss.Dtos.QuestionDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Http;
 
 namespace IdealDiscuss.Service.Implementations
 {
@@ -10,16 +11,21 @@ namespace IdealDiscuss.Service.Implementations
     {
         private readonly IUserRepository _userRepository;
         private readonly IQuestionRepository _questionRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public QuestionService(IQuestionRepository questionRepository, IUserRepository userRepository)
+        public QuestionService(IQuestionRepository questionRepository, IUserRepository userRepository, IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _questionRepository = questionRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public BaseResponseModel Create(CreateQuestionDto createQuestionDto)
         {
             var response = new BaseResponseModel();
+            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+            var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+
             var user = _userRepository.Get(createQuestionDto.UserId);
             
             var question = new Question
@@ -28,8 +34,10 @@ namespace IdealDiscuss.Service.Implementations
                 User = user,
                 QuestionText = createQuestionDto.QuestionText,
                 ImageUrl = createQuestionDto.ImageUrl,
-                CreatedBy = user.Id.ToString(),
-                DateCreated = DateTime.Now
+                CreatedBy= createdBy,
+                ModifiedBy= modifiedBy, 
+                DateCreated = DateTime.Now,
+                LastModified = DateTime.Now,
             };
 
 
@@ -80,13 +88,16 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
 
-            if (!_questionRepository.Exists(c => c.Id == questionId))
+            var questionExist = _questionRepository.Exists(c => c.Id == questionId);
+
+            if (!questionExist)
             {
                 response.Message = "Question does not exist!";
                 return response;
             }
 
             var question = _questionRepository.Get(questionId);
+
             question.IsDeleted = true;
 
             try
@@ -117,14 +128,16 @@ namespace IdealDiscuss.Service.Implementations
 					response.Message = "No question found!";
 					return response;
 				}
+                
 
 				response.Reports = questions.Select(question => new ViewQuestionDto
 				{
 					Id = question.Id,
 					QuestionText = question.QuestionText,
 					UserName = question.User.UserName,
-					ImageUrl = question.ImageUrl
-				}).ToList();
+					ImageUrl = question.ImageUrl,
+
+                }).ToList();
 
 				response.Status = true;
 				response.Message = "Success";

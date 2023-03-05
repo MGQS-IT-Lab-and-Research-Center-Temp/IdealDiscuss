@@ -3,41 +3,43 @@
 @{
     ViewData["Title"] = "Question List";
     int count = 1;
-    var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
+    var status = ViewBag.Status == false ? false : true;
 }
 
-@if (ViewBag.Message != null)
+<div>
+     <a asp-controller="Question" asp-action="Create" class="btn btn-outline-primary">Add A Question</a>
+</div>
+
+@if (status is false)
 {
-    <div class="alert @status alert-dismissible" question="alert">
-        @ViewBag.Message
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    <p>@ViewBag.Message</p>
+    return;
 }
-
 <table class="table">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Question</th>
-            <th scope="col">Image Url</th>
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
+     <thead>
+          <tr>
+               <th scope="col">#</th>
+               <th scope="col">Question</th>
+               <th scope="col">Action</th>
+          </tr>
+     </thead>
 
-    <tbody>
+     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <th scope="row">@count</th>
-                <td>@item.QuestionText</td>
-                <td>@item.ImageUrl</td>
-                <td>
-                    <div class="btn-group">
-                        <a asp-controller="Question" asp-action="GetQuestionDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
-                    </div>
-                </td>
-            </tr>
+              <tr>
+                   <th scope="row">@count</th>
+                   <td>@item.QuestionText</td>        
+                   <td>
+                        <div class="btn-group">
+                             <a asp-controller="Question" asp-action="GetQuestionDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                        </div>
+                   </td>
+              </tr>
             count++;
         }
-    </tbody>
+     </tbody>
 </table>
+
+
+
