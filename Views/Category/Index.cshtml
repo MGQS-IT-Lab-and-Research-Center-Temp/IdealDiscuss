@@ -2,9 +2,7 @@
 @{
     ViewData["Title"] = "Category List";
     int count = 1;
-    int counts = Model.Count;
 }
-<div>
     <a asp-controller="Category" asp-action="Create" class="btn btn-outline-primary">Add New Category</a>
 </div>
     @if(Model.Count == 0)
@@ -14,8 +12,6 @@
     else
     {
 <div>
-
-        <h3>Category : (@counts)</h3>
     <table class="table">
         <thead>
             <tr>
@@ -44,4 +40,3 @@
     </table>
 </div>
     }
-    
