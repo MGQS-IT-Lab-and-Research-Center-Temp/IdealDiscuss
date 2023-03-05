@@ -7,9 +7,13 @@
 
   <ItemGroup>
     <Compile Remove="Dtos\Category\**" />
+    <Compile Remove="Views\NewFolder\**" />
     <Content Remove="Dtos\Category\**" />
+    <Content Remove="Views\NewFolder\**" />
     <EmbeddedResource Remove="Dtos\Category\**" />
+    <EmbeddedResource Remove="Views\NewFolder\**" />
     <None Remove="Dtos\Category\**" />
+    <None Remove="Views\NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
