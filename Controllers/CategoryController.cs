@@ -6,14 +6,7 @@ namespace IdealDiscuss.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
-        private readonly ILogger<CategoryController> _logger;
-
-        public CategoryController(ILogger<CategoryController> logger, ICategoryService categoryService)
-        {
-            _logger = logger;
-            _categoryService = categoryService;
-        }
-
+       
         public ActionResult Index()
         {
             return View();
