@@ -34,13 +34,14 @@
     <div class="btn-group">
         <a asp-controller="Role" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Update</a>
         &nbsp;
-        
-       
 
-        <form asp-action="DeleteRole" asp-route-id="@Model.Id = 1">
-           <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-        
+        @if (!(User.Identity.Name == "Admin") || !(User.Identity.Name == "AppUser"))
+        {
+            <form asp-action="DeleteRole" asp-route-id="@Model.Id">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        }
+
         &nbsp;
         <a asp-controller="Role" asp-action="Index" class="btn btn-secondary">Back to list</a>
     </div>
