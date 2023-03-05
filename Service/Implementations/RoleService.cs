@@ -136,7 +136,6 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"An error occured: {ex.Message}";
                 return response;
             }
-
             return response;
         }
 

@@ -2,6 +2,7 @@
 using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.CommentReport;
 using IdealDiscuss.Dtos.FlagDto;
+using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
@@ -23,15 +24,23 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
 
             var isFlagExist = _flagRepository.Exists(c => c.FlagName == createFlagDto.FlagName);
+
             if (isFlagExist)
             {
-                response.Message = "Flag does not exist.";
+                response.Message = $"Flag with {createFlagDto.FlagName} already exist!";
                 return response;
             }
 
-            var flag = new Flag
+            if (string.IsNullOrWhiteSpace(createFlagDto.FlagName))
             {
-                FlagName = response.Message
+                response.Message = "Flag name is required!";
+                return response;
+            }
+
+            var flag = new Flag()
+            {
+                FlagName = createFlagDto.FlagName,
+                Description = createFlagDto.Description
             };
 
             try
@@ -43,6 +52,7 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Failed to create Flag. {ex.Message}";
                 return response;
             }
+
             response.Status = true;
             response.Message = "Flag created successfully.";
 
@@ -84,13 +94,14 @@ namespace IdealDiscuss.Service.Implementations
 
             var flags = _flagRepository.GetAll();
 
-            response.Reports = flags.Select(flags => new ViewFlagDto
-            {
-                Id = flags.Id,
-                FlagName = flags.FlagName,
-                Description = flags.Description
-
-            }).ToList();
+            response.Reports = flags
+               .Where(f => f.IsDeleted == false)
+               .Select(f => new ViewFlagDto
+               {
+                   Id = f.Id,
+                   FlagName = f.FlagName,
+                   Description = f.Description
+               }).ToList();
 
             response.Status = true;
             response.Message = "Success";
@@ -133,8 +144,9 @@ namespace IdealDiscuss.Service.Implementations
 
             var flag = _flagRepository.Get(flagId);
 
+            flag.FlagName = updateFlagDto.FlagName;
             flag.Description = updateFlagDto.Description;
-
+            
             try
             {
                 _flagRepository.Update(flag);
