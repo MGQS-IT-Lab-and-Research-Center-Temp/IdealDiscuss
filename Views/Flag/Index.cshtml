@@ -1,0 +1,46 @@
+﻿@model List<IdealDiscuss.Dtos.FlagDto.ViewFlagDto>
+@{
+    ViewData["Title"] = "Flag List";
+    int count = 1;
+}
+
+<div>
+    <a asp-controller="Flag" asp-action="CreateFlag" class="btn btn-outline-primary">Add New Flag</a>
+</div>
+
+@if(Model.Count > 0)
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Flag Name</th>
+            <th scope="col">Flag Description</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@count</th>
+                    <td>@item.FlagName</td>
+                    <td>@item.Description</td>
+                    <td>
+                        <div class="btn-group">
+                            <a asp-controller="Flag" asp-action="GetFlagDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                        </div>
+                    </td>
+                </tr>
+                count++;
+            }
+    </tbody>
+</table>
+}
+@if(Model.Count < 0)
+{
+    <span>No records found</span>
+}
+
