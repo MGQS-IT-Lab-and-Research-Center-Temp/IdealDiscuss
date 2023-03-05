@@ -1,11 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using IdealDiscuss.Dtos.CommentDto;
+using IdealDiscuss.Service.Implementations;
+using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdealDiscuss.Controllers
 {
     public class CommentController : Controller
     {
-        // GET: CommentController
+        private readonly ICommentService _commentService;
+        public CommentController(ICommentService commentService)
+        {
+            _commentService = commentService;
+        }
         public IActionResult Index()
         {
             return View();
@@ -34,22 +41,21 @@ namespace IdealDiscuss.Controllers
         // POST: CommentController/Edit/5
         [HttpPost]
        
-        public IActionResult Edit()
+        public IActionResult Edit(int id, UpdateCommentDto updateCommentDto)
         {
-            return View();
+            var commentEdit = _commentService.UpdateComment(id, updateCommentDto);
+            ViewBag.Message = commentEdit.Message;
+            ViewBag.Status = commentEdit.Status;
+            return RedirectToAction("Index");
         }
-
-        // GET: CommentController/Delete/5
-        public IActionResult Delete(int id)
+		// POST: CommentController/Delete/5
+		[HttpPost("comment/{id}/delete")]
+		public IActionResult DeleteComment([FromRoute] int id)
         {
-            return View();
-        }
-
-        // POST: CommentController/Delete/5
-        [HttpPost]
-        public IActionResult Delete()
-        {
-            return View();
-        }
-    }
+			var response = _commentService.DeleteComment(id);
+			ViewBag.Message = response.Message;
+			ViewBag.Status = response.Status;
+			return RedirectToAction("Index", "Comment");
+		}
+	}
 }
