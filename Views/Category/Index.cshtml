@@ -1,0 +1,29 @@
+﻿@model List<IdealDiscuss.Dtos.CategoryDto.ViewCategoryDto>
+@{
+    ViewData["Title"] = "Category List";
+    int count = 1;
+    int counts = Model.Count;
+}
+<div>
+    <h3>Category : (@counts)</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>S/N</th>
+                <th>Name</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td scope="row">@count</td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                </tr>
+                count++;
+            }
+        </tbody>
+    </table>
+</div>

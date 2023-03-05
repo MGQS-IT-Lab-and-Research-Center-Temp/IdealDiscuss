@@ -1,5 +1,6 @@
-﻿using IdealDiscuss.Dtos.CategoryDto;
-using IdealDiscuss.Dtos.RoleDto;
+﻿using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Http;
+﻿using IdealDiscuss.Dtos.CategoryDto
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,8 +13,14 @@ namespace IdealDiscuss.Controllers
 
         public CategoryController(ILogger<CategoryController> logger, ICategoryService categoryService)
         {
-            _logger = logger;
-            _categoryService = categoryService;
+            _categoryService = categoryService; 
+            _logger = logger;   
+        }
+        
+        public IActionResult Index()
+        {
+            var categories = _categoryService.GetAllCategory();
+            return View(categories.Data);
         }
 
         public IActionResult Index()
