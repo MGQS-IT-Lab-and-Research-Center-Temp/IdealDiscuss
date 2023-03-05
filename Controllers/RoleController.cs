@@ -46,11 +46,11 @@ namespace IdealDiscuss.Controllers
 
             return View(response.Role);
         }
-       
         [HttpGet]
-        public IActionResult Update()
+        public IActionResult Update(int id)
         {
-            return View();
+            var response = _roleService.GetRole(id);
+            return View(response.Role);
         }
 
         [HttpPost]
