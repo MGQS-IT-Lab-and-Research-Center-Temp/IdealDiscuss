@@ -1,9 +1,7 @@
-<<<<<<< HEAD
-﻿using IdealDiscuss.Service.Interface;
-=======
 ﻿using IdealDiscuss.Dtos.CommentDto;
+using IdealDiscuss.Dtos.RoleDto;
+using IdealDiscuss.Service.Implementations;
 using IdealDiscuss.Service.Interface;
->>>>>>> origin/CommentCreateController
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -48,20 +46,11 @@ namespace IdealDiscuss.Controllers
         }
 
         // GET: CommentController/Create
-<<<<<<< HEAD
-        [HttpGet]
-=======
->>>>>>> origin/CommentCreateController
         public IActionResult Create()
         {
             return View();
         }
 
-<<<<<<< HEAD
-   
-        // GET: CommentController/Edit/5
-        public IActionResult Edit(int id)
-=======
         // POST: CommentController/Create
         [HttpPost]
         public IActionResult Create(CreateCommentDto request)
@@ -73,44 +62,28 @@ namespace IdealDiscuss.Controllers
         }
 
         //GET: CommentController/Edit/5
-        public ActionResult Edit(int id)
->>>>>>> origin/CommentCreateController
+         public ActionResult Edit(int id)
         {
             return View();
         }
 
         // POST: CommentController/Edit/5
         [HttpPost]
-<<<<<<< HEAD
-       
-        public IActionResult Edit()
-=======
-        public ActionResult Edit(int id, IFormCollection collection)
->>>>>>> origin/CommentCreateController
+        public ActionResult Edit(int id, UpdateCommentDto updateCommentDto)
         {
-            return View();
+            var commentUpdate = _commentService.UpdateComment(id, updateCommentDto);
+            ViewBag.Message = commentUpdate.Message;
+            ViewBag.Status = commentUpdate.Status;
+            return RedirectToAction("Index");
         }
 
-<<<<<<< HEAD
-        // GET: CommentController/Delete/5
-        public IActionResult Delete(int id)
-=======
-        //GET: CommentController/Delete/5
-        public ActionResult Delete(int id)
->>>>>>> origin/CommentCreateController
+        [HttpPost("comment/{id}/delete")]
+        public IActionResult DeleteComment([FromRoute] int id)
         {
-            return View();
-        }
-
-        // POST: CommentController/Delete/5
-        [HttpPost]
-<<<<<<< HEAD
-        public IActionResult Delete()
-=======
-        public ActionResult Delete(int id, IFormCollection collection)
->>>>>>> origin/CommentCreateController
-        {
-            return View();
+            var response = _commentService.DeleteComment(id);
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+            return RedirectToAction("Index", "Role");
         }
     }
 }
