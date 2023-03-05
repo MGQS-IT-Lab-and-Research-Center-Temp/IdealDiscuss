@@ -46,19 +46,20 @@ namespace IdealDiscuss.Controllers
 
             return View(response.Role);
         }
-       
         [HttpGet]
-        public IActionResult Update()
+        public IActionResult Update(int id)
         {
-            return View();
+            var response = _roleService.GetRole(id);
+            return View(response.Role);
         }
 
         [HttpPost]
         public IActionResult Update(int id, UpdateRoleDto updateRoleDto)
         {
-            var roleUpdate = _roleService.UpdateRole(id, updateRoleDto);
-            ViewBag.Message = roleUpdate.Message;
-            ViewBag.Status = roleUpdate.Status;
+            var response = _roleService.UpdateRole(id, updateRoleDto);
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+
             return RedirectToAction("Index");
         }
 
@@ -68,7 +69,8 @@ namespace IdealDiscuss.Controllers
             var response = _roleService.DeleteRole(id);
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
-            return RedirectToAction("Index", "Role");
+
+            return RedirectToAction("Index");
         }
     }
 }
