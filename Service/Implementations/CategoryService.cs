@@ -1,6 +1,7 @@
 ﻿using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.CategoryDto;
 using IdealDiscuss.Dtos.CommentReport;
+using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
@@ -31,7 +32,13 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                }
 
-               var category = new Category
+               if (string.IsNullOrWhiteSpace(createCategoryDto.Name))
+               {
+                   response.Message = "Category name is required!";
+                   return response;
+               }
+
+            var category = new Category
                {
                     Name = createCategoryDto.Name,
                     Description = createCategoryDto.Description
