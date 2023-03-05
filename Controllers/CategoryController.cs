@@ -36,5 +36,14 @@ namespace IdealDiscuss.Controllers
 
             return View(response);
         }
-    }
+
+		[HttpPost]
+		public IActionResult Update(int id, UpdateCategoryDto updateCategoryDto)
+		{
+			var categoryUpdate = _categoryService.UpdateCategory(id, updateCategoryDto);
+			ViewBag.Message = categoryUpdate.Message;
+			ViewBag.Status = categoryUpdate.Status;
+			return RedirectToAction("Index", "Category");
+		}
+	}
 }
