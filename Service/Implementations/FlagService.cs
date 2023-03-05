@@ -45,7 +45,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 FlagName = createFlagDto.FlagName,
                 Description = createFlagDto.Description,
-                CreatedBy =  createdBy,
+                CreatedBy = createdBy,
                 DateCreated = createdDate
             };
 
@@ -69,10 +69,11 @@ namespace IdealDiscuss.Service.Implementations
         public BaseResponseModel DeleteFlag(int flagId)
         {
             var response = new BaseResponseModel();
+            var flagExist = _flagRepository.Exists(x => x.Id == flagId);
 
-            if (!_flagRepository.Exists(x => x.Id == flagId))
+            if (!flagExist)
             {
-                response.Message = "Flag does not exist.";
+                response.Message = "Flag does not exist!";
                 return response;
             }
 
@@ -83,9 +84,9 @@ namespace IdealDiscuss.Service.Implementations
             {
                 _flagRepository.Update(flags);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                response.Message = "Flag delete failed.";
+                response.Message = "Flag delete failed";
                 return response;
             }
 
@@ -99,6 +100,12 @@ namespace IdealDiscuss.Service.Implementations
             var response = new FlagsResponseModel();
 
             var flags = _flagRepository.GetAll();
+
+            if (flags.Count == 0)
+            {
+                response.Message = "Flags not found!";
+                return response;
+            }
 
             response.Reports = flags
                .Where(f => f.IsDeleted == false)
@@ -115,6 +122,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
 
         }
+
         public FlagResponseModel GetFlag(int flagId)
         {
             var response = new FlagResponseModel();
@@ -143,6 +151,7 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var modifiedDate = DateTime.Now;
+
             if (!_flagRepository.Exists(x => x.Id == flagId))
             {
                 response.Message = "Flag does not exist.";
@@ -155,7 +164,7 @@ namespace IdealDiscuss.Service.Implementations
             flag.Description = updateFlagDto.Description;
             flag.ModifiedBy = modifiedBy;
             flag.LastModified = modifiedDate;
-            
+
             try
             {
                 _flagRepository.Update(flag);
@@ -168,8 +177,6 @@ namespace IdealDiscuss.Service.Implementations
             response.Message = "Flag updated successfully.";
             return response;
         }
-
-
     }
 }
 

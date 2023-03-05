@@ -17,12 +17,17 @@ namespace IdealDiscuss.Controllers
         public IActionResult Index()
         {
             var instances = _flagService.GetAllFlag();
+            ViewBag.Message = instances.Message;
+            ViewBag.Status = instances.Status;
+
             return View(instances.Reports);
         }
+
         public IActionResult CreateFlag()
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult CreateFlag(CreateFlagDto request)
         {
@@ -32,7 +37,6 @@ namespace IdealDiscuss.Controllers
             ViewBag.Status = response.Status;
             return View(response);
         }
-
 
         public IActionResult GetFlagDetail(int id)
         {
@@ -45,6 +49,7 @@ namespace IdealDiscuss.Controllers
             var response = _flagService.GetFlag(id);
             return View(response.Report);
         }
+
         [HttpPost]
         public IActionResult UpdateFlag(int id,UpdateFlagDto request)
         {
