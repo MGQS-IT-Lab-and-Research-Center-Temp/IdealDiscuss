@@ -1,8 +1,5 @@
 ﻿using IdealDiscuss.Dtos.CommentDto;
-using IdealDiscuss.Dtos.RoleDto;
-using IdealDiscuss.Service.Implementations;
 using IdealDiscuss.Service.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdealDiscuss.Controllers
@@ -12,21 +9,13 @@ namespace IdealDiscuss.Controllers
         private readonly ICommentService _commentService;
         private readonly ILogger<CommentController> _logger;
 
-<<<<<<< HEAD
-        public CommentController(ICommentService commentService,ILogger<CommentController> logger)
-=======
         public CommentController(ILogger<CommentController> logger, ICommentService commentService)
         {
             _logger = logger;
             _commentService = commentService;
         }
         //GET: CommentController
-        public ActionResult Index()
->>>>>>> origin/CommentCreateController
-        {
-            _commentService = commentService;
-            _logger = logger;  
-        }
+
         // GET: CommentController
         public IActionResult Index()
         {
