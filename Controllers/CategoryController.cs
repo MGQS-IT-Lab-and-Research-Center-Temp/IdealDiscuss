@@ -7,12 +7,11 @@ namespace IdealDiscuss.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
-        private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(ILogger<CategoryController> logger, ICategoryService categoryService)
+
+        public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService; 
-            _logger = logger;   
         }
         
         public IActionResult Index()
@@ -26,6 +25,15 @@ namespace IdealDiscuss.Controllers
             return View();
         }
 
+        [HttpPost("category/{id}/delete")]
+        public IActionResult DeleteCategory([FromRoute] int id)
+        {
+            var response = _categoryService.DeleteCategory(id);
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+            return RedirectToAction("Index", "Category");
+        }
+
         [HttpPost]
         public IActionResult Create(CreateCategoryDto request)
         {
@@ -37,7 +45,6 @@ namespace IdealDiscuss.Controllers
             return View(response);
         }
 
-        [HttpPost]
         public IActionResult GetCategory(int id)
         {
             var response = _categoryService.GetCategory(id);

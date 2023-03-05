@@ -1,0 +1,45 @@
+﻿@model IdealDiscuss.Dtos.QuestionDto.ViewQuestionDto
+
+@{
+    ViewData["Title"] = "Question Detail";
+    var status = ViewBag.Status == false ? false : true;
+}
+
+<div class="body">
+
+    @if (status is false)
+    {
+        <span class="badge text-center bg-danger">@ViewBag.Message</span>
+        <a asp-controller="Question" asp-action="Index" class="btn btn-outline-secondary">Go back to question list</a>
+        return;
+    }
+    <dl class="row">
+        <dt class="col-sm-4">
+            Question
+        </dt>
+
+        <dd class="col-sm-8">
+            @Model.QuestionText
+        </dd>
+
+        <dt class="col-sm-4">
+            Image Url:
+        </dt>
+
+        <dd class="col-sm-8">
+            @Model.ImageUrl
+        </dd>
+    </dl>
+    <br />
+    <div class="btn-group">
+        <a asp-controller="Question" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-success">Modify</a>
+        
+        <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to question list</a>
+    </div>
+</div>
+
+
+
+
+
+
