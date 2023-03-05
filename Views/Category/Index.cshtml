@@ -21,7 +21,8 @@
             <tr>
                 <th>S/N</th>
                 <th>Name</th>
-                <th>Description</th>
+                 <th scope="col">Action</th>
+                 <th>Description</th>
             </tr>
         </thead>
         <tbody>
@@ -30,7 +31,12 @@
                 <tr>
                     <td scope="row">@count</td>
                     <td>@item.Name</td>
-                    <td>@item.Description</td>
+                     <td>@item.Description</td>
+                        <td>
+                            <div class="btn-group">
+                                <a asp-controller="Category" asp-action="GetCategory" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                            </div>
+                        </td>
                 </tr>
                 count++;
             }
