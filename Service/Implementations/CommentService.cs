@@ -29,7 +29,7 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var user = _userRepository.Get(createCommentDto.UserId);
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-            var createdDate = _httpContextAccessor.HttpContext.User;
+            var createdDate = DateTime.Now;
             if (user is null)
             {
                 response.Message = "User not found";
@@ -49,7 +49,7 @@ namespace IdealDiscuss.Service.Implementations
                 Question = question,
                 CommentText = createCommentDto.CommentText,
                 CreatedBy = createdBy,
-                DateCreated = DateTime.Now,
+                DateCreated = createdDate
             };
 
             try
@@ -151,6 +151,10 @@ namespace IdealDiscuss.Service.Implementations
 
             var response = new BaseResponseModel();
             var commentexist = _commentRepository.Exists(c => c.Id == commentId);
+            var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+            var modifiedDate = DateTime.Now;
+
+
             if (!commentexist)
             {
                 response.Message = "Comment  does not exist.";
@@ -160,6 +164,10 @@ namespace IdealDiscuss.Service.Implementations
             var comment = _commentRepository.Get(commentId);
 
             comment.CommentText = updateCommentDto.CommentText;
+            comment.ModifiedBy = modifiedBy;
+            comment.DateCreated = modifiedDate;
+
+
 
             try
             {
