@@ -29,8 +29,6 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
 
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-           
-
 
             var roleExist = _roleRepository.Exists(r => r.RoleName == createRoleDto.RoleName);
 

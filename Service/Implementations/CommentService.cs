@@ -9,13 +9,13 @@ namespace IdealDiscuss.Service.Implementations
 {
     public class CommentService : ICommentService
     {
-        
+
         private readonly IUserRepository _userRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IQuestionRepository _questionRepository;
-        public CommentService( IUserRepository userRepository, ICommentRepository commentRepository, IQuestionRepository questionRepository)
+        public CommentService(IUserRepository userRepository, ICommentRepository commentRepository, IQuestionRepository questionRepository)
         {
-           
+
             _userRepository = userRepository;
             _commentRepository = commentRepository;
             _questionRepository = questionRepository;
@@ -31,7 +31,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
             var question = _questionRepository.Get(createCommentDto.QuestionId);
-            if(question is null)
+            if (question is null)
             {
                 response.Message = "Question not found";
                 return response;
@@ -42,12 +42,11 @@ namespace IdealDiscuss.Service.Implementations
                 User = user,
                 QuestionId = question.Id,
                 Question = question,
-                CommentText=createCommentDto.CommentText,
+                CommentText = createCommentDto.CommentText,
                 CreatedBy = user.Id.ToString(),
                 DateCreated = DateTime.Now,
             };
 
-        
             try
             {
                 _commentRepository.Create(comment);
@@ -92,26 +91,28 @@ namespace IdealDiscuss.Service.Implementations
 
         public CommentsResponseModel GetAllComment()
         {
+            var response = new CommentsResponseModel();
+
+            var comment = _commentRepository.GetAll();
+
+            if (comment.Count == 0)
             {
-                var response = new CommentsResponseModel();
-
-                var comment = _commentRepository.GetAll();
-
-                response.Comments = comment.Select(comment => new ViewCommentDto
-                {
-              
-                    Id = comment.Id,
-                    CommentText = comment.CommentText,
-                    QuestionId = comment.QuestionId,
-                    UserId = comment.UserId,
-
-                }).ToList();
-
-                response.Status = true;
-                response.Message = "Success";
-
+                response.Message = "No comments yet!";
                 return response;
             }
+
+            response.Comments = comment.Select(comment => new ViewCommentDto
+            {
+                Id = comment.Id,
+                CommentText = comment.CommentText,
+                QuestionId = comment.QuestionId,
+                UserId = comment.UserId,
+            }).ToList();
+
+            response.Status = true;
+            response.Message = "Success";
+
+            return response;
         }
 
         public CommentResponseModel GetComment(int commentId)
@@ -132,7 +133,7 @@ namespace IdealDiscuss.Service.Implementations
                 Id = commentId,
                 CommentText = comment.CommentText,
                 QuestionId = comment.QuestionId,
-                UserId = comment.UserId,   
+                UserId = comment.UserId,
             };
             return response;
         }

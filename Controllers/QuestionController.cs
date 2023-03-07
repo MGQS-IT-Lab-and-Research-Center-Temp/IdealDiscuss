@@ -17,6 +17,7 @@ namespace IdealDiscuss.Controllers
             _logger = logger;
             _questionService = questionService;
         }
+
         public IActionResult Index()
         {
             var questions = _questionService.GetAllQuestion();

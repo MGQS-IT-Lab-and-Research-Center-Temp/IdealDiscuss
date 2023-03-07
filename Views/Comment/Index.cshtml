@@ -1,30 +1,32 @@
-﻿
-@model List<IdealDiscuss.Dtos.CommentDto.ViewCommentDto>
+﻿@model List<IdealDiscuss.Dtos.CommentDto.ViewCommentDto>
 
 @{
     ViewData["Title"] = "Comment List";
     int count = 1;
-    var counts = Model.Count;
+    var status = ViewBag.Status == false ? false : true;
 }
-
-<h3>Total Comments: (@counts)</h3>
 
 <div>
     <a asp-controller="Comment" asp-action="Create" class="btn btn-outline-primary">Add New Comment</a>
 </div>
 
+@if (status == false)
+{
+    <p>@ViewBag.Message</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">S/N</th>
+                <th scope="col">Comment Text</th>
+            </tr>
+        </thead>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Comment Text</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var item in Model)
-        {
+        <tbody>
+            @foreach (var item in Model)
+            {
                 <tr>
                     <th scope="row">@count</th>
                     <td>@item.CommentText</td>
@@ -34,8 +36,9 @@
                         </div>
                     </td>
                 </tr>
-            count++;
-        }
-    </tbody>
-</table>
+                count++;
+            }
+        </tbody>
+    </table>
+}
 

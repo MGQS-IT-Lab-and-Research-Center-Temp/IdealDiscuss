@@ -14,15 +14,16 @@ namespace IdealDiscuss.Controllers
             _logger = logger;
             _commentService = commentService;
         }
-        //GET: CommentController
-        // GET: CommentController
+       
         public IActionResult Index()
         {
             var comments = _commentService.GetAllComment();
+            ViewBag.Message = comments.Message;
+            ViewBag.Status = comments.Status;
+
             return View(comments.Comments);
         }
 
-        // GET: CommentController/Details/5
         public IActionResult GetCommentDetail(int id)
         {
             var response = _commentService.GetComment(id);
@@ -33,15 +34,11 @@ namespace IdealDiscuss.Controllers
             return View(response.Comment);
         }
 
-        // GET: CommentController/Create
-
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
-
-        // GET: CommentController/Edit/5
 
         [HttpPost]
         public IActionResult Create(CreateCommentDto request)
@@ -52,7 +49,6 @@ namespace IdealDiscuss.Controllers
             return View(response);
         }
 
-        //GET: CommentController/Edit/5
         public IActionResult Edit(int id)
         {
             return View();
@@ -66,8 +62,6 @@ namespace IdealDiscuss.Controllers
             ViewBag.Status = response.Status;
             return View(response);
         }
-
-        // POST: CommentController/Edit/5
 
         [HttpPost("comment/{id}/delete")]
         public IActionResult DeleteComment([FromRoute] int id)
