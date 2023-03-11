@@ -24,7 +24,8 @@ builder.Services.AddScoped<IFlagService, FlagService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<IdealDiscussContext>(option => option.UseMySQL(builder.Configuration.GetConnectionString("IdealDiscussContext")));
+builder.Services.AddDbContext<IdealDiscussContext>(option => 
+    option.UseMySQL(builder.Configuration.GetConnectionString("IdealDiscussContext")));
 builder.Services.AddScoped<DbInitializer>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
