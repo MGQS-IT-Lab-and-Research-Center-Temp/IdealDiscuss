@@ -1,9 +1,12 @@
 ﻿using IdealDiscuss.Service.Interface;
 using IdealDiscuss.Dtos.CategoryDto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using IdealDiscuss.Entities;
 
 namespace IdealDiscuss.Controllers
 {
+    
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -12,7 +15,7 @@ namespace IdealDiscuss.Controllers
         {
             _categoryService = categoryService; 
         }
-        
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var categories = _categoryService.GetAllCategory();
