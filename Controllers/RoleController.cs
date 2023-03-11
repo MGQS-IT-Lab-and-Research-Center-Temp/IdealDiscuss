@@ -7,6 +7,7 @@ namespace IdealDiscuss.Controllers
 {
     public class RoleController : Controller
     {
+
         private readonly IRoleService _roleService;
         private readonly ILogger<RoleController> _logger;
 
@@ -15,7 +16,7 @@ namespace IdealDiscuss.Controllers
             _logger = logger;
             _roleService = roleService;
         }
-
+        [Authorize(Roles ="Admin")]
         public IActionResult Index()
         {
             var roles = _roleService.GetAllRole();
