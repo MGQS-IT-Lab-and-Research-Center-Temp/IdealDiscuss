@@ -6,7 +6,7 @@ using IdealDiscuss.Entities;
 
 namespace IdealDiscuss.Controllers
 {
-    
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -15,7 +15,7 @@ namespace IdealDiscuss.Controllers
         {
             _categoryService = categoryService; 
         }
-        [Authorize(Roles = "Admin")]
+        
         public IActionResult Index()
         {
             var categories = _categoryService.GetAllCategory();
