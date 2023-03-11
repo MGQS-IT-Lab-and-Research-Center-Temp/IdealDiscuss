@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IdealDiscuss.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class FlagController : Controller
     {
         private readonly IFlagService _flagService;
