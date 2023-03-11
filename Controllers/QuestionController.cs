@@ -1,6 +1,4 @@
 ﻿using IdealDiscuss.Dtos.QuestionDto;
-using IdealDiscuss.Dtos.RoleDto;
-using IdealDiscuss.Service.Implementations;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
