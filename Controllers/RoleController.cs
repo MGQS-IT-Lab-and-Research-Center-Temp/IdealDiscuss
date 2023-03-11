@@ -1,11 +1,13 @@
 ﻿using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdealDiscuss.Controllers
 {
     public class RoleController : Controller
     {
+
         private readonly IRoleService _roleService;
         private readonly ILogger<RoleController> _logger;
 
@@ -14,7 +16,7 @@ namespace IdealDiscuss.Controllers
             _logger = logger;
             _roleService = roleService;
         }
-
+        [Authorize(Roles ="Admin")]
         public IActionResult Index()
         {
             var roles = _roleService.GetAllRole();
