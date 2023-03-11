@@ -93,7 +93,7 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        
+        [Authorize]
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync();
