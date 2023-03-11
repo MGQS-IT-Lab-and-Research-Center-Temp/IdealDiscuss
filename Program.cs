@@ -33,7 +33,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                    config.LoginPath = "/home/login";
                    config.Cookie.Name = "IdealDiscussion";
                    config.ExpireTimeSpan = TimeSpan.FromDays(1);
-                   config.AccessDeniedPath = "/home/login";
+                   config.AccessDeniedPath = "/home/privacy";
                });
 builder.Services.AddHttpContextAccessor();
 

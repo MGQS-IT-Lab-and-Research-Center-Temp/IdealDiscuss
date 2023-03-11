@@ -3,8 +3,8 @@ using IdealDiscuss.Models;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using System.Security.Claims;
 
 namespace IdealDiscuss.Controllers
@@ -25,7 +25,6 @@ namespace IdealDiscuss.Controllers
             return View();
         }
 
-        [HttpGet]
         public IActionResult SignUp()
         {
             return View();
@@ -52,7 +51,6 @@ namespace IdealDiscuss.Controllers
             return View(result);
         }
 
-        [HttpGet]
         public IActionResult Login()
         {
             return View();
@@ -70,13 +68,13 @@ namespace IdealDiscuss.Controllers
             }
 
             var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.GivenName, user.UserName),
-                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, user.RoleName),
-                };
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.GivenName, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.RoleName),
+            };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -94,7 +92,6 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpGet]
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync();
@@ -106,10 +103,9 @@ namespace IdealDiscuss.Controllers
             return View();
         }
 
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
+        public IActionResult Privacy()
+        {
+            return View();
+        }
     }
 }
