@@ -22,7 +22,7 @@ namespace IdealDiscuss.Controllers
             ViewBag.Message = questions.Message;
             ViewBag.Status = questions.Status;
 
-            return View(questions.Reports);
+            return View(questions.questions);
         }
 
         public IActionResult Create()
@@ -47,14 +47,14 @@ namespace IdealDiscuss.Controllers
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
 
-            return View(response.Report);
+            return View(response.question);
         }
 
         [HttpGet]
         public IActionResult Update(int id)
         {
             var response = _questionService.GetQuestion(id);
-            return View(response.Report);
+            return View(response.question);
         }
 
         [HttpPost]

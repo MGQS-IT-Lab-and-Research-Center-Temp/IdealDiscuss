@@ -1,6 +1,7 @@
 ﻿using IdealDiscuss.Service.Interface;
 using IdealDiscuss.Dtos.CategoryDto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdealDiscuss.Controllers
 {
@@ -18,12 +19,12 @@ namespace IdealDiscuss.Controllers
             var categories = _categoryService.GetAllCategory();
             return View(categories.Data);
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("category/{id}/delete")]
         public IActionResult DeleteCategory([FromRoute] int id)
         {
@@ -50,8 +51,12 @@ namespace IdealDiscuss.Controllers
             ViewBag.Message = response.Message;
             return View(response.Data);
         }
-
-		[HttpPost]
+        [Authorize(Roles ="Admin")]
+        public IActionResult Update()
+        {
+            return View();
+        }
+        [HttpPost]
 		public IActionResult Update(int id, UpdateCategoryDto updateCategoryDto)
 		{
 			var categoryUpdate = _categoryService.UpdateCategory(id, updateCategoryDto);

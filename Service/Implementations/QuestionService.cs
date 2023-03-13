@@ -1,11 +1,8 @@
 using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.QuestionDto;
-using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace IdealDiscuss.Service.Implementations
@@ -139,15 +136,15 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var questions = _questionRepository.GetAll();
+                var questions = _questionRepository.GetQuestions(); 
 
-                if (questions.Count == 0)
+                if(questions.Count == 0)
                 {
                     response.Message = "No question found!";
                     return response;
                 }
 
-                response.Reports = questions
+                response.questions = questions
                     .Where(q => q.IsClosed == false && q.IsDeleted == false)
                     .Select(question => new ViewQuestionDto
                     {
@@ -178,11 +175,11 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Question with id {questionId} does not exist!";
                 return response;
             }
-            var question = _questionRepository.Get(questionId);
+            var question = _questionRepository.GetQuestion(questionId);
 
             response.Message = "Success";
             response.Status = true;
-            response.Report = new ViewQuestionDto
+            response.question = new ViewQuestionDto
             {
                 Id = question.Id,
                 QuestionText = question.QuestionText,
