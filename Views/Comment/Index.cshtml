@@ -7,7 +7,10 @@
 }
 
 <div>
-    <a asp-controller="Comment" asp-action="Create" class="btn btn-outline-primary">Add New Comment</a>
+    @foreach (var item in Model)
+    {
+        <a asp-controller="Comment" asp-action="Create" asp-route-id="@item.Id" class="btn btn-outline-primary">Add New Comment</a>
+    }
 </div>
 
 @if (status == false)

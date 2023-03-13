@@ -35,25 +35,19 @@ else
                     <td scope="row">@item.QuestionText</td>
                     <td scope="row">
                         &nbsp;
+                         <div class="btn-group">
+                            <a asp-controller="Question" asp-action="GetQuestionDetail" asp-route-id="@item.Id" class="btn btn-danger">ViewQuestion</a>
+                        </div>
                         <div class="btn-group">
                             <a asp-controller="Comment" asp-action="Index" asp-route-id="@item.Id" class="btn btn-danger">ViewComment</a>
                         </div>
-                        &nbsp;
                     </td>
-                    @if (item.UserName.Equals("Admin"))
-                    {
-                        <td>
-                            <div class="btn-group">
-                                <a asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@item.Id" class="btn btn-danger">RemoveQuestion</a>
-                            </div>
-                        </td>
-                    }
-                    @count++;
                 </tr>
+                count++;
             }
         </tbody>
     </table>
 }
-    }
+    
 
 

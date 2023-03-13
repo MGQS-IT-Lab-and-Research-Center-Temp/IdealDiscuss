@@ -14,8 +14,8 @@ namespace IdealDiscuss.Service.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public QuestionService(
-            IQuestionRepository questionRepository, 
-            IUserRepository userRepository, 
+            IQuestionRepository questionRepository,
+            IUserRepository userRepository,
             IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
@@ -136,9 +136,9 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var questions = _questionRepository.GetQuestions(); 
+                var questions = _questionRepository.GetQuestions();
 
-                if(questions.Count == 0)
+                if (questions.Count == 0)
                 {
                     response.Message = "No question found!";
                     return response;

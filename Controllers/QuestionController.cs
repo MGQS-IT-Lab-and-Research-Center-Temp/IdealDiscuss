@@ -1,5 +1,6 @@
 ﻿using IdealDiscuss.Dtos.QuestionDto;
 using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdealDiscuss.Controllers
@@ -40,7 +41,7 @@ namespace IdealDiscuss.Controllers
 
             return View(response);
         }
-
+        [Authorize(Roles ="Admin")]
         public IActionResult GetQuestionDetail(int id)
         {
             var response = _questionService.GetQuestion(id);
