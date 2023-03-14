@@ -10,11 +10,12 @@ namespace IdealDiscuss.Service.Implementations
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-      
+        private readonly ICategoryQuestionRepository _categoryQuestionRepository;
 
-        public CategoryService(ICategoryRepository categoryRepository, IHttpContextAccessor httpContextAccessor)
+        public CategoryService(ICategoryRepository categoryRepository, IHttpContextAccessor httpContextAccessor,ICategoryQuestionRepository categoryQuestionRepository)
         {
             _httpContextAccessor = httpContextAccessor;
+            _categoryQuestionRepository = categoryQuestionRepository;
             _categoryRepository = categoryRepository;
          
         }
@@ -159,5 +160,6 @@ namespace IdealDiscuss.Service.Implementations
             response.Message = "Category updated successfully.";
             return response;
         }
+        
     }
 }

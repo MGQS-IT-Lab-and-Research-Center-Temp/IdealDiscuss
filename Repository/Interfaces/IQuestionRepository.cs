@@ -7,6 +7,8 @@ namespace IdealDiscuss.Repository.Interfaces
     {
         List<Question> GetQuestions();
         Question GetQuestion(int id);
-       
+        List<CategoryQuestion> GetQuestionByCategoryId(int categoryId);
+
+
     }
 }

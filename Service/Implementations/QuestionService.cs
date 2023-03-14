@@ -12,15 +12,20 @@ namespace IdealDiscuss.Service.Implementations
         private readonly IUserRepository _userRepository;
         private readonly IQuestionRepository _questionRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICategoryQuestionRepository _categoryQuestionRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
         public QuestionService(
             IQuestionRepository questionRepository,
             IUserRepository userRepository,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            ICategoryQuestionRepository categoryQuestionRepository, ICategoryRepository categoryRepository)
         {
             _userRepository = userRepository;
             _questionRepository = questionRepository;
             _httpContextAccessor = httpContextAccessor;
+            _categoryQuestionRepository = categoryQuestionRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public BaseResponseModel Create(CreateQuestionDto createQuestionDto)
@@ -51,10 +56,30 @@ namespace IdealDiscuss.Service.Implementations
                 CreatedBy = createdBy,
                 DateCreated = DateTime.Now
             };
+     
 
             try
             {
                 _questionRepository.Create(question);
+                foreach (var item in createQuestionDto.CategoryIds)
+                {
+                    //Check if category Exist
+                    var categoryData = _categoryRepository.Get(item);
+                    if (categoryData != null)
+                    {
+                        CategoryQuestion categoryQuestion = new()
+                        {
+                            CategoryId = item,
+                            QuestionId = question.Id,
+                            Category = categoryData,
+                            Question = question,
+                            CreatedBy = createdBy,
+                            DateCreated = DateTime.Now
+                        };
+
+                        _categoryQuestionRepository.Create(categoryQuestion);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -186,6 +211,40 @@ namespace IdealDiscuss.Service.Implementations
                 UserName = question.User.UserName,
                 ImageUrl = question.ImageUrl
             };
+
+            return response;
+        }
+        public QuestionsResponseModel GetQuestionsByCategoryId(int categoryId)
+        {
+            var response = new QuestionsResponseModel();
+
+            try
+            {
+                var questions = _questionRepository.GetQuestionByCategoryId(categoryId);
+
+                if(questions.Count == 0)
+                {
+                    response.Message = "No question found!";
+                    return response;
+                }
+
+                response.questions = questions
+                                    .Select(question => new ViewQuestionDto
+                    {
+                        Id = question.Id,
+                        QuestionText = question.Question.QuestionText,
+                        UserName = question.Question.User.UserName,
+                        ImageUrl = question.Question.ImageUrl,
+                    }).ToList();
+
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.Message = $"An error occured: {ex.StackTrace}";
+                return response;
+            }
 
             return response;
         }

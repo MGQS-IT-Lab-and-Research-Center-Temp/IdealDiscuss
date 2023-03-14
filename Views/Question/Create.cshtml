@@ -14,6 +14,15 @@
 <div class="d-flex justify-content-center">
 
     <form asp-action="Create">
+
+        <div class="col-md-12 mb-2">
+            <select class="form-select" id="CategoryIds" name="CategoryIds" multiple="multiple">
+                <option value="0">--Select Category--</option>
+                <option value="1">Ahmaddiyya</option>
+                <option value="2">Technology</option>                
+                <option value="3">Food</option>
+            </select>
+        </div>
         <div class="col-md-12 mb-2">
             <label for="QuestionText" class="form-label">Question:</label>
             <input type="text" class="form-control" placeholder="Enter your question" name="QuestionText">

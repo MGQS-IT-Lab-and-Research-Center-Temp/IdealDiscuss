@@ -27,5 +27,15 @@ namespace IdealDiscuss.Repository.Implementations
 
             return questions;
         }
+        public List<CategoryQuestion> GetQuestionByCategoryId(int categoryId)
+        {
+            var questions = _context.CategoryQuestions
+                .Include(c => c.Category)
+                .Include(c => c.Question)
+                .ThenInclude(c=>c.User)
+                .Where(c=>c.CategoryId.Equals(categoryId)).ToList();
+
+            return questions;
+        }
     }
 }

@@ -41,14 +41,15 @@ namespace IdealDiscuss.Controllers
 
             return View(response);
         }
-        [Authorize(Roles ="Admin")]
-        public IActionResult GetQuestionDetail(int id)
+
+        [HttpGet("getquestionbycategory/{id}")]
+        public IActionResult GetQuestionByCategory(int id)
         {
-            var response = _questionService.GetQuestion(id);
+            var response = _questionService.GetQuestionsByCategoryId(id);
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
 
-            return View(response.question);
+            return View(response.questions);
         }
 
         [HttpGet]
