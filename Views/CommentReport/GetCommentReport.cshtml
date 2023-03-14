@@ -1,4 +1,4 @@
-﻿@model IdealDiscuss.Dtos.CommentDto.ViewCommentDto
+@model IdealDiscuss.Dtos.CommentDto.ViewCommentReportDto
 
 @{
     ViewData["Title"] = "Comment Detail";
@@ -10,16 +10,28 @@
     @if (status is false)
     {
         <span class="badge text-center bg-danger">@ViewBag.Message</span>
-        <a asp-controller="Comment" asp-action="Index" class="btn btn-outline-secondary">Go back to list</a>
+        <a asp-controller="CommentReport" asp-action="Index" class="btn btn-outline-secondary">Back to list</a>
         return;
     }
     <dl class="row">
         <dt class="col-sm-4">
-            Comment Text:
+            AdditionalComment:
         </dt>
 
         <dd class="col-sm-8">
-            @Model.CommentText
+            @Model.AdditionalComment
+        </dd>
+        <dt class="col-sm-4">
+            FlagNames
+        </dt>
+        <dd>
+            @Model.FlagNames
+        </dd>
+        <dt>
+         CommentReporter
+        </dt>
+        <dd>
+        @Model.CommentReporter
         </dd>
     </dl>
     <br />

@@ -1,0 +1,46 @@
+@model List<IdealDiscuss.Dtos.CommentDto.ViewCommentReportDto>
+@{
+    ViewData["Title"] = "Comment Report List";
+    int count = 1;
+    var status = ViewBag.Status == false ? false : true;
+}
+
+@if (status == false)
+{
+    <p>@ViewBag.Message</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">S/N</th>
+                <th scope="col">CommentReporter</th>
+                <th scope="col">AdditionalComment</th>
+                <th scope="col">FlagNames</th>
+                
+
+
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@count</th>
+                    <td>@item.CommentReporter</td>
+                    <td>@item.AdditionalComment</td>
+                    <td>@item.FlagNames</td>
+                    <td>
+                        <div class="btn-group">
+                            <a asp-controller="CommentReport" asp-action="GetCommentReport" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                        </div>
+                    </td>
+                </tr>
+                count++;
+            }
+        </tbody>
+    </table>
+}
+
