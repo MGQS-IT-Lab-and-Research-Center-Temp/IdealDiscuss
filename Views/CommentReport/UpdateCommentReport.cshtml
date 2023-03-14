@@ -1,0 +1,36 @@
+@model IdealDiscuss.Dtos.CommentReportDto.UpdateCommentReportDto
+@{
+	ViewData["Title"] = "Update comment report";
+}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6">
+		   <form asp-action="CreatecommentReport">
+              	<div class="form-group" type>
+					 <label asp-for="AdditionalComment" class="control-label"></label>
+					<input asp-for="AdditionalComment" type="text" class="form-control-plaintext"/>
+                    <span asp-validation-for="AdditionalComment" class="text-danger"></span>
+				</div>
+
+				<div class="form-group"> 
+				<select type="radio" class="form-control"  placeholder="select flag"
+									name="FlagIds" required="required"
+									asp-items="@(new SelectList(@ViewBag.flagLists,"Id","FlagName"))">
+								</select>
+				</div>
+             <div class="col-md-12">
+                 <button type="submit" class="btn btn-primary">Update</button>
+             </div>
+            </form>
+		</div>
+	</div>
+</div>
+	<%-- @section Scripts
+	{
+
+	<script>
+		setupCategorySelect('@Url.Action("GetAllFlag", "SelectListUtility")');
+	</script>
+} --%>
+
+
