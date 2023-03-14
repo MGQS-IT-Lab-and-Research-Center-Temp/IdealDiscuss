@@ -1,14 +1,8 @@
 ﻿using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.CategoryDto;
-using IdealDiscuss.Dtos.CommentReport;
-using IdealDiscuss.Dtos.QuestionDto;
-using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
-using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace IdealDiscuss.Service.Implementations
 {
@@ -16,13 +10,13 @@ namespace IdealDiscuss.Service.Implementations
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IQuestionRepository _questionRepository;
+      
 
-        public CategoryService(ICategoryRepository categoryRepository, IHttpContextAccessor httpContextAccessor,IQuestionRepository questionRepository)
+        public CategoryService(ICategoryRepository categoryRepository, IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _questionRepository = questionRepository;
             _categoryRepository = categoryRepository;
+         
         }
 
         public BaseResponseModel CreateCategory(CreateCategoryDto createCategoryDto)
@@ -165,29 +159,5 @@ namespace IdealDiscuss.Service.Implementations
             response.Message = "Category updated successfully.";
             return response;
         }
-        //public CategoryResponseModel GetQuestionsByCategoryId(int categoryId)
-        //{
-        //    var response = new QuestionsResponseModel();
-
-        //    var result = _questionRepository.Get(c=>c.CategoryQuestions)
-
-        //    if (!_categoryRepository.Exists(c => c.Id == categoryId))
-        //    {
-        //        response.Message = $"Category with id {categoryId} does not exist.";
-        //        return response;
-        //    }
-        //    var category = _categoryRepository.Get(categoryId);
-
-        //    response.Message = "Success";
-        //    response.Status = true;
-        //    response.Data = new ViewCategoryDto
-        //    {
-        //        Id = category.Id,
-        //        Name = category.Name,
-        //        Description = category.Description,
-        //    };
-
-            //return response;
-       // }
     }
 }
