@@ -1,0 +1,21 @@
+﻿@model IdealDiscuss.Dtos.QuestionReportDto.ViewQuestionReportDto
+@{
+	ViewData["Title"] = "Update QuestionReport";
+}
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6">
+		   <form asp-action="Update">
+
+				<div class="form-group"> 
+					<label asp-for="AdditionalComment" class="control-label"></label>
+						 <input asp-for="AdditionalComment" type="text" class="form-control" value="@Model.AdditionalComment" /><br />
+						 <span asp-validation-for="AdditionalComment" class="text-danger"></span>
+				</div>
+			 <div class="col-md-12">
+				 <button type="submit" class="btn btn-primary">Update</button>
+			 </div>
+			</form>
+		</div>
+	</div>
+</div>
