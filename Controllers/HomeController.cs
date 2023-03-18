@@ -24,12 +24,12 @@ namespace IdealDiscuss.Controllers
         {
             return View();
         }
-
+        
         public IActionResult SignUp()
         {
             return View();
         }
-
+        
         [HttpPost]
         public IActionResult SignUp(SignUpViewModel model)
         {
@@ -51,6 +51,7 @@ namespace IdealDiscuss.Controllers
             return View(result);
         }
 
+        
         public IActionResult Login()
         {
             return View();
@@ -92,12 +93,14 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize]
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync();
             return RedirectToAction("Login");
         }
 
+        [Authorize(Roles ="Admin")]
         public IActionResult AdminDashboard()
         {
             return View();
