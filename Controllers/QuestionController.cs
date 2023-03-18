@@ -44,6 +44,8 @@ namespace IdealDiscuss.Controllers
         [HttpPost]
         public IActionResult Create(CreateQuestionDto request)
         {
+            var user = _httpContextAccessor.HttpContext.User;
+            request.UserId = Convert.ToInt32(user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var response = _questionService.Create(request);
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
@@ -68,7 +70,7 @@ namespace IdealDiscuss.Controllers
 
             return View(response.question);
         }
-
+        
         public IActionResult Update(int id)
         {
             var response = _questionService.GetQuestion(id);

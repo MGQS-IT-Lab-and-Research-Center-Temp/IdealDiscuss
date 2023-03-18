@@ -209,6 +209,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 Id = question.Id,
                 QuestionText = question.QuestionText,
+                UserId= question.UserId,
                 UserName = question.User.UserName,
                 ImageUrl = question.ImageUrl
             };
