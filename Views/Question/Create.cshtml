@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IdealDiscuss.Dtos.QuestionDto.CreateQuestionDto
+
+@{
     ViewData["Title"] = "Create A Question";
     var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
 }
@@ -12,16 +14,14 @@
 }
 
 <div class="d-flex justify-content-center">
-
     <form asp-action="Create">
-
         <div class="col-md-12 mb-2">
-            <select class="form-select" id="CategoryIds" name="CategoryIds" multiple="multiple">
-                <option value="0">--Select Category--</option>
-                <option value="1">Ahmaddiyya</option>
-                <option value="2">Technology</option>                
-                <option value="3">Food</option>
-            </select>
+          		<div class="col-md-6" style="margin-top: 20px; font-size: larger; font-weight: bold; color: darkcyan">
+                            <label class="control-label">Categories</label>
+                            <select asp-for="CategoryIds"  class="form-control" asp-items="ViewBag.Categories" multiple required>
+                                <option value="">--Select Categories--</option>
+                            </select>
+                        </div>
         </div>
         <div class="col-md-12 mb-2">
             <label for="QuestionText" class="form-label">Question:</label>

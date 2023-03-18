@@ -14,12 +14,13 @@ namespace IdealDiscuss.Repository.Implementations
             _context = context;
         }
 
-        public Question GetQuestion(int id)
-        {
-            var question = _context.Questions.Include(c => c.User).SingleOrDefault();
-            return question;
 
+        public Question GetQuestion(Expression<Func<Question, bool>> expression)
+        {
+            var question = _context.Questions.Include(c => c.User).SingleOrDefault(expression);
+            return question;
         }
+       
 
         public List<Question> GetQuestions()
         {
@@ -34,6 +35,16 @@ namespace IdealDiscuss.Repository.Implementations
                 .Include(c => c.Question)
                 .ThenInclude(c=>c.User)
                 .Where(c=>c.CategoryId.Equals(categoryId)).ToList();
+
+            return questions;
+        }
+        public List<CategoryQuestion> SelectQuestionByCategory()
+        {
+            var questions = _context.CategoryQuestions
+                .Include(c => c.Category)
+                .Include(c => c.Question)
+                .ThenInclude(c => c.User)
+                .ToList();
 
             return questions;
         }

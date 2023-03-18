@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace IdealDiscuss.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -19,12 +20,12 @@ namespace IdealDiscuss.Controllers
             var categories = _categoryService.GetAllCategory();
             return View(categories.Data);
         }
-        [Authorize(Roles = "Admin")]
+        
         public IActionResult Create()
         {
             return View();
         }
-        [Authorize(Roles = "Admin")]
+       
         [HttpPost("category/{id}/delete")]
         public IActionResult DeleteCategory([FromRoute] int id)
         {

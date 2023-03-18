@@ -4,6 +4,7 @@
     ViewData["Title"] = "Question List";
     int count = 1;
     var status = ViewBag.Status == false ? false : true;
+
 }
 
 <div>
@@ -35,11 +36,12 @@ else
                     <td scope="row">@item.QuestionText</td>
                     <td scope="row">
                         &nbsp;
-                         <div class="btn-group">
-                            <a asp-controller="Question" asp-action="GetQuestionDetail" asp-route-id="@item.Id" class="btn btn-danger">ViewQuestion</a>
-                        </div>
                         <div class="btn-group">
-                            <a asp-controller="Comment" asp-action="Index" asp-route-id="@item.Id" class="btn btn-danger">ViewComment</a>
+                            <a asp-controller="Question" asp-action="GetQuestionDetail" asp-route-id="@item.Id" class="btn btn-danger">ViewQuestion</a>
+
+                            <div class="btn-group">
+                                <a asp-controller="Comment" asp-action="Index" asp-route-id="@item.Id" class="btn btn-danger">ViewComment</a>
+                            </div>
                         </div>
                     </td>
                 </tr>
@@ -48,6 +50,6 @@ else
         </tbody>
     </table>
 }
-    
+
 
 

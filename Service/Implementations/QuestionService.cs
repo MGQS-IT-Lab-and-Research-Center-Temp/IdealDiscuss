@@ -56,7 +56,7 @@ namespace IdealDiscuss.Service.Implementations
                 CreatedBy = createdBy,
                 DateCreated = DateTime.Now
             };
-     
+
 
             try
             {
@@ -129,13 +129,14 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
 
             var questionExist = _questionRepository.Exists(c => c.Id == questionId);
+          
+
 
             if (!questionExist)
             {
                 response.Message = "Question does not exist!";
                 return response;
             }
-
             var question = _questionRepository.Get(questionId);
 
             question.IsDeleted = true;
@@ -200,7 +201,7 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Question with id {questionId} does not exist!";
                 return response;
             }
-            var question = _questionRepository.GetQuestion(questionId);
+            var question = _questionRepository.GetQuestion(c => c.Id == questionId);
 
             response.Message = "Success";
             response.Status = true;
@@ -222,7 +223,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 var questions = _questionRepository.GetQuestionByCategoryId(categoryId);
 
-                if(questions.Count == 0)
+                if (questions.Count == 0)
                 {
                     response.Message = "No question found!";
                     return response;
@@ -230,6 +231,41 @@ namespace IdealDiscuss.Service.Implementations
 
                 response.questions = questions
                                     .Select(question => new ViewQuestionDto
+                                    {
+                                        Id = question.Id,
+                                        QuestionText = question.Question.QuestionText,
+                                        UserName = question.Question.User.UserName,
+                                        ImageUrl = question.Question.ImageUrl,
+                                    }).ToList();
+
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.Message = $"An error occured: {ex.StackTrace}";
+                return response;
+            }
+
+            return response;
+        }
+        public QuestionsResponseModel DisplayQuestion()
+        {
+            var response = new QuestionsResponseModel();
+
+            try
+            {
+                var questions = _questionRepository.SelectQuestionByCategory();
+
+                if (questions.Count == 0)
+                {
+                    response.Message = "No question found!";
+                    return response;
+                }
+
+                response.questions = questions.Take(4)
+                    .Where(q => q.IsDeleted == false)
+                    .Select(question => new ViewQuestionDto
                     {
                         Id = question.Id,
                         QuestionText = question.Question.QuestionText,
@@ -248,5 +284,6 @@ namespace IdealDiscuss.Service.Implementations
 
             return response;
         }
+
     }
 }
