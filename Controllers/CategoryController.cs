@@ -2,10 +2,11 @@
 using IdealDiscuss.Dtos.CategoryDto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using IdealDiscuss.Entities;
 
 namespace IdealDiscuss.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
