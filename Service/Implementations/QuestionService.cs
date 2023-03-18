@@ -138,7 +138,11 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
             var question = _questionRepository.Get(questionId);
-
+            if (question.Comments.Count!= 0)
+            {
+                response.Message = "You cannot delete question";
+                return response;
+            }
             question.IsDeleted = true;
 
             try
