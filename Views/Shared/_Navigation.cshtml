@@ -1,37 +1,38 @@
 ﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container-fluid">
-        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">IdealDiscuss</a>
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">IdealDiscuss</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
             <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item">
-                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                </li>
 
                 @if (User != null && User.Identity.IsAuthenticated)
                 {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="Index">Manage Role</a>
-                    </li>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Role" asp-action="Index">Manage Role</a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Manage Category</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Manage Category</a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Comment" asp-action="Index">Manage Comment</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Flag" asp-action="Index">Manage Flag</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Comment" asp-action="Index">Manage Comment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Flag" asp-action="Index">Manage Flag</a>
+                        </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Question" asp-action="Index">Question List</a>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Question" asp-action="Index">Question List</a>
                         </li>
                     }
                     else
@@ -55,7 +56,7 @@
                     <a class="nav-link text-success" href="#">@User.Identity.Name</a>
                 </li>
                 <li class="nav-item mr-3 float-right">
-                    <a class="nav-link text-success mr-1" asp-area="" asp-controller="Home" asp-action="Logout">
+                    <a class="nav-link text-success mr-1" asp-action="Logout">
                         <i class="fas fa-user"></i>
                         Logout
                     </a>
@@ -64,13 +65,13 @@
             else
             {
                 <li class="nav-item">
-                    <a class="nav-link text-success mr-1 float-right" asp-controller="Home" asp-action="Login">
+                    <a class="nav-link text-success mr-1 float-right" asp-action="Login">
                         <i class="fas fa-user"></i>
                         Login
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-success mr-1 float-right" asp-controller="Home" asp-action="SignUp">
+                    <a class="nav-link text-success mr-1 float-right" asp-action="SignUp">
                         <i class="fas fa-user"></i>
                         SignUp
                     </a>
