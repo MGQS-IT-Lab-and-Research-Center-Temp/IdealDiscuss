@@ -1,9 +1,11 @@
 ﻿using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdealDiscuss.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class RoleController : Controller
     {
         private readonly IRoleService _roleService;
@@ -14,10 +16,13 @@ namespace IdealDiscuss.Controllers
             _logger = logger;
             _roleService = roleService;
         }
-
+    
         public IActionResult Index()
         {
             var roles = _roleService.GetAllRole();
+
+            ViewBag.Message = roles.Message;
+            ViewBag.Status = roles.Status;
 
             return View(roles.Roles);
         }
@@ -31,7 +36,6 @@ namespace IdealDiscuss.Controllers
         public IActionResult Create(CreateRoleDto request)
         {
             var response = _roleService.CreateRole(request);
-
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
 

@@ -33,6 +33,8 @@
     <br />
     <div class="btn-group">
         <a asp-controller="Question" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-success">Modify</a>
+
+          <a asp-controller="QuestionReport" asp-action="ReportQuestion" asp-route-id="@Model.Id" class="btn btn-success">Report this question</a>
         
         <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to question list</a>
     </div>
