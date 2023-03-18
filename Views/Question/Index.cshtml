@@ -4,12 +4,7 @@
     ViewData["Title"] = "Question List";
     int count = 1;
     var status = ViewBag.Status == false ? false : true;
-
 }
-
-<div>
-    <a asp-controller="Question" asp-action="Create" class="btn btn-outline-primary">Add A Question</a>
-</div>
 
 @if (status is false)
 {

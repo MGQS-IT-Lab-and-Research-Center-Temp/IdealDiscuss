@@ -1,32 +1,42 @@
-﻿@*@model IdealDiscuss.Dtos.QuestionDto.ViewQuestionDto>*@
+﻿@model List<IdealDiscuss.Dtos.QuestionDto.ViewQuestionDto>
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home Page";   
+    int count = 1;
+   var status = ViewBag.Status == false ? false : true;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if (status == false)
+    {
+        <p>@ViewBag.Message</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">S/N</th>
+                    <th scope="col">Question</th>
+                </tr>
+            </thead>
 
-    <h1>What is Science and Mythology?</h1>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat nihil ullam, magnam dignissimos eveniet consequuntur sint animi? Reiciendis excepturi molestias numquam, suscipit quaerat id soluta minus mollitia, voluptas perspiciatis unde.</li>
-        <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat nihil ullam, magnam dignissimos eveniet consequuntur sint animi? Reiciendis excepturi molestias numquam, suscipit quaerat id soluta minus mollitia, voluptas perspiciatis unde.</li>
-        <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat nihil ullam, magnam dignissimos eveniet consequuntur sint animi? Reiciendis excepturi molestias numquam, suscipit quaerat id soluta minus mollitia, voluptas perspiciatis unde.</li>
-    </ul> 
-    <h1>What is Science and Mythology?</h1>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat nihil ullam, magnam dignissimos eveniet consequuntur sint animi? Reiciendis excepturi molestias numquam, suscipit quaerat id soluta minus mollitia, voluptas perspiciatis unde.</li>
-        <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat nihil ullam, magnam dignissimos eveniet consequuntur sint animi? Reiciendis excepturi molestias numquam, suscipit quaerat id soluta minus mollitia, voluptas perspiciatis unde.</li>
-        <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat nihil ullam, magnam dignissimos eveniet consequuntur sint animi? Reiciendis excepturi molestias numquam, suscipit quaerat id soluta minus mollitia, voluptas perspiciatis unde.</li>
-    </ul>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <th scope="row">@count</th>
+                        <td>@item.QuestionText</td>
+                        <td>
+                            <div class="btn-group">
+                                <a asp-controller="Comment" asp-action="Index" asp-route-id="@item.Id" class="btn btn-primary">ViewComments</a>
+                            </div>
+                        </td>
+                    </tr>
+                    count++;
+                }
+            </tbody>
+        </table>
+    }
 
-    <h1>What is the difference between dependency inversion and dependency injection?</h1>
-    <ul>
-        <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat nihil ullam, magnam dignissimos eveniet consequuntur sint animi? Reiciendis excepturi molestias numquam, suscipit quaerat id soluta minus mollitia, voluptas perspiciatis unde.</li>
-        <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat nihil ullam, magnam dignissimos eveniet consequuntur sint animi? Reiciendis excepturi molestias numquam, suscipit quaerat id soluta minus mollitia, voluptas perspiciatis unde.</li>
-        <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Placeat nihil ullam, magnam dignissimos eveniet consequuntur sint animi? Reiciendis excepturi molestias numquam, suscipit quaerat id soluta minus mollitia, voluptas perspiciatis unde.</li>
-    </ul>
 
-    
 </div>
