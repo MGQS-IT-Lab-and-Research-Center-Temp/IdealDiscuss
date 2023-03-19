@@ -7,9 +7,7 @@
     var questionId = ViewContext.RouteData.Values["id"];
 }
 
-<div>
-    <a asp-controller="Comment" asp-action="Create" asp-route-id="@questionId" class="btn btn-outline-primary">Add New Comment</a>
-</div>
+
 
 @if (status == false)
 {
