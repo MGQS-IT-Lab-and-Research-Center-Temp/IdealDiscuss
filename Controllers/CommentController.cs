@@ -3,6 +3,7 @@ using IdealDiscuss.Dtos.CommentDto;
 using Microsoft.AspNetCore.Mvc;
 using IdealDiscuss.Service.Implementations;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdealDiscuss.Controllers
 {
@@ -17,7 +18,8 @@ namespace IdealDiscuss.Controllers
             _httpContextAccessor = httpContextAccessor;
             _commentService = commentService;
         }
-       
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var comments = _commentService.GetAllComment();
@@ -68,6 +70,7 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index", "Comment");
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPost("comment/{id}/delete")]
         public IActionResult DeleteComment([FromRoute] int id)
         {
