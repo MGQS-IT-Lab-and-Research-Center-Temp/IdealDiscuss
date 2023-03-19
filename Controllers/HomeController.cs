@@ -1,4 +1,5 @@
 ﻿using IdealDiscuss.Dtos.UserDto;
+using IdealDiscuss.Entities;
 using IdealDiscuss.Models;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication;
@@ -12,17 +13,20 @@ namespace IdealDiscuss.Controllers
     public class HomeController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IQuestionService _questionService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger, IUserService userService)
+        public HomeController(ILogger<HomeController> logger, IUserService userService,IQuestionService questionService)
         {
             _logger = logger;
             _userService = userService;
+            _questionService = questionService;
         }
-
+        [Authorize]
         public IActionResult Index()
         {
-            return View();
+            var questions = _questionService.DisplayQuestion();
+            return View(questions.questions);
         }
         
         public IActionResult SignUp()
@@ -51,7 +55,6 @@ namespace IdealDiscuss.Controllers
             return View(result);
         }
 
-        
         public IActionResult Login()
         {
             return View();

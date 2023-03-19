@@ -101,7 +101,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            response.Comments = comment.Select(comment => new ViewCommentDto
+            response.Comments = comment.Where(c=>c.IsDeleted==false).Select(comment => new ViewCommentDto
             {
                 Id = comment.Id,
                 CommentText = comment.CommentText,
