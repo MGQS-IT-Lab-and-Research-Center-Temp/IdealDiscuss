@@ -23,6 +23,8 @@ builder.Services.AddScoped<IFlagRepository, FlagRepository>();
 builder.Services.AddScoped<IFlagService, FlagService>();
 builder.Services.AddScoped<IQuestionService, QuestionService>();
 builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+builder.Services.AddScoped<ICommentReportRepository, CommentReportRepository>();
+builder.Services.AddScoped<ICommentReportService, CommentReportService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<IdealDiscussContext>(option => 
     option.UseMySQL(builder.Configuration.GetConnectionString("IdealDiscussContext")));

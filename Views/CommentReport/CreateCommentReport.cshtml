@@ -1,0 +1,64 @@
+﻿@model IdealDiscuss.Dtos.QuestionReportDto.CreateQuestionReportDto
+@{
+	ViewData["Title"] = "Report Comment";
+	var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
+}
+
+@if (ViewBag.Message != null)
+{
+	<div class="alert @status alert-dismissible" role="alert">
+		@ViewBag.Message
+		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+	</div>
+}
+
+<div class="d-flex justify-content-center">
+
+	<form asp-action="CreateCommentReport" asp-controller="CommentReport">
+		<div class="form-group" type>
+            <label asp-for="AdditionalComment" class="control-label"></label>
+            <input asp-for="AdditionalComment" type="text" class="form-control" />
+            <span asp-validation-for="AdditionalComment" class="text-danger"></span>
+		</div>
+
+		<div>
+			<select type="checkbox" class="form-control" multiple="multiple" placeholder="----select flag----"
+					name="FlagIds" required="required"
+                    asp-items="@(new SelectList(@ViewBag.flagLists,"Id","FlagName"))">
+			</select>
+		</div>
+
+
+
+		<div class="col-md-12">
+			<button type="submit" class="btn btn-primary">Report Comment</button>
+		</div>
+	</form>
+</div>
+
+@*<form method="post">
+    <select id="Id" name="FlagId" asp-items="@Model.Customers" multiple="multiple">
+        <option value="0">--Select Customer--</option>
+    </select>
+    <br />
+    <br />
+    <input type="submit" value="Submit" asp-page-handler="Submit" />
+    @if (ViewData["Message"] != null)
+    {
+        <script type="text/javascript">
+            window.onload = function () {
+                alert("@ViewData["Message"]");
+            };
+        </script>
+    }
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js">
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("#Id").select2();
+        });
+    </script>
+</form>
+*@

@@ -78,7 +78,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 _commentRepository.Update(comment);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 response.Message = "Comment  delete failed";
                 return response;
