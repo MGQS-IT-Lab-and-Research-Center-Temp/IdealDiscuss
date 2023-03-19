@@ -1,43 +1,40 @@
 ﻿@model List<IdealDiscuss.Dtos.QuestionDto.ViewQuestionDto>
 
 @{
-    ViewData["Title"] = "Home Page";   
+    ViewData["Title"] = "Home Page";
     int count = 1;
-   var status = ViewBag.Status == false ? false : true;
+    var status = !(bool)ViewData["Status"];
 }
 
-    @if (status == false)
+<div>
+    @if (Model is null || Model.Count == 0)
     {
-        <p>@ViewBag.Message</p>
+        <p>@ViewData["Message"]</p>
+        return;
     }
-    else
-    {
-        <table class="table">
-            <thead>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">S/N</th>
+                <th scope="col">Question</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
                 <tr>
-                    <th scope="col">S/N</th>
-                    <th scope="col">Question</th>
+                    <th scope="row">@count</th>
+                    <td>@item.QuestionText</td>
+                    <td>
+                        <div class="btn-group">
+                            <a asp-controller="Comment" asp-action="Index" asp-route-id="@item.Id" class="btn btn-primary">ViewComments</a>
+                        </div>
+                    </td>
                 </tr>
-            </thead>
-
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <th scope="row">@count</th>
-                        <td>@item.QuestionText</td>
-                        <td>
-                            <div class="btn-group">
-                                <a asp-controller="Comment" asp-action="Create" asp-route-id="@item.Id" class="btn btn-primary">Add comment</a>
-                                <a asp-controller="Comment" asp-action="Index" asp-route-id="@item.Id" class="btn btn-primary">View Comments</a>
-                            </div>
-                        </td>
-                    </tr>
-                    count++;
-                }
-            </tbody>
-        </table>
-    }
-
-
+                count++;
+            }
+        </tbody>
+    </table>
 </div>
