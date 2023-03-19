@@ -99,7 +99,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new FlagsResponseModel();
 
-            var flags = _flagRepository.GetAll(f=> f.IsDeleted == false);
+            var flags = _flagRepository.GetAll(f => f.IsDeleted == false);
 
             if (flags.Count == 0)
             {
@@ -108,7 +108,6 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             response.Reports = flags
-               .Where(f => f.IsDeleted == false)
                .Select(f => new ViewFlagDto
                {
                    Id = f.Id,
@@ -120,20 +119,20 @@ namespace IdealDiscuss.Service.Implementations
             response.Message = "Success";
 
             return response;
-
         }
 
         public FlagResponseModel GetFlag(int flagId)
         {
             var response = new FlagResponseModel();
-            var flagExist = _flagRepository.Exists(f => f.Id == flagId);
-            var flagIsDeleted = _flagRepository.Exists(f => f.Id == flagId && f.IsDeleted == true);
+            var flagExist = _flagRepository.Exists(f => (f.Id == flagId) || (f.Id == flagId && f.IsDeleted == true));
+            //var flagIsDeleted = _flagRepository.Exists(f => f.Id == flagId && f.IsDeleted == true);
 
-            if (!flagExist || flagIsDeleted)
+            if (!flagExist)
             {
                 response.Message = $"Flag with id {flagId} does not exist.";
                 return response;
             }
+
             var flags = _flagRepository.Get(flagId);
 
             response.Message = "Success";
