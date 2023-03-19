@@ -1,5 +1,5 @@
-﻿using IdealDiscuss.Dtos.UserDto;
-using IdealDiscuss.Entities;
+﻿using IdealDiscuss.ActionFilters;
+using IdealDiscuss.Dtos.UserDto;
 using IdealDiscuss.Models;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication;
@@ -66,15 +66,9 @@ namespace IdealDiscuss.Controllers
             return View(result);
         }
 
+        [RedirectIfAuthenticated]
         public IActionResult Login()
         {
-            var user = _httpContextAccessor.HttpContext.User;
-
-            if (user is not null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
             return View();
         }
 
