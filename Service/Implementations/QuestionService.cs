@@ -1,11 +1,8 @@
 using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.QuestionDto;
-using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace IdealDiscuss.Service.Implementations
@@ -15,15 +12,20 @@ namespace IdealDiscuss.Service.Implementations
         private readonly IUserRepository _userRepository;
         private readonly IQuestionRepository _questionRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ICategoryQuestionRepository _categoryQuestionRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
         public QuestionService(
-            IQuestionRepository questionRepository, 
-            IUserRepository userRepository, 
-            IHttpContextAccessor httpContextAccessor)
+            IQuestionRepository questionRepository,
+            IUserRepository userRepository,
+            IHttpContextAccessor httpContextAccessor,
+            ICategoryQuestionRepository categoryQuestionRepository, ICategoryRepository categoryRepository)
         {
             _userRepository = userRepository;
             _questionRepository = questionRepository;
             _httpContextAccessor = httpContextAccessor;
+            _categoryQuestionRepository = categoryQuestionRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public BaseResponseModel Create(CreateQuestionDto createQuestionDto)
@@ -55,9 +57,29 @@ namespace IdealDiscuss.Service.Implementations
                 DateCreated = DateTime.Now
             };
 
+
             try
             {
                 _questionRepository.Create(question);
+                foreach (var item in createQuestionDto.CategoryIds)
+                {
+                    //Check if category Exist
+                    var categoryData = _categoryRepository.Get(item);
+                    if (categoryData != null)
+                    {
+                        CategoryQuestion categoryQuestion = new()
+                        {
+                            CategoryId = item,
+                            QuestionId = question.Id,
+                            Category = categoryData,
+                            Question = question,
+                            CreatedBy = createdBy,
+                            DateCreated = DateTime.Now
+                        };
+
+                        _categoryQuestionRepository.Create(categoryQuestion);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -107,15 +129,20 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
 
             var questionExist = _questionRepository.Exists(c => c.Id == questionId);
+          
+
 
             if (!questionExist)
             {
                 response.Message = "Question does not exist!";
                 return response;
             }
-
             var question = _questionRepository.Get(questionId);
-
+            if (question.Comments.Count!= 0)
+            {
+                response.Message = "You cannot delete question";
+                return response;
+            }
             question.IsDeleted = true;
 
             try
@@ -139,7 +166,7 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var questions = _questionRepository.GetAll();
+                var questions = _questionRepository.GetQuestions();
 
                 if (questions.Count == 0)
                 {
@@ -147,7 +174,7 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.Reports = questions
+                response.questions = questions
                     .Where(q => q.IsClosed == false && q.IsDeleted == false)
                     .Select(question => new ViewQuestionDto
                     {
@@ -178,19 +205,90 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Question with id {questionId} does not exist!";
                 return response;
             }
-            var question = _questionRepository.Get(questionId);
+            var question = _questionRepository.GetQuestion(c => c.Id == questionId);
 
             response.Message = "Success";
             response.Status = true;
-            response.Report = new ViewQuestionDto
+            response.question = new ViewQuestionDto
             {
                 Id = question.Id,
                 QuestionText = question.QuestionText,
+                UserId= question.UserId,
                 UserName = question.User.UserName,
                 ImageUrl = question.ImageUrl
             };
 
             return response;
         }
+        public QuestionsResponseModel GetQuestionsByCategoryId(int categoryId)
+        {
+            var response = new QuestionsResponseModel();
+
+            try
+            {
+                var questions = _questionRepository.GetQuestionByCategoryId(categoryId);
+
+                if (questions.Count == 0)
+                {
+                    response.Message = "No question found!";
+                    return response;
+                }
+
+                response.questions = questions
+                                    .Select(question => new ViewQuestionDto
+                                    {
+                                        Id = question.Id,
+                                        QuestionText = question.Question.QuestionText,
+                                        UserName = question.Question.User.UserName,
+                                        ImageUrl = question.Question.ImageUrl,
+                                    }).ToList();
+
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.Message = $"An error occured: {ex.StackTrace}";
+                return response;
+            }
+
+            return response;
+        }
+        public QuestionsResponseModel DisplayQuestion()
+        {
+            var response = new QuestionsResponseModel();
+
+            try
+            {
+                var questions = _questionRepository.SelectQuestionByCategory();
+
+                if (questions.Count == 0)
+                {
+                    response.Message = "No question found!";
+                    return response;
+                }
+
+                response.questions = questions.Take(4)
+                    .Where(q => q.IsDeleted == false)
+                    .Select(question => new ViewQuestionDto
+                    {
+                        Id = question.Id,
+                        QuestionText = question.Question.QuestionText,
+                        UserName = question.Question.User.UserName,
+                        ImageUrl = question.Question.ImageUrl,
+                    }).ToList();
+
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.Message = $"An error occured: {ex.StackTrace}";
+                return response;
+            }
+
+            return response;
+        }
+
     }
 }

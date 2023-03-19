@@ -1,4 +1,5 @@
-﻿@model IdealDiscuss.Dtos.QuestionDto.ViewQuestionDto
+﻿@using System.Security.Claims;
+@model IdealDiscuss.Dtos.QuestionDto.ViewQuestionDto
 
 @{
     ViewData["Title"] = "Question Detail";
@@ -32,11 +33,16 @@
     </dl>
     <br />
     <div class="btn-group">
-        <a asp-controller="Question" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-success">Modify</a>
-
-          <a asp-controller="QuestionReport" asp-action="ReportQuestion" asp-route-id="@Model.Id" class="btn btn-success">Report this question</a>
-        
-        <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to question list</a>
+        @if(Model.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
+        {
+        <a asp-controller="Question" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Update</a>
+        <a asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@Model.Id" class="btn btn-success">Delete</a>
+        <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
+        }
+        else
+        {
+        <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
+        }
     </div>
 </div>
 
