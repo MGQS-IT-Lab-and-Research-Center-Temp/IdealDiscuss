@@ -18,8 +18,8 @@ namespace IdealDiscuss.Controllers
         public IActionResult Index()
         {
             var instances = _flagService.GetAllFlag();
-            ViewBag.Message = instances.Message;
-            ViewBag.Status = instances.Status;
+            ViewData["Message"] = instances.Message;
+            ViewData["Status"] = instances.Status;
 
             return View(instances.Reports);
         }
@@ -34,8 +34,8 @@ namespace IdealDiscuss.Controllers
         {
             var response = _flagService.CreateFlag(request);
 
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
             return View(response);
         }
 

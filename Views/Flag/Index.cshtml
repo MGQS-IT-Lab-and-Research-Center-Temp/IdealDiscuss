@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Flag List";
     int count = 1;
-    var status = ViewBag.Status == false ? false : true;
+    var status =  ViewData["Status"] = false ? false : true;
 }
 
 <div>
@@ -11,7 +11,7 @@
 
 @if (status is false)
 {
-    <span>@ViewBag.Message</span>
+    <span>@ViewData["Message"]</span>
     return;
 }
 <table class="table">
