@@ -3,20 +3,21 @@
 @{
     ViewData["Title"] = "Role List";
     int count = 1;
-    var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
-}
-
-@if (ViewBag.Message != null)
-{
-    <div class="alert @status alert-dismissible" role="alert">
-        @ViewBag.Message
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    var status = (bool)ViewData["Status"];
 }
 
 <div>
     <a asp-controller="Role" asp-action="Create" class="btn btn-outline-primary">Add New Role</a>
 </div>
+
+@if (Model is null || Model.Count == 0)
+{
+    <div class="alert alert-info alert-dismissible" role="alert">
+        @ViewBag.Message
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    return;
+}
 
 <table class="table">
     <thead>
