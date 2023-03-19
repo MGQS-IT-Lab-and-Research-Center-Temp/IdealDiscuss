@@ -15,25 +15,36 @@ namespace IdealDiscuss.Controllers
         private readonly IUserService _userService;
         private readonly IQuestionService _questionService;
         private readonly ILogger<HomeController> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public HomeController(ILogger<HomeController> logger, IUserService userService,IQuestionService questionService)
+
+        public HomeController(
+            ILogger<HomeController> logger,
+            IUserService userService,
+            IQuestionService questionService,
+            IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _userService = userService;
             _questionService = questionService;
+            _httpContextAccessor = httpContextAccessor;
         }
+
         [Authorize]
         public IActionResult Index()
         {
             var questions = _questionService.DisplayQuestion();
-            return View(questions.questions);
+            ViewData["Message"] = questions.Message;
+            ViewData["Status"] = questions.Status;
+
+            return View(questions.Questions);
         }
-        
+
         public IActionResult SignUp()
         {
             return View();
         }
-        
+
         [HttpPost]
         public IActionResult SignUp(SignUpViewModel model)
         {
@@ -57,6 +68,13 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult Login()
         {
+            var user = _httpContextAccessor.HttpContext.User;
+
+            if (user is not null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -96,14 +114,13 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize]
         public IActionResult LogOut()
         {
-            HttpContext.SignOutAsync();
-            return RedirectToAction("Login");
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Home");
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AdminDashboard()
         {
             return View();

@@ -3,15 +3,16 @@
 @{
     ViewData["Title"] = "Home Page";
     int count = 1;
-    var status = ViewBag.Status == false ? false : true;
+    var status = !(bool)ViewData["Status"];
 }
 
-@if (status == false)
-{
-    <p>@ViewBag.Message</p>
-}
-else
-{
+<div>
+    @if (Model is null || Model.Count == 0)
+    {
+        <p>@ViewData["Message"]</p>
+        return;
+    }
+
     <table class="table">
         <thead>
             <tr>
@@ -36,3 +37,4 @@ else
             }
         </tbody>
     </table>
+</div>
