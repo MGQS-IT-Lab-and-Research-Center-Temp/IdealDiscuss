@@ -1,6 +1,8 @@
 ﻿using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.CategoryDto;
+using IdealDiscuss.Dtos.FlagDto;
 using IdealDiscuss.Entities;
+using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 
@@ -112,10 +114,12 @@ namespace IdealDiscuss.Service.Implementations
 
         public CategoryResponseModel GetCategory(int categoryId)
         {
-            var response = new CategoryResponseModel();
+			var response = new CategoryResponseModel();
+            var categoryExist = _categoryRepository.Exists(c => c.Id == categoryId);
+			var categoryIsDeleted = _categoryRepository.Exists(c => c.Id == categoryId && c.IsDeleted == true);
 
-            if (!_categoryRepository.Exists(c => c.Id == categoryId))
-            {
+			if (!categoryExist || categoryIsDeleted)
+			{
                 response.Message = $"Category with id {categoryId} does not exist.";
                 return response;
             }
