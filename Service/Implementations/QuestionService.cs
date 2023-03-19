@@ -205,7 +205,7 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Question with id {questionId} does not exist!";
                 return response;
             }
-            var question = _questionRepository.GetQuestion(c => c.Id == questionId);
+            var question = _questionRepository.GetQuestion(c => c.Id == questionId );
 
             response.Message = "Success";
             response.Status = true;
