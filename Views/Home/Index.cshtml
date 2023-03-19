@@ -28,7 +28,8 @@
                         <td>@item.QuestionText</td>
                         <td>
                             <div class="btn-group">
-                                <a asp-controller="Comment" asp-action="Index" asp-route-id="@item.Id" class="btn btn-primary">ViewComments</a>
+                                <a asp-controller="Comment" asp-action="Create" asp-route-id="@item.Id" class="btn btn-primary">Add comment</a>
+                                <a asp-controller="Comment" asp-action="Index" asp-route-id="@item.Id" class="btn btn-primary">View Comments</a>
                             </div>
                         </td>
                     </tr>

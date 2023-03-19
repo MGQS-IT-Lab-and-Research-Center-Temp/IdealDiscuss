@@ -65,7 +65,7 @@ namespace IdealDiscuss.Controllers
             var response = _commentService.UpdateComment(id, updateCommentDto);
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
-            return View(response);
+            return RedirectToAction("Index", "Comment");
         }
 
         [HttpPost("comment/{id}/delete")]
