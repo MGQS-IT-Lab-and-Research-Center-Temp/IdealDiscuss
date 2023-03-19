@@ -80,7 +80,7 @@ namespace IdealDiscuss.Service.Implementations
                 _questionReportRepository.Create(questionReport);
 
                 response.Status = true;
-                response.Message = "Comment Report created successfully!";
+                response.Message = "Report created successfully!";
             }
             catch (Exception ex)
             {

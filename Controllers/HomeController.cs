@@ -1,4 +1,5 @@
 ﻿using IdealDiscuss.Dtos.UserDto;
+using IdealDiscuss.Entities;
 using IdealDiscuss.Models;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication;
@@ -20,6 +21,7 @@ namespace IdealDiscuss.Controllers
             _userService = userService;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             return View();
@@ -51,7 +53,6 @@ namespace IdealDiscuss.Controllers
             return View(result);
         }
 
-        
         public IActionResult Login()
         {
             return View();

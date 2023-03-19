@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "Create New Question Report";
+    var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
+}
+@if (ViewBag.Message != null)
+{
+    <div class="alert @status alert-dismissible" questionReport="alert">
+        @ViewBag.Message
+         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+<div class="d-flex justify-content-center">
+
+     <form asp-action="ReportQuestion">
+          <div class="col-md-12 mb-2">
+               <label for="AdditionalComment" class="form-label">Additional Comment:</label>
+               <textarea class="form-control" placeholder="Additional Comment" name="AdditionalComment"></textarea>
+          </div>
+
+          <div class="col-md-12">
+               <button type="submit" class="btn btn-primary">Report Question</button>
+          </div>
+     </form>
+</div>
