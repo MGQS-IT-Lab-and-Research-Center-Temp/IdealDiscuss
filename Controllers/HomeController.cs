@@ -25,7 +25,7 @@ namespace IdealDiscuss.Controllers
         public IActionResult Index()
         {
             var questions = _questionService.DisplayQuestion();
-            return View(questions.questions);
+            return View(questions.Questions);
         }
         
         public IActionResult SignUp()

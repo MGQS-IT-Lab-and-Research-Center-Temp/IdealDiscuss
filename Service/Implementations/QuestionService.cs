@@ -138,7 +138,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
             var question = _questionRepository.Get(questionId);
-            if (question.Comments.Count!= 0)
+            if (question.Comments.Count != 0)
             {
                 response.Message = "You cannot delete question";
                 return response;
@@ -174,7 +174,7 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.questions = questions
+                response.Questions = questions
                     .Where(q => q.IsClosed == false && q.IsDeleted == false)
                     .Select(question => new ViewQuestionDto
                     {
@@ -209,7 +209,7 @@ namespace IdealDiscuss.Service.Implementations
 
             response.Message = "Success";
             response.Status = true;
-            response.question = new ViewQuestionDto
+            response.Question = new ViewQuestionDto
             {
                 Id = question.Id,
                 QuestionText = question.QuestionText,
@@ -234,7 +234,7 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.questions = questions
+                response.Questions = questions
                                     .Select(question => new ViewQuestionDto
                                     {
                                         Id = question.Id,
@@ -268,7 +268,7 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.questions = questions.Take(4)
+                response.Questions = questions.Take(4)
                     .Where(q => q.IsDeleted == false)
                     .Select(question => new ViewQuestionDto
                     {

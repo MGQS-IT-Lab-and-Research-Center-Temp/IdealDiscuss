@@ -20,7 +20,6 @@ namespace IdealDiscuss.Repository.Implementations
             var question = _context.Questions.Include(c => c.User).SingleOrDefault(expression);
             return question;
         }
-       
 
         public List<Question> GetQuestions()
         {
