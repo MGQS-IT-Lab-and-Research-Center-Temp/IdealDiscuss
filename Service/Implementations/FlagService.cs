@@ -124,8 +124,7 @@ namespace IdealDiscuss.Service.Implementations
         public FlagResponseModel GetFlag(int flagId)
         {
             var response = new FlagResponseModel();
-            var flagExist = _flagRepository.Exists(f => (f.Id == flagId) || (f.Id == flagId && f.IsDeleted == true));
-            //var flagIsDeleted = _flagRepository.Exists(f => f.Id == flagId && f.IsDeleted == true);
+            var flagExist = _flagRepository.Exists(f => (f.Id == flagId) && (f.Id == flagId && f.IsDeleted == false));
 
             if (!flagExist)
             {
