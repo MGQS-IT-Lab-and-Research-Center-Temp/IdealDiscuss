@@ -29,8 +29,15 @@
                     <td>@item.QuestionText</td>
                     <td>
                         <div class="btn-group">
-                            <a asp-controller="Comment" asp-action="Index" asp-route-id="@item.Id" class="btn btn-primary">ViewComments</a>
+                            <a asp-controller="Comment" asp-action="Create" asp-route-id="@item.Id" class="btn btn-primary">Add Comment</a>
                         </div>
+                        <div class="btn-group">
+                            <a asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@item.Id" class="btn btn-primary">ViewComments</a>
+                        </div>
+                        <div class="btn-group">
+                            <a asp-controller="Comment" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success">Update Comment</a>
+                        </div>
+                     
                     </td>
                 </tr>
                 count++;

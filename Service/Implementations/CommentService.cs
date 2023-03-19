@@ -93,7 +93,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new CommentsResponseModel();
 
-            var comment = _commentRepository.GetAll();
+            var comment = _commentRepository.GetAll(x =>x.IsDeleted == false);
 
             if (comment.Count == 0)
             {
@@ -121,7 +121,7 @@ namespace IdealDiscuss.Service.Implementations
             var commentexist = _commentRepository.Exists(c => c.Id == commentId);
             if (!commentexist)
             {
-                response.Message = $"Comment with id {commentId} does not exist.";
+                response.Message = $"Comment does not exist.";
                 return response;
             }
             var comment = _commentRepository.Get(commentId);
