@@ -126,11 +126,12 @@ namespace IdealDiscuss.Service.Implementations
         public FlagResponseModel GetFlag(int flagId)
         {
             var response = new FlagResponseModel();
-            var flagExist = _flagRepository.Exists(c => c.Id == flagId);
+            var flagExist = _flagRepository.Exists(f => f.Id == flagId);
+            var flagIsDeleted = _flagRepository.Exists(f => f.Id == flagId && f.IsDeleted == true);
 
-            if (!flagExist)
+            if (!flagExist || flagIsDeleted)
             {
-                response.Message = $"CommentReport with id {flagId} does not exist.";
+                response.Message = $"Flag with id {flagId} does not exist.";
                 return response;
             }
             var flags = _flagRepository.Get(flagId);
