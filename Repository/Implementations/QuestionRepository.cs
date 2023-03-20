@@ -2,7 +2,6 @@
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace IdealDiscuss.Repository.Implementations
@@ -13,7 +12,6 @@ namespace IdealDiscuss.Repository.Implementations
         {
             _context = context;
         }
-
 
         public Question GetQuestion(Expression<Func<Question, bool>> expression)
         {

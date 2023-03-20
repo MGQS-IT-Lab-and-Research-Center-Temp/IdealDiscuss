@@ -3,20 +3,20 @@
 @{
     ViewData["Title"] = "Home Page";
     int count = 1;
-    var status = ViewBag.Status == false ? false : true;
+    var status = (bool)ViewData["Status"];
 }
 
-@if (status == false)
-{
-    <p>@ViewBag.Message</p>
-}
-else
-{
+<div>
+    @if (Model is null || Model.Count == 0)
+    {
+        <p>@ViewData["Message"]</p>
+        return;
+    }
+
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">S/N</th>
-                <th scope="col">UserName</th>
                 <th scope="col">Question</th>
             </tr>
         </thead>
@@ -26,19 +26,22 @@ else
             {
                 <tr>
                     <th scope="row">@count</th>
-                    <td>@item.UserName</td>
                     <td>@item.QuestionText</td>
                     <td>
                         <div class="btn-group">
-                            <a asp-controller="Comment" asp-action="Index" asp-route-id="@item.Id" class="btn btn-primary">ViewComments</a>
+                            <a asp-controller="Comment" asp-action="Create" asp-route-id="@item.Id" class="btn btn-primary">Add Comment</a>
                         </div>
+                        <div class="btn-group">
+                            <a asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@item.Id" class="btn btn-primary">ViewComments</a>
+                        </div>
+                        <div class="btn-group">
+                            <a asp-controller="Comment" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success">Update Comment</a>
+                        </div>
+                     
                     </td>
                 </tr>
                 count++;
             }
         </tbody>
     </table>
-}
-
-
 </div>

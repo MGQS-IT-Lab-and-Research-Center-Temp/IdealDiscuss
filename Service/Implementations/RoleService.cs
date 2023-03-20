@@ -50,7 +50,7 @@ namespace IdealDiscuss.Service.Implementations
                 Description = createRoleDto.Description,
                 CreatedBy = createdBy,
                 DateCreated = DateTime.Now,
-                             
+
             };
 
             try
@@ -111,7 +111,7 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var role = _roleRepository.GetAll();
+                var role = _roleRepository.GetAll(r => r.IsDeleted == false);
 
                 if (role.Count == 0)
                 {
@@ -120,7 +120,6 @@ namespace IdealDiscuss.Service.Implementations
                 }
 
                 response.Roles = role
-                    .Where(r => r.IsDeleted == false)
                     .Select(r => new ViewRoleDto
                     {
                         Id = r.Id,
@@ -144,7 +143,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new RoleResponseModel();
 
-            var roleExist = _roleRepository.Exists(c => c.Id == roleId);
+            var roleExist = _roleRepository.Exists(r => (r.Id == roleId) && (r.Id == roleId && r.IsDeleted == false));
 
             if (!roleExist)
             {

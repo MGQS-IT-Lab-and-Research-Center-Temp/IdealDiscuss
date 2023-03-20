@@ -129,8 +129,6 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
 
             var questionExist = _questionRepository.Exists(c => c.Id == questionId);
-          
-
 
             if (!questionExist)
             {
@@ -213,13 +211,14 @@ namespace IdealDiscuss.Service.Implementations
             {
                 Id = question.Id,
                 QuestionText = question.QuestionText,
-                UserId= question.UserId,
+                UserId = question.UserId,
                 UserName = question.User.UserName,
                 ImageUrl = question.ImageUrl
             };
 
             return response;
         }
+
         public QuestionsResponseModel GetQuestionsByCategoryId(int categoryId)
         {
             var response = new QuestionsResponseModel();

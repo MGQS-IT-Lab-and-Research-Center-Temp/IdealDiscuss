@@ -1,11 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Create New Flag";
-    var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
+    var status = ViewData["Status"] = false ? "alert-danger" : "alert-success";
 }
-@if (ViewBag.Message != null)
+@if (ViewData["Message"] != null)
 {
     <div class="alert @status alert-dismissible" role="alert">
-        @ViewBag.Message
+        @ViewData["Message"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }

@@ -2,18 +2,19 @@
 @{
     ViewData["Title"] = "Flag List";
     int count = 1;
-    var status = ViewBag.Status == false ? false : true;
+    var status = (bool)ViewData["Status"];
 }
 
 <div>
     <a asp-controller="Flag" asp-action="CreateFlag" class="btn btn-outline-primary">Add New Flag</a>
 </div>
 
-@if (status is false)
+@if (Model is null || Model.Count == 0)
 {
-    <span>@ViewBag.Message</span>
+    <span>@ViewData["Message"]</span>
     return;
 }
+
 <table class="table">
     <thead>
         <tr>
@@ -42,8 +43,3 @@
         }
     </tbody>
 </table>
-
-
-
-
-

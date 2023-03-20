@@ -21,8 +21,8 @@ namespace IdealDiscuss.Controllers
         {
             var roles = _roleService.GetAllRole();
 
-            ViewBag.Message = roles.Message;
-            ViewBag.Status = roles.Status;
+            ViewData["Message"] = roles.Message;
+            ViewData["Status"] = roles.Status;
 
             return View(roles.Roles);
         }
@@ -36,8 +36,8 @@ namespace IdealDiscuss.Controllers
         public IActionResult Create(CreateRoleDto request)
         {
             var response = _roleService.CreateRole(request);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
             return View(response);
         }
@@ -45,8 +45,8 @@ namespace IdealDiscuss.Controllers
         public IActionResult GetRoleDetail(int id) 
         {
             var response = _roleService.GetRole(id);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
             return View(response.Role);
         }
@@ -54,6 +54,9 @@ namespace IdealDiscuss.Controllers
         public IActionResult Update(int id)
         {
             var response = _roleService.GetRole(id);
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
+
             return View(response.Role);
         }
 
@@ -61,8 +64,8 @@ namespace IdealDiscuss.Controllers
         public IActionResult Update(int id, UpdateRoleDto updateRoleDto)
         {
             var response = _roleService.UpdateRole(id, updateRoleDto);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
             return RedirectToAction("Index");
         }
@@ -71,8 +74,8 @@ namespace IdealDiscuss.Controllers
         public IActionResult DeleteRole([FromRoute] int id)
         {
             var response = _roleService.DeleteRole(id);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
             return RedirectToAction("Index");
         }

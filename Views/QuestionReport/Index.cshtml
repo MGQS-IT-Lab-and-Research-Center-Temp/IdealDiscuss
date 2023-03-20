@@ -1,0 +1,43 @@
+﻿@model List<IdealDiscuss.Dtos.QuestionReportDto.ViewQuestionReportDto>
+@{
+    ViewData["Title"] = "Flag List";
+    int count = 1;
+    var status = ViewBag.Status == false ? false : true;
+}
+
+<div>
+     <a asp-controller="QuestionReport" asp-action="ReportQuestion" class="btn btn-outline-primary">Report a question</a>
+</div>
+
+@if (status is false)
+{
+    <span>@ViewBag.Message</span>
+    return;
+}
+<table class="table">
+     <thead>
+          <tr>
+               <th scope="col">#</th>
+               <th scope="col">AdditionalComment</th>
+               <th scope="col">Action</th>
+          </tr>
+     </thead>
+
+     <tbody>
+
+        @foreach (var item in Model)
+        {
+              <tr>
+                   <th scope="row">@count</th>
+                   <td>@item.AdditionalComment</td>
+                   <td>
+                        <div class="btn-group">
+                             <a asp-controller="QuestionReport" asp-action="GetQuestionReport" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                        </div>
+                   </td>
+              </tr>
+            count++;
+        }
+     </tbody>
+</table>
+

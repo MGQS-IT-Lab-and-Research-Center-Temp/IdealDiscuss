@@ -1,6 +1,8 @@
 ﻿using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.CategoryDto;
+using IdealDiscuss.Dtos.FlagDto;
 using IdealDiscuss.Entities;
+using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 
@@ -17,7 +19,6 @@ namespace IdealDiscuss.Service.Implementations
             _httpContextAccessor = httpContextAccessor;
             _categoryQuestionRepository = categoryQuestionRepository;
             _categoryRepository = categoryRepository;
-         
         }
 
         public BaseResponseModel CreateCategory(CreateCategoryDto createCategoryDto)
@@ -112,13 +113,16 @@ namespace IdealDiscuss.Service.Implementations
 
         public CategoryResponseModel GetCategory(int categoryId)
         {
-            var response = new CategoryResponseModel();
+			var response = new CategoryResponseModel();
 
-            if (!_categoryRepository.Exists(c => c.Id == categoryId))
-            {
+            var categoryExist = _categoryRepository.Exists(c => (c.Id == categoryId) && (c.Id == categoryId && c.IsDeleted == false));
+
+            if (!categoryExist)
+			{
                 response.Message = $"Category with id {categoryId} does not exist.";
                 return response;
             }
+
             var category = _categoryRepository.Get(categoryId);
 
             response.Message = "Success";

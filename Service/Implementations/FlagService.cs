@@ -99,7 +99,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new FlagsResponseModel();
 
-            var flags = _flagRepository.GetAll();
+            var flags = _flagRepository.GetAll(f => f.IsDeleted == false);
 
             if (flags.Count == 0)
             {
@@ -108,7 +108,6 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             response.Reports = flags
-               .Where(f => f.IsDeleted == false)
                .Select(f => new ViewFlagDto
                {
                    Id = f.Id,
@@ -120,18 +119,19 @@ namespace IdealDiscuss.Service.Implementations
             response.Message = "Success";
 
             return response;
-
         }
 
         public FlagResponseModel GetFlag(int flagId)
         {
             var response = new FlagResponseModel();
+            var flagExist = _flagRepository.Exists(f => (f.Id == flagId) && (f.Id == flagId && f.IsDeleted == false));
 
-            if (!_flagRepository.Exists(c => c.Id == flagId))
+            if (!flagExist)
             {
-                response.Message = $"CommentReport with id {flagId} does not exist.";
+                response.Message = $"Flag with id {flagId} does not exist.";
                 return response;
             }
+
             var flags = _flagRepository.Get(flagId);
 
             response.Message = "Success";
@@ -151,8 +151,9 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var modifiedDate = DateTime.Now;
+            var isFlagExist = _flagRepository.Exists(x => x.Id == flagId);
 
-            if (!_flagRepository.Exists(x => x.Id == flagId))
+            if (!isFlagExist)
             {
                 response.Message = "Flag does not exist.";
                 return response;

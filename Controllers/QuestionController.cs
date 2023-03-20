@@ -1,23 +1,25 @@
 ﻿using IdealDiscuss.Dtos.QuestionDto;
-using IdealDiscuss.Entities;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Claims;
 
 namespace IdealDiscuss.Controllers
 {
+    [Authorize]
     public class QuestionController : Controller
     {
-
         private readonly IQuestionService _questionService;
         private readonly ICategoryService _categoryService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<QuestionController> _logger;
 
-        public QuestionController(ILogger<QuestionController> logger, IQuestionService questionService,ICategoryService categoryService, IHttpContextAccessor httpContextAccessor)
+        public QuestionController(
+            ILogger<QuestionController> logger, 
+            IQuestionService questionService, 
+            ICategoryService categoryService, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _questionService = questionService;
@@ -28,16 +30,17 @@ namespace IdealDiscuss.Controllers
         public IActionResult Index()
         {
             var questions = _questionService.GetAllQuestion();
-            ViewBag.Message = questions.Message;
-            ViewBag.Status = questions.Status;
+            ViewData["Message"] = questions.Message;
+            ViewData["Status"] = questions.Status;
 
             return View(questions.Questions);
         }
 
         public IActionResult Create()
         {
-           var category = _categoryService.GetAllCategory();
+            var category = _categoryService.GetAllCategory();
             ViewBag.Categories = new SelectList(category.Data, "Id", "Name");
+
             return View();
         }
 
@@ -49,6 +52,7 @@ namespace IdealDiscuss.Controllers
             var response = _questionService.Create(request);
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
+
             return RedirectToAction("Index");
         }
 
@@ -61,7 +65,7 @@ namespace IdealDiscuss.Controllers
 
             return View(response.Questions);
         }
-        
+
         public IActionResult GetQuestionDetail(int id)
         {
             var response = _questionService.GetQuestion(id);
@@ -70,7 +74,7 @@ namespace IdealDiscuss.Controllers
 
             return View(response.Question);
         }
-        
+
         public IActionResult Update(int id)
         {
             var response = _questionService.GetQuestion(id);
@@ -94,7 +98,5 @@ namespace IdealDiscuss.Controllers
             ViewBag.Status = response.Status;
             return RedirectToAction("Index", "Question");
         }
-
-
     }
 }
