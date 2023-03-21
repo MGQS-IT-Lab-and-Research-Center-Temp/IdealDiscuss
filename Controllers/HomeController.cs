@@ -1,11 +1,13 @@
 ﻿using IdealDiscuss.ActionFilters;
 using IdealDiscuss.Dtos.UserDto;
+using IdealDiscuss.Entities;
 using IdealDiscuss.Models;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MySqlX.XDevAPI.Common;
 using System.Security.Claims;
 
 namespace IdealDiscuss.Controllers
@@ -42,6 +44,9 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult SignUp()
         {
+            ViewData["Message"] = "";
+            ViewData["Status"] = false;
+
             return View();
         }
 
@@ -59,16 +64,24 @@ namespace IdealDiscuss.Controllers
 
             if (result.Status == false)
             {
-                ViewBag.Message = result.Message;
+                ViewData["Message"] = result.Message;
+                ViewData["Status"] = result.Status;
+
                 return View();
             }
 
-            return View(result);
+            ViewData["Message"] = result.Message;
+            ViewData["Status"] = result.Status;
+
+            return View();
         }
 
         [RedirectIfAuthenticated]
         public IActionResult Login()
         {
+            ViewData["Message"] = "";
+            ViewData["Status"] = false;
+
             return View();
         }
 
@@ -79,7 +92,9 @@ namespace IdealDiscuss.Controllers
 
             if (user.Status == false)
             {
-                ViewBag.Message = user.Message;
+                ViewData["Message"] = user.Message;
+                ViewData["Status"] = user.Status;
+
                 return View();
             }
 

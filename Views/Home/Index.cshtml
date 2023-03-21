@@ -3,21 +3,18 @@
 @{
     ViewData["Title"] = "Home Page";
     int count = 1;
-    var status = (bool)ViewData["Status"];
 }
 
-<div>
-    @if (Model is null || Model.Count == 0)
-    {
-        <p>@ViewData["Message"]</p>
-        return;
-    }
+@await Html.PartialAsync("_ListAlert", Model)
 
+@if (Model is not null && Model.Count >= 1)
+{
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">S/N</th>
                 <th scope="col">Question</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
 
@@ -29,19 +26,13 @@
                     <td>@item.QuestionText</td>
                     <td>
                         <div class="btn-group">
-                            <a asp-controller="Comment" asp-action="Create" asp-route-id="@item.Id" class="btn btn-primary">Add Comment</a>
+                            <a asp-controller="Comment" asp-action="Create" asp-route-id="@item.Id" class="btn btn-success">Add Comment</a>
                         </div>
-                        <div class="btn-group">
-                            <a asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@item.Id" class="btn btn-primary">ViewComments</a>
-                        </div>
-                        <div class="btn-group">
-                            <a asp-controller="Comment" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-success">Update Comment</a>
-                        </div>
-                     
                     </td>
                 </tr>
                 count++;
             }
         </tbody>
     </table>
-</div>
+}
+

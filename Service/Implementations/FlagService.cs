@@ -1,10 +1,6 @@
-﻿
-using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.CommentReport;
+﻿using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.FlagDto;
-using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
-using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 
@@ -99,24 +95,32 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new FlagsResponseModel();
 
-            var flags = _flagRepository.GetAll(f => f.IsDeleted == false);
-
-            if (flags.Count == 0)
+            try
             {
-                response.Message = "Flags not found!";
+                var flags = _flagRepository.GetAll(f => f.IsDeleted == false);
+
+                if (flags is null || flags.Count == 0)
+                {
+                    response.Message = "No flags found!";
+                    return response;
+                }
+
+                response.Data = flags
+                   .Select(f => new ViewFlagDto
+                   {
+                       Id = f.Id,
+                       FlagName = f.FlagName,
+                       Description = f.Description
+                   }).ToList();
+
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch(Exception ex)
+            {
+                response.Message = ex.StackTrace;
                 return response;
             }
-
-            response.Reports = flags
-               .Select(f => new ViewFlagDto
-               {
-                   Id = f.Id,
-                   FlagName = f.FlagName,
-                   Description = f.Description
-               }).ToList();
-
-            response.Status = true;
-            response.Message = "Success";
 
             return response;
         }
@@ -132,16 +136,24 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var flags = _flagRepository.Get(flagId);
-
-            response.Message = "Success";
-            response.Status = true;
-            response.Report = new ViewFlagDto
+            try
             {
-                Id = flags.Id,
-                FlagName = flags.FlagName,
-                Description = flags.Description
-            };
+                var flags = _flagRepository.Get(flagId);
+
+                response.Message = "Success";
+                response.Status = true;
+                response.Data = new ViewFlagDto
+                {
+                    Id = flags.Id,
+                    FlagName = flags.FlagName,
+                    Description = flags.Description
+                };
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                return response;
+            }
 
             return response;
         }
@@ -151,11 +163,17 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var modifiedDate = DateTime.Now;
-            var isFlagExist = _flagRepository.Exists(x => x.Id == flagId);
+            var isFlagExist = _flagRepository.Exists(f => (f.Id == flagId) && (f.Id == flagId && f.IsDeleted == false));
 
             if (!isFlagExist)
             {
-                response.Message = "Flag does not exist.";
+                response.Message = "Flag does not exist!";
+                return response;
+            }
+
+            if(string.IsNullOrWhiteSpace(updateFlagDto.FlagName))
+            {
+                response.Message = "Flag name cannot be null!";
                 return response;
             }
 

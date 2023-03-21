@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdealDiscuss.Migrations
 {
     [DbContext(typeof(IdealDiscussContext))]
-    [Migration("20230218142703_initial")]
-    partial class initial
+    [Migration("20230321062406_ReMigrate")]
+    partial class ReMigrate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -550,7 +550,7 @@ namespace IdealDiscuss.Migrations
             modelBuilder.Entity("IdealDiscuss.Entities.User", b =>
                 {
                     b.HasOne("IdealDiscuss.Entities.Role", "Role")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -590,6 +590,11 @@ namespace IdealDiscuss.Migrations
             modelBuilder.Entity("IdealDiscuss.Entities.QuestionReport", b =>
                 {
                     b.Navigation("QuestionReportFlags");
+                });
+
+            modelBuilder.Entity("IdealDiscuss.Entities.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

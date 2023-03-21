@@ -2,23 +2,20 @@
     ViewData["Title"] = "Login";
 }
 
-@if (ViewBag.Message != null)
-{
-    <div class="alert alert-danger alert-dismissible" role="alert">
-        @ViewBag.Message
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
+@await Html.PartialAsync("_NoModelAlert")
+
 <div class="d-flex justify-content-center">
     <form asp-action="Login" class="row g-3">
         <div class="col-md-12">
             <label for="UserName" class="form-label">UserName:</label>
             <input type="text" class="form-control" placeholder="Enter UserName" name="UserName">
         </div>
+
         <div class="col-md-12">
             <label for="Password" class="form-label">Password:</label>
             <input type="password" class="form-control" placeholder="Enter password" name="Password">
         </div>
+
         <div class="col-12">
             <div class="form-check">
                 <label class="form-check-label">
@@ -30,6 +27,7 @@
                 <a asp-action="SignUp">here</a>
             </span>
         </div>
+
         <div class="col-md-12">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>

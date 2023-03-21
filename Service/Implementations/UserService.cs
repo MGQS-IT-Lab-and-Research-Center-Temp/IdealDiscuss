@@ -10,24 +10,43 @@ namespace IdealDiscuss.Service.Implementations
     {
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _roleRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IUserRepository userRepository, IRoleRepository roleRepository)
+        public UserService(
+            IUserRepository userRepository, 
+            IRoleRepository roleRepository, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _roleRepository = roleRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public BaseResponseModel AddUser(CreateUserDto request, string roleName)
         {
             try
             {
+                var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+                var createdDate = DateTime.Now;
+
+                var formValueCheck = string.IsNullOrWhiteSpace(request.UserName) || string.IsNullOrEmpty(request.Email) || string.IsNullOrWhiteSpace(request.Password);
+
+                if (formValueCheck)
+                {
+                    return new BaseResponseModel
+                    {
+                        Message = $"One or more form fields are required!",
+                        Status = false
+                    };
+                }
+
                 var userExist = _userRepository.Exists(x => x.UserName == request.UserName || x.Email == request.Email);
 
                 if (userExist)
                 {
                     return new BaseResponseModel
                     {
-                        Message = $"User with <b>{request.UserName}</b> or <b>{request.Email}</b> already exist",
+                        Message = $"User with {request.UserName} or {request.Email} already exist",
                         Status = false
                     };
                 }
@@ -41,7 +60,9 @@ namespace IdealDiscuss.Service.Implementations
                     UserName = request.UserName,
                     Email = request.Email,
                     Password = request.Password,
-                    RoleId = role.Id
+                    RoleId = role.Id,
+                    CreatedBy = createdBy,
+                    DateCreated = createdDate,
                 };
 
                 _userRepository.Create(user);

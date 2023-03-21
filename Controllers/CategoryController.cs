@@ -2,7 +2,6 @@
 using IdealDiscuss.Dtos.CategoryDto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using IdealDiscuss.Entities;
 
 namespace IdealDiscuss.Controllers
 {
@@ -19,6 +18,9 @@ namespace IdealDiscuss.Controllers
         public IActionResult Index()
         {
             var categories = _categoryService.GetAllCategory();
+            ViewData["Message"] = categories.Message;
+            ViewData["Status"] = categories.Status;
+
             return View(categories.Data);
         }
         
