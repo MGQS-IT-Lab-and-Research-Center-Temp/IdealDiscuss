@@ -25,6 +25,13 @@ namespace IdealDiscuss.Repository.Implementations
 
             return questions;
         }
+
+        public List<Question> GetQuestions(Expression<Func<Question, bool>> expression)
+        {
+            var questions = _context.Questions.Where(expression).ToList();
+
+            return questions;
+        }
         public List<CategoryQuestion> GetQuestionByCategoryId(int categoryId)
         {
             var questions = _context.CategoryQuestions

@@ -1,0 +1,46 @@
+﻿@model List<IdealDiscuss.Dtos.QuestionDto.ViewQuestionDto>
+
+@{
+    ViewData["Title"] = "My Question List";
+    int count = 1;
+}
+
+@await Html.PartialAsync("_ListAlert", Model)
+
+@if (Model is not null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Username</th>
+                <th scope="col">Question</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td scope="row">@count</td>
+                    <td scope="row">@item.UserName</td>
+                    <td scope="row">@item.QuestionText</td>
+                    <td scope="row">
+                        <div class="btn-group">
+                            <a asp-controller="Question" asp-action="GetQuestionDetail" asp-route-id="@item.Id" class="btn btn-danger">ViewQuestion</a>
+
+                            <div class="btn-group">
+                                <a asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@item.Id" class="btn btn-outline-secondary">View Comment</a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                count++;
+            }
+        </tbody>
+    </table>
+}
+
+
+

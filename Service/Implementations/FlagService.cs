@@ -3,6 +3,7 @@ using IdealDiscuss.Dtos.FlagDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using System.Linq.Expressions;
 
 namespace IdealDiscuss.Service.Implementations
 {
@@ -163,7 +164,10 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var modifiedDate = DateTime.Now;
-            var isFlagExist = _flagRepository.Exists(f => (f.Id == flagId) && (f.Id == flagId && f.IsDeleted == false));
+            Expression<Func<Flag, bool>> expression = f => (f.Id == flagId) 
+                                                && (f.Id == flagId 
+                                                && f.IsDeleted == false);
+            var isFlagExist = _flagRepository.Exists(expression);
 
             if (!isFlagExist)
             {

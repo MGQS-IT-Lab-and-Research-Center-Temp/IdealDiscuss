@@ -26,6 +26,9 @@ namespace IdealDiscuss.Controllers
         
         public IActionResult Create()
         {
+            ViewData["Message"] = "";
+            ViewData["Status"] = false;
+
             return View();
         }
        

@@ -1,9 +1,11 @@
 ﻿@{
-    ViewData["Title"] = "Create New Role";
+    ViewData["Title"] = "Create New Question Category";
 }
 
-
 <div class="body">
+
+    @await Html.PartialAsync("_NoModelAlert")
+
     <div class="row">
         <div class="col-md-6">
             <form asp-action="Create">
