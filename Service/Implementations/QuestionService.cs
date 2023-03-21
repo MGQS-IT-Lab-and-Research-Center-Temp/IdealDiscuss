@@ -57,28 +57,31 @@ namespace IdealDiscuss.Service.Implementations
                 DateCreated = DateTime.Now
             };
 
-
             try
             {
                 _questionRepository.Create(question);
+
                 foreach (var item in createQuestionDto.CategoryIds)
                 {
-                    //Check if category Exist
                     var categoryData = _categoryRepository.Get(item);
-                    if (categoryData != null)
-                    {
-                        CategoryQuestion categoryQuestion = new()
-                        {
-                            CategoryId = item,
-                            QuestionId = question.Id,
-                            Category = categoryData,
-                            Question = question,
-                            CreatedBy = createdBy,
-                            DateCreated = DateTime.Now
-                        };
 
-                        _categoryQuestionRepository.Create(categoryQuestion);
+                    if (categoryData is null)
+                    {
+                        response.Message = "Category not found!";
+                        return response;
                     }
+
+                    CategoryQuestion categoryQuestion = new()
+                    {
+                        CategoryId = item,
+                        QuestionId = question.Id,
+                        Category = categoryData,
+                        Question = question,
+                        CreatedBy = createdBy,
+                        DateCreated = DateTime.Now
+                    };
+
+                    _categoryQuestionRepository.Create(categoryQuestion);
                 }
             }
             catch (Exception ex)
