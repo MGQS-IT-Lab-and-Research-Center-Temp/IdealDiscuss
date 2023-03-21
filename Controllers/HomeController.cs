@@ -42,6 +42,9 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult SignUp()
         {
+            ViewData["Message"] = "";
+            ViewData["Status"] = false;
+
             return View();
         }
 
@@ -59,16 +62,24 @@ namespace IdealDiscuss.Controllers
 
             if (result.Status == false)
             {
-                ViewBag.Message = result.Message;
+                ViewData["Message"] = result.Message;
+                ViewData["Status"] = result.Status;
+
                 return View();
             }
 
-            return View(result);
+            ViewData["Message"] = result.Message;
+            ViewData["Status"] = result.Status;
+
+            return View();
         }
 
         [RedirectIfAuthenticated]
         public IActionResult Login()
         {
+            ViewData["Message"] = "";
+            ViewData["Status"] = false;
+
             return View();
         }
 
@@ -79,7 +90,9 @@ namespace IdealDiscuss.Controllers
 
             if (user.Status == false)
             {
-                ViewBag.Message = user.Message;
+                ViewData["Message"] = user.Message;
+                ViewData["Status"] = user.Status;
+
                 return View();
             }
 

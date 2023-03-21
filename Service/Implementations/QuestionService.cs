@@ -3,6 +3,7 @@ using IdealDiscuss.Dtos.QuestionDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace IdealDiscuss.Service.Implementations
@@ -19,7 +20,8 @@ namespace IdealDiscuss.Service.Implementations
             IQuestionRepository questionRepository,
             IUserRepository userRepository,
             IHttpContextAccessor httpContextAccessor,
-            ICategoryQuestionRepository categoryQuestionRepository, ICategoryRepository categoryRepository)
+            ICategoryQuestionRepository categoryQuestionRepository,
+            ICategoryRepository categoryRepository)
         {
             _userRepository = userRepository;
             _questionRepository = questionRepository;
@@ -33,8 +35,13 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            var userId = int.Parse(userIdClaim);
-            var user = _userRepository.Get(userId);
+            var user = _userRepository.Get(int.Parse(userIdClaim));
+
+            if (createQuestionDto.CategoryIds is null)
+            {
+                response.Message = "You can't create a question without selecting one or more categories";
+                return response;
+            }
 
             if (string.IsNullOrWhiteSpace(createQuestionDto.QuestionText))
             {
@@ -57,33 +64,30 @@ namespace IdealDiscuss.Service.Implementations
                 DateCreated = DateTime.Now
             };
 
-
             try
             {
                 _questionRepository.Create(question);
+
                 foreach (var item in createQuestionDto.CategoryIds)
                 {
-                    //Check if category Exist
                     var categoryData = _categoryRepository.Get(item);
-                    if (categoryData != null)
-                    {
-                        CategoryQuestion categoryQuestion = new()
-                        {
-                            CategoryId = item,
-                            QuestionId = question.Id,
-                            Category = categoryData,
-                            Question = question,
-                            CreatedBy = createdBy,
-                            DateCreated = DateTime.Now
-                        };
 
-                        _categoryQuestionRepository.Create(categoryQuestion);
-                    }
+                    CategoryQuestion categoryQuestion = new()
+                    {
+                        CategoryId = item,
+                        QuestionId = question.Id,
+                        Category = categoryData,
+                        Question = question,
+                        CreatedBy = createdBy,
+                        DateCreated = DateTime.Now
+                    };
+
+                    _categoryQuestionRepository.Create(categoryQuestion);
                 }
             }
             catch (Exception ex)
             {
-                response.Message = $"Failed to create question: {ex.InnerException}";
+                response.Message = $"Failed to create question: {ex.Message}";
                 return response;
             }
 
@@ -128,19 +132,27 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
 
-            var questionExist = _questionRepository.Exists(c => c.Id == questionId);
+            Expression<Func<Question, bool>> expression = (q => (q.Id == questionId)
+                                        && (q.Id == questionId
+                                        && q.IsDeleted == false
+                                        && q.IsClosed == false));
+
+            var questionExist = _questionRepository.Exists(expression);
 
             if (!questionExist)
             {
                 response.Message = "Question does not exist!";
                 return response;
             }
+
             var question = _questionRepository.Get(questionId);
+
             if (question.Comments.Count != 0)
             {
                 response.Message = "You cannot delete question";
                 return response;
             }
+
             question.IsDeleted = true;
 
             try
@@ -174,6 +186,46 @@ namespace IdealDiscuss.Service.Implementations
 
                 response.Questions = questions
                     .Where(q => q.IsClosed == false && q.IsDeleted == false)
+                    .Select(question => new ViewQuestionDto
+                    {
+                        Id = question.Id,
+                        QuestionText = question.QuestionText,
+                        UserName = question.User.UserName,
+                        ImageUrl = question.ImageUrl,
+                    }).ToList();
+
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.Message = $"An error occured: {ex.StackTrace}";
+                return response;
+            }
+
+            return response;
+        }
+
+        public QuestionsResponseModel GetUserQuestions()
+        {
+            var response = new QuestionsResponseModel();
+
+            try
+            {
+                var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+                var user = _userRepository.Get(int.Parse(userIdClaim));
+
+                Expression<Func<Question, bool>> expression = q => (q.UserId == user.Id) 
+                                                    && (q.IsDeleted == false);
+                var questions = _questionRepository.GetQuestions(expression);
+
+                if (questions.Count == 0)
+                {
+                    response.Message = "No question found!";
+                    return response;
+                }
+
+                response.Questions = questions
                     .Select(question => new ViewQuestionDto
                     {
                         Id = question.Id,

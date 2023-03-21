@@ -1,13 +1,13 @@
 ﻿@model List<IdealDiscuss.Dtos.QuestionDto.ViewQuestionDto>
 
 @{
-    ViewData["Title"] = "Question List";
+    ViewData["Title"] = "My Question List";
     int count = 1;
 }
 
 @await Html.PartialAsync("_ListAlert", Model)
 
-@if (Model is not null && Model.Count >= 1)
+@if (Model is not null)
 {
     <table class="table">
         <thead>

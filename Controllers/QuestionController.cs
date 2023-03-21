@@ -1,4 +1,5 @@
 ﻿using IdealDiscuss.Dtos.QuestionDto;
+using IdealDiscuss.Entities;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,7 @@ namespace IdealDiscuss.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
+        //[Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var questions = _questionService.GetAllQuestion();
@@ -36,10 +38,21 @@ namespace IdealDiscuss.Controllers
             return View(questions.Questions);
         }
 
+        public IActionResult UserQuestions()
+        {
+            var questions = _questionService.GetUserQuestions();
+            ViewData["Message"] = questions.Message;
+            ViewData["Status"] = questions.Status;
+
+            return View(questions.Questions);
+        }
+
         public IActionResult Create()
         {
             var category = _categoryService.GetAllCategory();
-            ViewBag.Categories = new SelectList(category.Data, "Id", "Name");
+            ViewData["Categories"] = new SelectList(category.Data, "Id", "Name");
+            ViewData["Message"] = "";
+            ViewData["Status"] = false;
 
             return View();
         }
@@ -47,13 +60,11 @@ namespace IdealDiscuss.Controllers
         [HttpPost]
         public IActionResult Create(CreateQuestionDto request)
         {
-            var user = _httpContextAccessor.HttpContext.User;
-            request.UserId = Convert.ToInt32(user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var response = _questionService.Create(request);
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
 
-            return RedirectToAction("Index");
+            return View();
         }
 
         [HttpGet("getquestionbycategory/{id}")]

@@ -2,61 +2,50 @@
 
 @{
     ViewData["Title"] = "Role Detail";
-    var status = (bool)ViewData["Status"];
-    var statusColor = status == true ? "alert-success" : "alert-danger";
 }
 
 <div class="body">
 
-    @if (Model is null)
+    @await Html.PartialAsync("_Alert", Model)
+
+    @if (Model is not null)
     {
-        <div class="alert @statusColor" role="alert">@ViewData["Message"]</div>
-        <hr />
-        <a asp-controller="Role" asp-action="Index" class="btn btn-outline-secondary">Go back to list</a>
-        return;
-    }
+        <dl class="row">
+            <dt class="col-sm-4">
+                Role Name:
+            </dt>
 
-    <dl class="row">
-        <dt class="col-sm-4">
-            Role Name:
-        </dt>
+            <dd class="col-sm-8">
+                @Model.RoleName
+            </dd>
 
-        <dd class="col-sm-8">
-            @Model.RoleName
-        </dd>
+            <dt class="col-sm-4">
+                Description:
+            </dt>
 
-        <dt class="col-sm-4">
-            Description:
-        </dt>
+            <dd class="col-sm-8">
+                @Model.Description
+            </dd>
+        </dl>
+        <br />
 
-        <dd class="col-sm-8">
-            @Model.Description
-        </dd>
-    </dl>
-    <br />
-
-    @if (Model.RoleName == "Admin" || Model.RoleName == "AppUser")
-    {
-        <a asp-controller="Role" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Update</a>
-
-        <a asp-controller="Role" asp-action="Index" class="btn btn-secondary">Back to list</a>
-    }
-    else
-    {
-        <div class="btn-group">
+        @if (Model.RoleName == "Admin" || Model.RoleName == "AppUser")
+        {
             <a asp-controller="Role" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Update</a>
-            &nbsp;
-            <form asp-action="DeleteRole" asp-route-id="@Model.Id" style="display:inline">
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
-            &nbsp;
+
             <a asp-controller="Role" asp-action="Index" class="btn btn-secondary">Back to list</a>
-        </div>
+        }
+        else
+        {
+            <div class="btn-group">
+                <a asp-controller="Role" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Update</a>
+                &nbsp;
+                <form asp-action="DeleteRole" asp-route-id="@Model.Id" style="display:inline">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                &nbsp;
+                <a asp-controller="Role" asp-action="Index" class="btn btn-secondary">Back to list</a>
+            </div>
+        }
     }
 </div>
-
-
-
-
-
-
