@@ -24,7 +24,10 @@ namespace IdealDiscuss.Repository.Implementations
 
         public List<Question> GetQuestions()
         {
-            var questions = _context.Questions.Include(c => c.User).ToList();
+            var questions = _context.Questions
+                .Include(c => c.User)
+                .Include(c => c.Comments)
+                .ToList();
 
             return questions;
         }

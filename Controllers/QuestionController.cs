@@ -1,10 +1,8 @@
 ﻿using IdealDiscuss.Dtos.QuestionDto;
-using IdealDiscuss.Entities;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Security.Claims;
 
 namespace IdealDiscuss.Controllers
 {
@@ -28,7 +26,6 @@ namespace IdealDiscuss.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        //[Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var questions = _questionService.GetAllQuestion();
@@ -67,12 +64,12 @@ namespace IdealDiscuss.Controllers
             return View();
         }
 
-        [HttpGet("getquestionbycategory/{id}")]
+        [HttpGet("{id}")]
         public IActionResult GetQuestionByCategory(int id)
         {
             var response = _questionService.GetQuestionsByCategoryId(id);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
             return View(response.Questions);
         }
@@ -80,8 +77,8 @@ namespace IdealDiscuss.Controllers
         public IActionResult GetQuestionDetail(int id)
         {
             var response = _questionService.GetQuestion(id);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
             return View(response.Question);
         }
@@ -95,9 +92,10 @@ namespace IdealDiscuss.Controllers
         [HttpPost]
         public IActionResult Update(int id, UpdateQuestionDto updateQuestionDto)
         {
-            var questionUpdate = _questionService.Update(id, updateQuestionDto);
-            ViewBag.Message = questionUpdate.Message;
-            ViewBag.Status = questionUpdate.Status;
+            var response = _questionService.Update(id, updateQuestionDto);
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
+
             return RedirectToAction("Index", "Question");
         }
 
@@ -105,8 +103,9 @@ namespace IdealDiscuss.Controllers
         public IActionResult DeleteQuestion([FromRoute] int id)
         {
             var response = _questionService.Delete(id);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
+
             return RedirectToAction("Index", "Question");
         }
     }

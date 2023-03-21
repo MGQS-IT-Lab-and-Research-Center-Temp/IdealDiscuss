@@ -12,7 +12,11 @@ namespace IdealDiscuss.Controllers
         private readonly ICommentService _commentService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<CommentController> _logger;
-        public CommentController(ILogger<CommentController> logger, ICommentService commentService, IHttpContextAccessor httpContextAccessor)
+
+        public CommentController(
+            ILogger<CommentController> logger, 
+            ICommentService commentService, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
@@ -21,19 +25,18 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult Index()
         {
-            var comments = _commentService.GetAllComment();
-            ViewBag.Message = comments.Message;
-            ViewBag.Status = comments.Status;
+            var response = _commentService.GetAllComment();
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
-            return View(comments.Comments);
+            return View(response.Comments);
         }
 
         public IActionResult GetCommentDetail(int id)
         {
             var response = _commentService.GetComment(id);
-
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
             return View(response.Comment);
         }
@@ -41,6 +44,9 @@ namespace IdealDiscuss.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            ViewData["Message"] = "";
+            ViewData["Status"] = false;
+
             return View();
         }
 
@@ -49,8 +55,9 @@ namespace IdealDiscuss.Controllers
         {
             var user = _httpContextAccessor.HttpContext.User;
             var response = _commentService.CreateComment(request);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
+
             return View(response);
         }
 
@@ -63,8 +70,9 @@ namespace IdealDiscuss.Controllers
         public IActionResult Edit(int id, UpdateCommentDto updateCommentDto)
         {
             var response = _commentService.UpdateComment(id, updateCommentDto);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
+
             return RedirectToAction("Index", "Comment");
         }
 
@@ -73,8 +81,9 @@ namespace IdealDiscuss.Controllers
         public IActionResult DeleteComment([FromRoute] int id)
         {
             var response = _commentService.DeleteComment(id);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
+
             return RedirectToAction("Index", "Comment");
         }
     }

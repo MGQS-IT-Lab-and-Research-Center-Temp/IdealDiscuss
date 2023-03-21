@@ -3,46 +3,44 @@
 
 @{
     ViewData["Title"] = "Question Detail";
-    var status = ViewBag.Status == false ? false : true;
 }
 
 <div class="body">
 
-    @if (status is false)
+    @await Html.PartialAsync("_Alert", Model)
+
+    @if (Model is not null)
     {
-        <span class="badge text-center bg-danger">@ViewBag.Message</span>
-        <a asp-controller="Question" asp-action="Index" class="btn btn-outline-secondary">Go back to question list</a>
-        return;
+        <dl class="row">
+            <dt class="col-sm-4">
+                Question
+            </dt>
+
+            <dd class="col-sm-8">
+                @Model.QuestionText
+            </dd>
+
+            <dt class="col-sm-4">
+                Image Url:
+            </dt>
+
+            <dd class="col-sm-8">
+                @Model.ImageUrl
+            </dd>
+        </dl>
+        <br />
+        <div class="btn-group">
+            @if (Model.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
+            {
+                <a asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@Model.Id" class="btn btn-success">Delete</a>
+                <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
+            }
+            else
+            {
+                <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
+            }
+        </div>
     }
-    <dl class="row">
-        <dt class="col-sm-4">
-            Question
-        </dt>
-
-        <dd class="col-sm-8">
-            @Model.QuestionText
-        </dd>
-
-        <dt class="col-sm-4">
-            Image Url:
-        </dt>
-
-        <dd class="col-sm-8">
-            @Model.ImageUrl
-        </dd>
-    </dl>
-    <br />
-    <div class="btn-group">
-        @if(Model.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
-        {
-        <a asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@Model.Id" class="btn btn-success">Delete</a>
-        <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
-        }
-        else
-        {
-        <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
-        }
-    </div>
 </div>
 
 
