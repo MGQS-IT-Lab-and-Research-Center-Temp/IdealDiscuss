@@ -20,7 +20,8 @@ namespace IdealDiscuss.Service.Implementations
             IQuestionRepository questionRepository,
             IUserRepository userRepository,
             IHttpContextAccessor httpContextAccessor,
-            ICategoryQuestionRepository categoryQuestionRepository, ICategoryRepository categoryRepository)
+            ICategoryQuestionRepository categoryQuestionRepository,
+            ICategoryRepository categoryRepository)
         {
             _userRepository = userRepository;
             _questionRepository = questionRepository;
@@ -70,12 +71,6 @@ namespace IdealDiscuss.Service.Implementations
                 foreach (var item in createQuestionDto.CategoryIds)
                 {
                     var categoryData = _categoryRepository.Get(item);
-
-                    if (categoryData is null)
-                    {
-                        response.Message = "Category not found!";
-                        return response;
-                    }
 
                     CategoryQuestion categoryQuestion = new()
                     {
@@ -211,11 +206,52 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
+        public QuestionsResponseModel GetUserQuestions()
+        {
+            var response = new QuestionsResponseModel();
+
+            try
+            {
+                var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+                var user = _userRepository.Get(int.Parse(userIdClaim));
+
+                Expression<Func<Question, bool>> expression = q => (q.UserId == user.Id) 
+                                                    && (q.IsDeleted == false);
+                var questions = _questionRepository.GetQuestions(expression);
+
+                if (questions.Count == 0)
+                {
+                    response.Message = "No question found!";
+                    return response;
+                }
+
+                response.Questions = questions
+                    .Select(question => new ViewQuestionDto
+                    {
+                        Id = question.Id,
+                        QuestionText = question.QuestionText,
+                        UserName = question.User.UserName,
+                        ImageUrl = question.ImageUrl,
+                    }).ToList();
+
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                response.Message = $"An error occured: {ex.StackTrace}";
+                return response;
+            }
+
+            return response;
+        }
+
         public QuestionResponseModel GetQuestion(int questionId)
         {
             var response = new QuestionResponseModel();
+            var questionExist = _questionRepository.Exists(q => q.Id == questionId && q.IsDeleted == false);
 
-            if (!_questionRepository.Exists(c => c.Id == questionId))
+            if (!questionExist)
             {
                 response.Message = $"Question with id {questionId} does not exist!";
                 return response;
@@ -276,7 +312,7 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var questions = _questionRepository.SelectQuestionByCategory();
+                var questions = _questionRepository.GetQuestions();
 
                 if (questions.Count == 0)
                 {
@@ -284,14 +320,14 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.Questions = questions.Take(4)
+                response.Questions = questions
                     .Where(q => q.IsDeleted == false)
                     .Select(question => new ViewQuestionDto
                     {
                         Id = question.Id,
-                        QuestionText = question.Question.QuestionText,
-                        UserName = question.Question.User.UserName,
-                        ImageUrl = question.Question.ImageUrl,
+                        QuestionText = question.QuestionText,
+                        UserName = question.User.UserName,
+                        ImageUrl = question.ImageUrl,
                     }).ToList();
 
                 response.Status = true;

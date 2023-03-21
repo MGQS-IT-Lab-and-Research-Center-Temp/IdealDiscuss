@@ -19,7 +19,6 @@ namespace IdealDiscuss.Controllers
             _commentService = commentService;
         }
 
-        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var comments = _commentService.GetAllComment();
@@ -49,7 +48,6 @@ namespace IdealDiscuss.Controllers
         public IActionResult Create(CreateCommentDto request)
         {
             var user = _httpContextAccessor.HttpContext.User;
-            request.UserId = Convert.ToInt32(user.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var response = _commentService.CreateComment(request);
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;

@@ -1,13 +1,11 @@
 ﻿using IdealDiscuss.ActionFilters;
 using IdealDiscuss.Dtos.UserDto;
-using IdealDiscuss.Entities;
 using IdealDiscuss.Models;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MySqlX.XDevAPI.Common;
 using System.Security.Claims;
 
 namespace IdealDiscuss.Controllers

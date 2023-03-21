@@ -28,9 +28,19 @@ namespace IdealDiscuss.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
+        //[Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var questions = _questionService.GetAllQuestion();
+            ViewData["Message"] = questions.Message;
+            ViewData["Status"] = questions.Status;
+
+            return View(questions.Questions);
+        }
+
+        public IActionResult UserQuestions()
+        {
+            var questions = _questionService.GetUserQuestions();
             ViewData["Message"] = questions.Message;
             ViewData["Status"] = questions.Status;
 
