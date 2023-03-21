@@ -13,7 +13,7 @@
             <form asp-action="Create">
                 <div class="col-md-12 mb-2">
                     <label class="control-label">Categories</label>
-                    <select asp-for="CategoryIds" class="form-control" asp-items="@((SelectList)ViewData["Categories"])" multiple required>
+                    <select asp-for="CategoryIds" class="form-control" asp-items="@((SelectList)ViewData["Categories"])" multiple>
                         <option value="">--Select Categories--</option>
                     </select>
                 </div>

@@ -3,6 +3,7 @@ using IdealDiscuss.Dtos.QuestionDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace IdealDiscuss.Service.Implementations
@@ -33,8 +34,13 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            var userId = int.Parse(userIdClaim);
-            var user = _userRepository.Get(userId);
+            var user = _userRepository.Get(int.Parse(userIdClaim));
+
+            if (createQuestionDto.CategoryIds is null)
+            {
+                response.Message = "You can't create a question without selecting one or more categories";
+                return response;
+            }
 
             if (string.IsNullOrWhiteSpace(createQuestionDto.QuestionText))
             {
@@ -86,7 +92,7 @@ namespace IdealDiscuss.Service.Implementations
             }
             catch (Exception ex)
             {
-                response.Message = $"Failed to create question: {ex.InnerException}";
+                response.Message = $"Failed to create question: {ex.Message}";
                 return response;
             }
 
@@ -131,19 +137,27 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
 
-            var questionExist = _questionRepository.Exists(c => c.Id == questionId);
+            Expression<Func<Question, bool>> expression = (q => (q.Id == questionId)
+                                        && (q.Id == questionId
+                                        && q.IsDeleted == false
+                                        && q.IsClosed == false));
+
+            var questionExist = _questionRepository.Exists(expression);
 
             if (!questionExist)
             {
                 response.Message = "Question does not exist!";
                 return response;
             }
+
             var question = _questionRepository.Get(questionId);
+
             if (question.Comments.Count != 0)
             {
                 response.Message = "You cannot delete question";
                 return response;
             }
+
             question.IsDeleted = true;
 
             try

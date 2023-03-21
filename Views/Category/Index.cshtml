@@ -9,38 +9,34 @@
     <a asp-controller="Category" asp-action="Create" class="btn btn-outline-primary">Add New Category</a>
 </div>
 
-@if (status is false)
+@await Html.PartialAsync("_ListAlert", Model)
+
+@if (Model is not null && Model.Count >= 1)
 {
-    <p>ViewBag.Message</p>
-}
-else
-{
-    <div>
-        <table class="table">
-            <thead>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>S/N</th>
+                <th>Name</th>
+                <th scope="col">Description</th>
+                <th>ViewQuestions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
                 <tr>
-                    <th>S/N</th>
-                    <th>Name</th>
-                    <th scope="col">Description</th>
-                    <th>ViewQuestions</th>
+                    <td scope="row">@count</td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>
+                        <div class="btn-group">
+                            <a asp-controller="Question" asp-action="GetQuestionByCategory" asp-route-id="@item.Id" class="btn btn-primary">ViewQuestions</a>
+                        </div>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td scope="row">@count</td>
-                        <td>@item.Name</td>
-                        <td>@item.Description</td>
-                        <td>
-                            <div class="btn-group">
-                                <a asp-controller="Question" asp-action="GetQuestionByCategory" asp-route-id="@item.Id" class="btn btn-primary">ViewQuestions</a>
-                            </div>
-                        </td>
-                    </tr>
-                    count++;
-                }
-            </tbody>
-        </table>
-    </div>
+                count++;
+            }
+        </tbody>
+    </table>
 }
