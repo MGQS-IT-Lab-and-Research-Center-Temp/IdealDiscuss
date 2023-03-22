@@ -15,18 +15,25 @@
             @Model.ImageUrl
             <p class="lead">@Model.QuestionText</p>
             <hr />
-            <div class="btn-group">
-                @if (Model.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
-                {
+            @if (Model.Comments.Count == 0)
+            {
+                <div class="btn-group">
                     <a asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@Model.Id" class="btn btn-success">Delete</a>
-                    <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
-                }
-                else
-                {
-                    <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
-                }
-            </div>
-            @*Put the list of comment here using unorder list*@
+                    <a asp-controller="Question" asp-action="UserQuestions" class="btn btn-secondary">Back to list</a>
+                </div>
+            }
+            else{
+            @foreach (var comment in Model.Comments)
+            {
+                <ul>
+                    <li>
+                        @comment.CommentText -
+                        <i class="badge bg-secondary">by @comment.UserName</i>
+                    </li>
+                </ul>
+            }
+            <a asp-controller="Question" asp-action="UserQuestions" class="btn btn-secondary">Back to list</a>
+            }
         </div>
     }
 </div>

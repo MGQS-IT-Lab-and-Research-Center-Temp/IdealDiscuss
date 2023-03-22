@@ -147,13 +147,6 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             var question = _questionRepository.Get(questionId);
-
-            if (question.Comments.Count != 0)
-            {
-                response.Message = "You cannot delete question";
-                return response;
-            }
-
             question.IsDeleted = true;
 
             try
@@ -274,7 +267,17 @@ namespace IdealDiscuss.Service.Implementations
                 QuestionText = question.QuestionText,
                 UserId = question.UserId,
                 UserName = question.User.UserName,
-                ImageUrl = question.ImageUrl
+                ImageUrl = question.ImageUrl,
+                 Comments = question.Comments
+                            .Where(c => !c.IsDeleted)
+                            .Select(c => new ListCommentDto
+                            {
+                                Id = c.Id,
+                                UserId = c.UserId,
+                                CommentText = c.CommentText,
+                                UserName = c.User.UserName
+                            })
+                            .ToList()
             };
 
             return response;
