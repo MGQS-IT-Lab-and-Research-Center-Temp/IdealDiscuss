@@ -18,14 +18,18 @@ namespace IdealDiscuss.Controllers
         public IActionResult Index()
         {
             var instances = _flagService.GetAllFlag();
-            ViewBag.Message = instances.Message;
-            ViewBag.Status = instances.Status;
 
-            return View(instances.Reports);
+            ViewData["Message"] = instances.Message;
+            ViewData["Status"] = instances.Status;
+
+            return View(instances.Data);
         }
 
         public IActionResult CreateFlag()
         {
+            ViewData["Message"] = "";
+            ViewData["Status"] = false;
+
             return View();
         }
 
@@ -33,29 +37,39 @@ namespace IdealDiscuss.Controllers
         public IActionResult CreateFlag(CreateFlagDto request)
         {
             var response = _flagService.CreateFlag(request);
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
             return View(response);
         }
 
         public IActionResult GetFlagDetail(int id)
         {
             var response = _flagService.GetFlag(id);
-            return View(response.Report);
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
+            ViewData["ControllerName"] = "Flag";
+            ViewData["ActionName"] = "Index";
+
+            return View(response.Data);
         }
 
         public IActionResult UpdateFlag(int id)
         {
             var response = _flagService.GetFlag(id);
-            return View(response.Report);
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
+            ViewData["ControllerName"] = "Flag";
+            ViewData["ActionName"] = "Index";
+
+            return View(response.Data);
         }
 
         [HttpPost]
         public IActionResult UpdateFlag(int id,UpdateFlagDto request)
         {
             var response = _flagService.UpdateFlag(id,request);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Flag");
         }
 
         [HttpPost]

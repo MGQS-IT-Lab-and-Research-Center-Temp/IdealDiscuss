@@ -4,11 +4,10 @@
     ViewData["Title"] = "Comment List";
     int count = 1;
     var status = ViewBag.Status == false ? false : true;
+    var questionId = ViewContext.RouteData.Values["id"];
 }
 
-<div>
-    <a asp-controller="Comment" asp-action="Create" class="btn btn-outline-primary">Add New Comment</a>
-</div>
+
 
 @if (status == false)
 {

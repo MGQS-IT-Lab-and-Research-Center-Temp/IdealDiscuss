@@ -3,46 +3,42 @@
 @{
     ViewData["Title"] = "Role List";
     int count = 1;
-    var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
-}
-
-@if (ViewBag.Message != null)
-{
-    <div class="alert @status alert-dismissible" role="alert">
-        @ViewBag.Message
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
 }
 
 <div>
     <a asp-controller="Role" asp-action="Create" class="btn btn-outline-primary">Add New Role</a>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Role Name</th>
-            <th scope="col">Role Description</th>
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
+@await Html.PartialAsync("_ListAlert", Model)
 
-    <tbody>
-        
-        @foreach (var item in Model)
-        {
+@if (Model is not null && Model.Count >= 1)
+{
+    <table class="table">
+        <thead>
             <tr>
-                <th scope="row">@count</th>
-                <td>@item.RoleName</td>
-                <td>@item.Description</td>
-                <td>
-                    <div class="btn-group">
-                        <a asp-controller="Role" asp-action="GetRoleDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
-                    </div>
-                </td>
+                <th scope="col">#</th>
+                <th scope="col">Role Name</th>
+                <th scope="col">Role Description</th>
+                <th scope="col">Action</th>
             </tr>
-            count++;
-        }
-    </tbody>
-</table>
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@count</th>
+                    <td>@item.RoleName</td>
+                    <td>@item.Description</td>
+                    <td>
+                        <div class="btn-group">
+                            <a asp-controller="Role" asp-action="GetRoleDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                        </div>
+                    </td>
+                </tr>
+                count++;
+            }
+        </tbody>
+    </table>
+}

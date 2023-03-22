@@ -1,26 +1,32 @@
-﻿@{
+﻿@model IdealDiscuss.Dtos.QuestionDto.CreateQuestionDto
+
+@{
     ViewData["Title"] = "Create A Question";
-    var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
 }
 
-@if (ViewBag.Message != null)
-{
-    <div class="alert @status alert-dismissible" question="alert">
-        @ViewBag.Message
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="body">
+
+    @await Html.PartialAsync("_NoModelAlert")
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Create">
+                <div class="col-md-12 mb-2">
+                    <label class="control-label">Categories</label>
+                    <select asp-for="CategoryIds" class="form-control" asp-items="@((SelectList)ViewData["Categories"])" multiple>
+                        <option value="">--Select Categories--</option>
+                    </select>
+                </div>
+
+                <div class="col-md-12 mb-2">
+                    <label for="QuestionText" class="form-label">Question:</label>
+                    <textarea class="form-control" placeholder="Enter your question" name="QuestionText"></textarea>
+                </div>
+
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">Create Question</button>
+                </div>
+            </form>
+        </div>
     </div>
-}
-
-<div class="d-flex justify-content-center">
-
-    <form asp-action="Create">
-        <div class="col-md-12 mb-2">
-            <label for="QuestionText" class="form-label">Question:</label>
-            <input type="text" class="form-control" placeholder="Enter your question" name="QuestionText">
-        </div>
-
-        <div class="col-md-12">
-            <button type="submit" class="btn btn-primary">Create Question</button>
-        </div>
-    </form>
 </div>

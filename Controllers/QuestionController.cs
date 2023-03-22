@@ -1,32 +1,59 @@
 ﻿using IdealDiscuss.Dtos.QuestionDto;
+using IdealDiscuss.Entities;
 using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace IdealDiscuss.Controllers
 {
+    [Authorize]
     public class QuestionController : Controller
     {
-
         private readonly IQuestionService _questionService;
+        private readonly ICategoryService _categoryService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<QuestionController> _logger;
 
-        public QuestionController(ILogger<QuestionController> logger, IQuestionService questionService)
+        public QuestionController(
+            ILogger<QuestionController> logger, 
+            IQuestionService questionService, 
+            ICategoryService categoryService, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _questionService = questionService;
+            _categoryService = categoryService;
+            _httpContextAccessor = httpContextAccessor;
         }
 
+        //[Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var questions = _questionService.GetAllQuestion();
-            ViewBag.Message = questions.Message;
-            ViewBag.Status = questions.Status;
+            ViewData["Message"] = questions.Message;
+            ViewData["Status"] = questions.Status;
 
-            return View(questions.Reports);
+            return View(questions.Questions);
+        }
+
+        public IActionResult UserQuestions()
+        {
+            var questions = _questionService.GetUserQuestions();
+            ViewData["Message"] = questions.Message;
+            ViewData["Status"] = questions.Status;
+
+            return View(questions.Questions);
         }
 
         public IActionResult Create()
         {
+            var category = _categoryService.GetAllCategory();
+            ViewData["Categories"] = new SelectList(category.Data, "Id", "Name");
+            ViewData["Message"] = "";
+            ViewData["Status"] = false;
+
             return View();
         }
 
@@ -34,11 +61,20 @@ namespace IdealDiscuss.Controllers
         public IActionResult Create(CreateQuestionDto request)
         {
             var response = _questionService.Create(request);
-
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
 
-            return View(response);
+            return View();
+        }
+
+        [HttpGet("getquestionbycategory/{id}")]
+        public IActionResult GetQuestionByCategory(int id)
+        {
+            var response = _questionService.GetQuestionsByCategoryId(id);
+            ViewBag.Message = response.Message;
+            ViewBag.Status = response.Status;
+
+            return View(response.Questions);
         }
 
         public IActionResult GetQuestionDetail(int id)
@@ -47,14 +83,13 @@ namespace IdealDiscuss.Controllers
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
 
-            return View(response.Report);
+            return View(response.Question);
         }
 
-        [HttpGet]
         public IActionResult Update(int id)
         {
             var response = _questionService.GetQuestion(id);
-            return View(response.Report);
+            return View(response.Question);
         }
 
         [HttpPost]
@@ -74,7 +109,5 @@ namespace IdealDiscuss.Controllers
             ViewBag.Status = response.Status;
             return RedirectToAction("Index", "Question");
         }
-
-        
     }
 }

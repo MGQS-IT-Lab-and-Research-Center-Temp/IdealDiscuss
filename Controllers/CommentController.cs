@@ -2,19 +2,23 @@
 using IdealDiscuss.Dtos.CommentDto;
 using Microsoft.AspNetCore.Mvc;
 using IdealDiscuss.Service.Implementations;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IdealDiscuss.Controllers
 {
     public class CommentController : Controller
     {
         private readonly ICommentService _commentService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogger<CommentController> _logger;
-        public CommentController(ILogger<CommentController> logger, ICommentService commentService)
+        public CommentController(ILogger<CommentController> logger, ICommentService commentService, IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
             _commentService = commentService;
         }
-       
+
         public IActionResult Index()
         {
             var comments = _commentService.GetAllComment();
@@ -43,6 +47,7 @@ namespace IdealDiscuss.Controllers
         [HttpPost]
         public IActionResult Create(CreateCommentDto request)
         {
+            var user = _httpContextAccessor.HttpContext.User;
             var response = _commentService.CreateComment(request);
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
@@ -60,9 +65,10 @@ namespace IdealDiscuss.Controllers
             var response = _commentService.UpdateComment(id, updateCommentDto);
             ViewBag.Message = response.Message;
             ViewBag.Status = response.Status;
-            return View(response);
+            return RedirectToAction("Index", "Comment");
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPost("comment/{id}/delete")]
         public IActionResult DeleteComment([FromRoute] int id)
         {

@@ -3,11 +3,18 @@
 @{
     ViewData["Title"] = "Question List";
     int count = 1;
+    var status = ViewBag.Status == false ? false : true;
 }
 
-@await Html.PartialAsync("_ListAlert", Model)
+<div>
+    <a asp-controller="Question" asp-action="Create" class="btn btn-outline-primary">Add A Question</a>
+</div>
 
-@if (Model is not null && Model.Count >= 1)
+@if (status is false)
+{
+    <p>@ViewBag.Message</p>
+}
+else
 {
     <table class="table">
         <thead>
@@ -27,12 +34,12 @@
                     <td scope="row">@item.UserName</td>
                     <td scope="row">@item.QuestionText</td>
                     <td scope="row">
+                        &nbsp;
                         <div class="btn-group">
                             <a asp-controller="Question" asp-action="GetQuestionDetail" asp-route-id="@item.Id" class="btn btn-danger">ViewQuestion</a>
-
-                            <div class="btn-group">
-                                <a asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@item.Id" class="btn btn-outline-secondary">View Comment</a>
-                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <a asp-controller="Comment" asp-action="Index" asp-route-id="@item.Id" class="btn btn-danger">ViewComment</a>
                         </div>
                     </td>
                 </tr>
@@ -44,3 +51,4 @@
 
 
 
+.

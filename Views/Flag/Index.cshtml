@@ -2,48 +2,42 @@
 @{
     ViewData["Title"] = "Flag List";
     int count = 1;
-    var status = ViewBag.Status == false ? false : true;
 }
 
 <div>
     <a asp-controller="Flag" asp-action="CreateFlag" class="btn btn-outline-primary">Add New Flag</a>
 </div>
 
-@if (status is false)
+@await Html.PartialAsync("_ListAlert", Model)
+
+@if (Model is not null && Model.Count >= 1)
 {
-    <span>@ViewBag.Message</span>
-    return;
-}
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Flag Name</th>
-            <th scope="col">Flag Description</th>
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        @foreach (var item in Model)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <th scope="row">@count</th>
-                <td>@item.FlagName</td>
-                <td>@item.Description</td>
-                <td>
-                    <div class="btn-group">
-                        <a asp-controller="Flag" asp-action="GetFlagDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
-                    </div>
-                </td>
+                <th scope="col">#</th>
+                <th scope="col">Flag Name</th>
+                <th scope="col">Flag Description</th>
+                <th scope="col">Action</th>
             </tr>
-            count++;
-        }
-    </tbody>
-</table>
+        </thead>
 
+        <tbody>
 
-
-
-
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@count</th>
+                    <td>@item.FlagName</td>
+                    <td>@item.Description</td>
+                    <td>
+                        <div class="btn-group">
+                            <a asp-controller="Flag" asp-action="GetFlagDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                        </div>
+                    </td>
+                </tr>
+                count++;
+            }
+        </tbody>
+    </table>
+}

@@ -6,7 +6,7 @@ using MySql.EntityFrameworkCore.Metadata;
 
 namespace IdealDiscuss.Migrations
 {
-    public partial class dbsetup : Migration
+    public partial class ReMigrate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

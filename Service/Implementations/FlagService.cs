@@ -1,12 +1,9 @@
-﻿
-using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.CommentReport;
+﻿using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.FlagDto;
-using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
-using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using System.Linq.Expressions;
 
 namespace IdealDiscuss.Service.Implementations
 {
@@ -99,49 +96,65 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new FlagsResponseModel();
 
-            var flags = _flagRepository.GetAll();
-
-            if (flags.Count == 0)
+            try
             {
-                response.Message = "Flags not found!";
+                var flags = _flagRepository.GetAll(f => f.IsDeleted == false);
+
+                if (flags is null || flags.Count == 0)
+                {
+                    response.Message = "No flags found!";
+                    return response;
+                }
+
+                response.Data = flags
+                   .Select(f => new ViewFlagDto
+                   {
+                       Id = f.Id,
+                       FlagName = f.FlagName,
+                       Description = f.Description
+                   }).ToList();
+
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch(Exception ex)
+            {
+                response.Message = ex.StackTrace;
                 return response;
             }
 
-            response.Reports = flags
-               .Where(f => f.IsDeleted == false)
-               .Select(f => new ViewFlagDto
-               {
-                   Id = f.Id,
-                   FlagName = f.FlagName,
-                   Description = f.Description
-               }).ToList();
-
-            response.Status = true;
-            response.Message = "Success";
-
             return response;
-
         }
 
         public FlagResponseModel GetFlag(int flagId)
         {
             var response = new FlagResponseModel();
+            var flagExist = _flagRepository.Exists(f => (f.Id == flagId) && (f.Id == flagId && f.IsDeleted == false));
 
-            if (!_flagRepository.Exists(c => c.Id == flagId))
+            if (!flagExist)
             {
-                response.Message = $"CommentReport with id {flagId} does not exist.";
+                response.Message = $"Flag with id {flagId} does not exist.";
                 return response;
             }
-            var flags = _flagRepository.Get(flagId);
 
-            response.Message = "Success";
-            response.Status = true;
-            response.Report = new ViewFlagDto
+            try
             {
-                Id = flags.Id,
-                FlagName = flags.FlagName,
-                Description = flags.Description
-            };
+                var flags = _flagRepository.Get(flagId);
+
+                response.Message = "Success";
+                response.Status = true;
+                response.Data = new ViewFlagDto
+                {
+                    Id = flags.Id,
+                    FlagName = flags.FlagName,
+                    Description = flags.Description
+                };
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+                return response;
+            }
 
             return response;
         }
@@ -151,10 +164,20 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var modifiedDate = DateTime.Now;
+            Expression<Func<Flag, bool>> expression = f => (f.Id == flagId) 
+                                                && (f.Id == flagId 
+                                                && f.IsDeleted == false);
+            var isFlagExist = _flagRepository.Exists(expression);
 
-            if (!_flagRepository.Exists(x => x.Id == flagId))
+            if (!isFlagExist)
             {
-                response.Message = "Flag does not exist.";
+                response.Message = "Flag does not exist!";
+                return response;
+            }
+
+            if(string.IsNullOrWhiteSpace(updateFlagDto.FlagName))
+            {
+                response.Message = "Flag name cannot be null!";
                 return response;
             }
 
