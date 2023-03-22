@@ -1,4 +1,5 @@
 using IdealDiscuss.Dtos;
+using IdealDiscuss.Dtos.CommentDto;
 using IdealDiscuss.Dtos.QuestionDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
@@ -185,13 +186,20 @@ namespace IdealDiscuss.Service.Implementations
                 }
 
                 response.Questions = questions
-                    .Where(q => q.IsClosed == false && q.IsDeleted == false)
+                    .Where(q => q.IsDeleted == false)
                     .Select(question => new ViewQuestionDto
                     {
                         Id = question.Id,
                         QuestionText = question.QuestionText,
                         UserName = question.User.UserName,
                         ImageUrl = question.ImageUrl,
+                        Comments = question.Comments
+                        .Select(c => new ListCommentDto
+                        {
+                            Id = c.Id,
+                            CommentText = c.CommentText,
+                            UserName = c.User.UserName,
+                        }).ToList()
                     }).ToList();
 
                 response.Status = true;
@@ -249,8 +257,9 @@ namespace IdealDiscuss.Service.Implementations
         public QuestionResponseModel GetQuestion(int questionId)
         {
             var response = new QuestionResponseModel();
+            var questionExist = _questionRepository.Exists(q => q.Id == questionId && q.IsDeleted == false);
 
-            if (!_questionRepository.Exists(c => c.Id == questionId))
+            if (!questionExist)
             {
                 response.Message = $"Question with id {questionId} does not exist!";
                 return response;
@@ -305,13 +314,14 @@ namespace IdealDiscuss.Service.Implementations
 
             return response;
         }
+
         public QuestionsResponseModel DisplayQuestion()
         {
             var response = new QuestionsResponseModel();
 
             try
             {
-                var questions = _questionRepository.SelectQuestionByCategory();
+                var questions = _questionRepository.GetQuestions();
 
                 if (questions.Count == 0)
                 {
@@ -319,14 +329,25 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.Questions = questions.Take(4)
-                    .Where(q => q.IsDeleted == false)
+                response.Questions = questions
+                    .Where(q => !q.IsDeleted)
                     .Select(question => new ViewQuestionDto
                     {
                         Id = question.Id,
-                        QuestionText = question.Question.QuestionText,
-                        UserName = question.Question.User.UserName,
-                        ImageUrl = question.Question.ImageUrl,
+                        UserId = question.UserId,
+                        QuestionText = question.QuestionText,
+                        UserName = question.User.UserName,
+                        ImageUrl = question.ImageUrl,
+                        Comments = question.Comments
+                            .Where(c => !c.IsDeleted)
+                            .Select(c => new ListCommentDto
+                            {
+                                Id = c.Id,
+                                UserId = c.UserId,
+                                CommentText = c.CommentText,
+                                UserName = c.User.UserName
+                            })
+                            .ToList()
                     }).ToList();
 
                 response.Status = true;
@@ -334,12 +355,11 @@ namespace IdealDiscuss.Service.Implementations
             }
             catch (Exception ex)
             {
-                response.Message = $"An error occured: {ex.StackTrace}";
+                response.Message = $"An error occured: {ex.Message}";
                 return response;
             }
 
             return response;
         }
-
     }
 }
