@@ -99,7 +99,7 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index", "Question");
         }
 
-        [HttpPost("question/{id}/delete")]
+        [HttpPost("QuestionController/{id}/delete")]
         public IActionResult DeleteQuestion([FromRoute] int id)
         {
             var response = _questionService.Delete(id);

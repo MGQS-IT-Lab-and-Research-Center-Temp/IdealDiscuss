@@ -14,7 +14,10 @@
         <div>
             @Model.ImageUrl
             <p class="lead">@Model.QuestionText</p>
+
+   
             <hr />
+            
             <div class="btn-group">
                 @if (Model.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
                 {
@@ -26,7 +29,18 @@
                     <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
                 }
             </div>
-            @*Put the list of comment here using unorder list*@
+           <h5 class="mt-3">Comments:</h5>
+           <ul>
+                @foreach (var comment in Model.Comments)
+                {
+                    <li>
+                        @comment.CommentText -
+                        <i class="badge bg-secondary">by @comment.UserName</i>
+                    </li>
+                }
+           </ul>
+           
+
         </div>
     }
 </div>

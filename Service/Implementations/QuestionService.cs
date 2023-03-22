@@ -116,6 +116,8 @@ namespace IdealDiscuss.Service.Implementations
             question.ModifiedBy = modifiedBy;
             question.LastModified = DateTime.Now;
 
+            
+
             try
             {
                 _questionRepository.Update(question);
@@ -199,6 +201,7 @@ namespace IdealDiscuss.Service.Implementations
                             Id = c.Id,
                             CommentText = c.CommentText,
                             UserName = c.User.UserName,
+ 
                         }).ToList()
                     }).ToList();
 
@@ -240,6 +243,13 @@ namespace IdealDiscuss.Service.Implementations
                         QuestionText = question.QuestionText,
                         UserName = question.User.UserName,
                         ImageUrl = question.ImageUrl,
+                        Comments = question.Comments.Select(c => new ListCommentDto
+                        {
+                            Id = c.Id,
+                            CommentText = c.CommentText,
+                            UserName = c.User.UserName,
+
+                        }).ToList()
                     }).ToList();
 
                 response.Status = true;
@@ -274,7 +284,14 @@ namespace IdealDiscuss.Service.Implementations
                 QuestionText = question.QuestionText,
                 UserId = question.UserId,
                 UserName = question.User.UserName,
-                ImageUrl = question.ImageUrl
+                ImageUrl = question.ImageUrl,
+                Comments = question.Comments.Select(c => new ListCommentDto
+                {
+                    Id = c.Id,
+                    CommentText = c.CommentText,
+                    UserName = c.User.UserName,
+
+                }).ToList()
             };
 
             return response;
