@@ -1,4 +1,7 @@
-﻿namespace IdealDiscuss.Dtos.QuestionDto
+﻿using IdealDiscuss.Dtos.CommentDto;
+using IdealDiscuss.Entities;
+
+namespace IdealDiscuss.Dtos.QuestionDto
 {
     public class ViewQuestionDto
     {
@@ -7,5 +10,6 @@
         public string QuestionText { get; set; }
         public string ImageUrl { get; set; }
         public string UserName { get; set; }
+        public List<ListCommentDto> Comments { get; set; }
     }
 }

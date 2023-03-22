@@ -5,6 +5,7 @@ using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using System.Linq.Expressions;
 
 namespace IdealDiscuss.Service.Implementations
 {
@@ -21,12 +22,12 @@ namespace IdealDiscuss.Service.Implementations
             _categoryRepository = categoryRepository;
         }
 
-        public BaseResponseModel CreateCategory(CreateCategoryDto createCategoryDto)
+        public BaseResponseModel CreateCategory(CreateCategoryDto request)
         {
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
 
-            var isCategoryExist = _categoryRepository.Exists(c => c.Name == createCategoryDto.Name);
+            var isCategoryExist = _categoryRepository.Exists(c => c.Name == request.Name );
 
             if (isCategoryExist)
             {
@@ -34,7 +35,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            if (string.IsNullOrWhiteSpace(createCategoryDto.Name))
+            if (string.IsNullOrWhiteSpace(request.Name))
             {
                 response.Message = "Category name is required!";
                 return response;
@@ -42,8 +43,8 @@ namespace IdealDiscuss.Service.Implementations
 
             var category = new Category
             {
-                Name = createCategoryDto.Name,
-                Description = createCategoryDto.Description,
+                Name = request.Name,
+                Description = request.Description,
                 CreatedBy = createdBy,
                 DateCreated = DateTime.Now
             };
@@ -96,14 +97,30 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new CategoriesResponseModel();
 
-            var category = _categoryRepository.GetAll();
-
-            response.Data = category.Select(category => new ViewCategoryDto
+            try
             {
-                Id = category.Id,
-                Name = category.Name,
-                Description = category.Description
-            }).ToList();
+                Expression<Func<Category, bool>> expression = c => c.IsDeleted == false;
+                var category = _categoryRepository.GetAll(expression);
+
+                if (category is null || category.Count == 0)
+                {
+                    response.Message = "No categories found!";
+                    return response;
+                }
+
+                response.Data = category.Select(
+                    category => new ViewCategoryDto
+                    {
+                        Id = category.Id,
+                        Name = category.Name,
+                        Description = category.Description
+                    }).ToList();
+            }
+            catch(Exception ex)
+            {
+                response.Message = ex.Message;
+                return response;
+            }
 
             response.Status = true;
             response.Message = "Success";
@@ -115,7 +132,12 @@ namespace IdealDiscuss.Service.Implementations
         {
 			var response = new CategoryResponseModel();
 
-            var categoryExist = _categoryRepository.Exists(c => (c.Id == categoryId) && (c.Id == categoryId && c.IsDeleted == false));
+            Expression<Func<Category, bool>> expression = c =>
+                                                (c.Id == categoryId)
+                                                && (c.Id == categoryId 
+                                                && c.IsDeleted == false);
+
+            var categoryExist = _categoryRepository.Exists(expression);
 
             if (!categoryExist)
 			{
@@ -164,6 +186,5 @@ namespace IdealDiscuss.Service.Implementations
             response.Message = "Category updated successfully.";
             return response;
         }
-        
     }
 }

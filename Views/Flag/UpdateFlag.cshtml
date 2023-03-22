@@ -3,27 +3,33 @@
     ViewData["Title"] = "Update Flag";
 }
 
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md-6">
-		   <form asp-action="UpdateFlag">
-              	<div class="form-group">
-					<label asp-for="FlagName" class="control-label"></label>
-					<input asp-for="FlagName" type="text" class="form-control" value="@Model.FlagName" />
-                    <span asp-validation-for="FlagName" class="text-danger"></span>
-				</div>
+<div class="body">
+    @await Html.PartialAsync("_Alert", Model)
 
-				<div class="form-group"> 
-					<label asp-for="Description" class="control-label"></label>
-					<input asp-for="Description" type="text" class="form-control" value="@Model.Description" />
-					<span asp-validation-for="Description" class="text-danger"></span>
-				</div>
-             <div class="col-md-12">
-                 <button type="submit" class="btn btn-primary">Update</button>
-             </div>
-            </form>
-		</div>
-	</div>
+    @if (Model is not null)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <form asp-action="UpdateFlag">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="FlagName" class="control-label"></label>
+                        <input asp-for="FlagName" type="text" class="form-control" value="@Model.FlagName" />
+                        <span asp-validation-for="FlagName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" type="text" class="form-control" value="@Model.Description" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
 </div>
 
 

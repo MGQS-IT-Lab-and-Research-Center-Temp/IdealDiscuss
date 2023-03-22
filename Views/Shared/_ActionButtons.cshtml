@@ -1,0 +1,11 @@
+﻿@model int
+
+<div class="btn-group">
+    <a asp-controller="@ViewData["ControllerName"].ToString()" asp-action="@ViewData["UpdateActionName"].ToString()" asp-route-id="@Model" class="btn btn-primary">Update</a>
+    &nbsp;
+    <form asp-action="@ViewData["DeleteActionName"].ToString()" asp-route-id="@Model" style="display:inline">
+        <button type="submit" class="btn btn-danger">Delete</button>
+    </form>
+    &nbsp;
+    <a asp-controller="@ViewData["ControllerName"].ToString()" asp-action="@ViewData["IndexActionName"].ToString()" class="btn btn-secondary">Back to list</a>
+</div>

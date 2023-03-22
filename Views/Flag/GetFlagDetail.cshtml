@@ -1,29 +1,34 @@
 ﻿@model IdealDiscuss.Dtos.FlagDto.ViewFlagDto
 @{
-	ViewData["Title"] = "Flag Details";
+    ViewData["Title"] = "Flag Details";
 }
 
 <h3 class="card-title">
-	<i class="fas fa-text-width"></i>
-	Flag Details
+    <i class="fas fa-text-width"></i>
+    @ViewData["Title"]
 </h3>
 
 <div class="card-body">
-	<dl class="row">
-		<dt class="col-sm-4">FlagName</dt>
-		<dd class="col-sm-8">@Model.FlagName</dd>
-		<dt class="col-sm-4">Description</dt>
-		<dd class="col-sm-8">@Model.Description</dd>
-	</dl>
 
-	<div class="kt-form__actions">
-		<a class="btn btn-success" asp-action="UpdateFlag" asp-controller="Flag" asp-route-id="@Model.Id">update</a>
-		&nbsp;
-		<a class="btn btn-primary" asp-action="Index" asp-controller="Flag">Back to List</a>
-		&nbsp;
-		<hr />
-		<form asp-action="DeleteFlag" asp-controller="Flag" asp-route-id="@Model.Id">
-			<button type="submit" class="btn btn-danger">Delete</button>
-		</form>
-	</div>
+    @await Html.PartialAsync("_Alert", Model)
+
+    @if (Model is not null)
+    {
+        <dl class="row">
+            <dt class="col-sm-4">FlagName</dt>
+            <dd class="col-sm-8">@Model.FlagName</dd>
+            <dt class="col-sm-4">Description</dt>
+            <dd class="col-sm-8">@Model.Description</dd>
+        </dl>
+
+        <div class="btn-group">
+            <a asp-controller="Flag" asp-action="UpdateFlag" asp-route-id="@Model.Id" class="btn btn-primary">Update</a>
+            &nbsp;
+            <form asp-action="DeleteFlag" asp-route-id="@Model.Id" style="display:inline">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+            &nbsp;
+            <a asp-controller="Flag" asp-action="Index" class="btn btn-secondary">Back to list</a>
+        </div>
+    }
 </div>

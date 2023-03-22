@@ -15,26 +15,45 @@ namespace IdealDiscuss.Repository.Implementations
 
         public Question GetQuestion(Expression<Func<Question, bool>> expression)
         {
-            var question = _context.Questions.Include(c => c.User).SingleOrDefault(expression);
+            var question = _context.Questions
+                .Include(c => c.User)
+                .Include(c => c.Comments)
+                .ThenInclude(u => u.User)
+                .SingleOrDefault(expression);
+
             return question;
         }
 
         public List<Question> GetQuestions()
         {
-            var questions = _context.Questions.Include(c => c.User).ToList();
+            var questions = _context.Questions
+                .Include(u => u.User)
+                .Include(c => c.Comments)
+                .ThenInclude(u => u.User)
+                .ToList();
 
             return questions;
         }
+
+        public List<Question> GetQuestions(Expression<Func<Question, bool>> expression)
+        {
+            var questions = _context.Questions.Where(expression).ToList();
+
+            return questions;
+        }
+
         public List<CategoryQuestion> GetQuestionByCategoryId(int categoryId)
         {
             var questions = _context.CategoryQuestions
                 .Include(c => c.Category)
                 .Include(c => c.Question)
-                .ThenInclude(c=>c.User)
-                .Where(c=>c.CategoryId.Equals(categoryId)).ToList();
+                .ThenInclude(c => c.User)
+                .Where(c => c.CategoryId.Equals(categoryId))
+                .ToList();
 
             return questions;
         }
+
         public List<CategoryQuestion> SelectQuestionByCategory()
         {
             var questions = _context.CategoryQuestions

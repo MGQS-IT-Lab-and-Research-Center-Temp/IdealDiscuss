@@ -1,31 +1,32 @@
 ﻿@model IdealDiscuss.Dtos.RoleDto.ViewRoleDto
 @{
-	ViewData["Title"] = "Update Role";
+    ViewData["Title"] = "Update Role";
 }
 
-@Html.PartialAsync("_Alert", Model)
-	
-	<div class="row">
-		<div class="col-md-6">
-		   <form asp-action="Update">
-              	<div class="form-group" type>
-					 <label asp-for="RoleName" class="control-label"></label>
-					<input asp-for="RoleName" type="text" class="form-control-plaintext" value="@Model.RoleName" readonly />
-                    <span asp-validation-for="RoleName" class="text-danger"></span>
-				</div>
+<div class="body">
+    @await Html.PartialAsync("_Alert", Model)
 
-				<div class="form-group"> 
-					<label asp-for="Description" class="control-label"></label>
-					<input asp-for="Description" type="text" class="form-control" value="@Model.Description"/><br />
-					<span asp-validation-for="Description" class="text-danger"></span>
-				</div>
-             <div class="col-md-12">
-                 <button type="submit" class="btn btn-primary">Update</button>
-             </div>
-            </form>
-		</div>
-	</div>
+    @if (Model is not null)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <form asp-action="Update">
+                    <div class="form-group" type>
+                        <label asp-for="RoleName" class="control-label"></label>
+                        <input asp-for="RoleName" type="text" class="form-control-plaintext" value="@Model.RoleName" readonly />
+                        <span asp-validation-for="RoleName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" type="text" class="form-control" value="@Model.Description" /><br />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
 </div>
-
-
-

@@ -1,29 +1,28 @@
 ﻿@{
     ViewData["Title"] = "Create New Flag";
-    var status = ViewData["Status"] = false ? "alert-danger" : "alert-success";
 }
-@if (ViewData["Message"] != null)
-{
-    <div class="alert @status alert-dismissible" role="alert">
-        @ViewData["Message"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+<div class="body">
+
+    @await Html.PartialAsync("_NoModelAlert")
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="CreateFlag">
+                <div class="col-md-12 mb-2">
+                    <label for="FlagName" class="form-label">Flag Name:</label>
+                    <input type="text" class="form-control" placeholder="Enter Flag name" name="FlagName">
+                </div>
+
+                <div class="col-md-12 mb-2">
+                    <label for="Description" class="form-label">Description:</label>
+                    <textarea class="form-control" placeholder="Enter description" name="Description"></textarea>
+                </div>
+
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">Create Flag</button>
+                </div>
+            </form>
+        </div>
     </div>
-}
-<div class="d-flex justify-content-center">
-
-    <form asp-action="CreateFlag">
-        <div class="col-md-12 mb-2">
-            <label for="FlagName" class="form-label">Flag Name:</label>
-            <input type="text" class="form-control" placeholder="Enter Flag name" name="FlagName">
-        </div>
-
-        <div class="col-md-12 mb-2">
-            <label for="Description" class="form-label">Description:</label>
-            <textarea class="form-control" placeholder="Enter description" name="Description"></textarea>
-        </div>
-
-        <div class="col-md-12">
-            <button type="submit" class="btn btn-primary">Create Flag</button>
-        </div>
-    </form>
 </div>
