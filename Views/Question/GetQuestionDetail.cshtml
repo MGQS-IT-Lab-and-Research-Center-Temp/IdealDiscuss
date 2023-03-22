@@ -22,11 +22,11 @@
                 @if (Model.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
                 {
                     <a asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@Model.Id" class="btn btn-success">Delete</a>
-                    <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
+                    <a asp-controller="Question" asp-action="UserQuestions" class="btn btn-secondary">Back to list</a>
                 }
                 else
                 {
-                    <a asp-controller="Question" asp-action="GetQuestionDetail" class="btn btn-secondary">Back to list</a>
+                    <a asp-controller="Question" asp-action="UserQuestions" class="btn btn-secondary">Back to list</a>
                 }
             </div>
             @if (Model.Comments is not null)
