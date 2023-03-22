@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Comment Detail";
-    var status = ViewBag.Status == false ? false : true;
 }
 
 <div class="body">
@@ -11,24 +10,21 @@
 
     @if (Model is not null)
     {
-        <dl class="row">
-            <dt class="col-sm-4">
-                Comment Text:
-            </dt>
-
-            <dd class="col-sm-8">
+        <div class="">
+            <p class="lead">
                 @Model.CommentText
-            </dd>
-        </dl>
-        <br />
-        <div class="btn-group">
-            <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Update</a>
-            &nbsp;
-            <form asp-action="DeleteComment" asp-route-id="@Model.Id">
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
-            &nbsp;
-            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to list</a>
+            </p>
+
+            <hr />
+            <div class="btn-group">
+                <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Update</a>
+                &nbsp;
+                <form asp-action="DeleteComment" asp-route-id="@Model.Id">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+                &nbsp;
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to list</a>
+            </div>
         </div>
     }
 </div>

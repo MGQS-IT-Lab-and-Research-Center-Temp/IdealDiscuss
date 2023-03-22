@@ -11,34 +11,22 @@
 
     @if (Model is not null)
     {
-        <dl class="row">
-            <dt class="col-sm-4">
-                Question
-            </dt>
-
-            <dd class="col-sm-8">
-                @Model.QuestionText
-            </dd>
-
-            <dt class="col-sm-4">
-                Image Url:
-            </dt>
-
-            <dd class="col-sm-8">
-                @Model.ImageUrl
-            </dd>
-        </dl>
-        <br />
-        <div class="btn-group">
-            @if (Model.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
-            {
-                <a asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@Model.Id" class="btn btn-success">Delete</a>
-                <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
-            }
-            else
-            {
-                <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
-            }
+        <div>
+            @Model.ImageUrl
+            <p class="lead">@Model.QuestionText</p>
+            <hr />
+            <div class="btn-group">
+                @if (Model.UserId == Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value))
+                {
+                    <a asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@Model.Id" class="btn btn-success">Delete</a>
+                    <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
+                }
+                else
+                {
+                    <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
+                }
+            </div>
+            @*Put the list of comment here using unorder list*@
         </div>
     }
 </div>

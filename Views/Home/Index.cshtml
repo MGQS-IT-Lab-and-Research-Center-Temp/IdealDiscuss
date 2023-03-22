@@ -20,13 +20,16 @@
             <p>Be the first to comment on this</p>
         }
 
-        @if (question.Comments.Count >= 1)
+        @if (question.Comments.Count != 0)
         {
             <h5 class="mt-3">Comments:</h5>
             <ul>
                 @foreach (var comment in question.Comments)
                 {
-                    <li>@comment.CommentText - <i class="badge bg-secondary">by @comment.UserName</i></li>
+                    <li>
+                        @comment.CommentText - 
+                        <i class="badge bg-secondary">by @comment.UserName</i>
+                    </li>
                 }
             </ul>
         }

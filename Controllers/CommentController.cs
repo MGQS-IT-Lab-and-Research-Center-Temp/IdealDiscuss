@@ -14,8 +14,8 @@ namespace IdealDiscuss.Controllers
         private readonly ILogger<CommentController> _logger;
 
         public CommentController(
-            ILogger<CommentController> logger, 
-            ICommentService commentService, 
+            ILogger<CommentController> logger,
+            ICommentService commentService,
             IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
@@ -53,7 +53,6 @@ namespace IdealDiscuss.Controllers
         [HttpPost]
         public IActionResult Create(CreateCommentDto request)
         {
-            var user = _httpContextAccessor.HttpContext.User;
             var response = _commentService.CreateComment(request);
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
@@ -63,21 +62,25 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult Edit(int id)
         {
-            return View();
+            var response = _commentService.GetComment(id);
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
+
+            return View(response.Comment);
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, UpdateCommentDto updateCommentDto)
+        public IActionResult Edit(int id, UpdateCommentDto request)
         {
-            var response = _commentService.UpdateComment(id, updateCommentDto);
+            var response = _commentService.UpdateComment(id, request);
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
 
             return RedirectToAction("Index", "Comment");
         }
 
-        [Authorize(Roles ="Admin")]
-        [HttpPost("comment/{id}/delete")]
+        [Authorize(Roles = "Admin")]
+        [HttpPost("{id}/delete")]
         public IActionResult DeleteComment([FromRoute] int id)
         {
             var response = _commentService.DeleteComment(id);

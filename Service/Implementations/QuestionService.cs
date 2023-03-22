@@ -330,21 +330,24 @@ namespace IdealDiscuss.Service.Implementations
                 }
 
                 response.Questions = questions
-                    .Where(q => q.IsDeleted == false)
+                    .Where(q => !q.IsDeleted)
                     .Select(question => new ViewQuestionDto
                     {
                         Id = question.Id,
+                        UserId = question.UserId,
                         QuestionText = question.QuestionText,
                         UserName = question.User.UserName,
                         ImageUrl = question.ImageUrl,
                         Comments = question.Comments
-                        .Where(c => c is not null && c.User is not null)
-                        .Select(c => new ListCommentDto
-                        {
-                            Id = c.Id,
-                            CommentText = c.CommentText,
-                            UserName = c.User.UserName,
-                        }).ToList()
+                            .Where(c => !c.IsDeleted)
+                            .Select(c => new ListCommentDto
+                            {
+                                Id = c.Id,
+                                UserId = c.UserId,
+                                CommentText = c.CommentText,
+                                UserName = c.User.UserName
+                            })
+                            .ToList()
                     }).ToList();
 
                 response.Status = true;
@@ -352,12 +355,11 @@ namespace IdealDiscuss.Service.Implementations
             }
             catch (Exception ex)
             {
-                response.Message = $"An error occured: {ex.StackTrace}";
+                response.Message = $"An error occured: {ex.Message}";
                 return response;
             }
 
             return response;
         }
-
     }
 }
