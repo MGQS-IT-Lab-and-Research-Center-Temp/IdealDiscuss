@@ -7,7 +7,7 @@
 @if (ViewBag.Message != null)
 {
 	<div class="alert @status alert-dismissible" role="alert">
-		@ViewBag.Message
+		@ViewData["Message"]
 		<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 	</div>
 }
@@ -28,37 +28,8 @@
 			</select>
 		</div>
 
-
-
 		<div class="col-md-12">
 			<button type="submit" class="btn btn-primary">Report Comment</button>
 		</div>
 	</form>
 </div>
-
-@*<form method="post">
-    <select id="Id" name="FlagId" asp-items="@Model.Customers" multiple="multiple">
-        <option value="0">--Select Customer--</option>
-    </select>
-    <br />
-    <br />
-    <input type="submit" value="Submit" asp-page-handler="Submit" />
-    @if (ViewData["Message"] != null)
-    {
-        <script type="text/javascript">
-            window.onload = function () {
-                alert("@ViewData["Message"]");
-            };
-        </script>
-    }
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js">
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            $("#Id").select2();
-        });
-    </script>
-</form>
-*@

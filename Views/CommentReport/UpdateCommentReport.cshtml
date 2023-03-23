@@ -2,39 +2,44 @@
 @{
 	ViewData["Title"] = "Edit CommentReport";
 }
-<section class="content">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="col-md-6">
-				<form asp-action="UpdateCommentReport" asp-route-id="@Model.Id">
-					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-					<input type="hidden" asp-for="Id" />
-					<div class="form-group">
-						<label asp-for="AdditionalComment" class="control-label"></label>
-						<input asp-for="AdditionalComment" class="form-control" value="@Model.AdditionalComment" />
-						<span asp-validation-for="AdditionalComment" class="text-danger"></span>
-					</div>
 
-					<div class="form-row">
-						<div class="kt-form__actions">
-							<button class="btn btn-success"
-									type="submit">
-								Save Changes
-							</button>
-							&nbsp;
-							&nbsp;
-							<a class="btn btn-primary" asp-action="GetCommentReportDetail" asp-route-id="@Model.Id">
-								Return to Details
-							</a>
-							&nbsp;
-							<a class="btn btn-primary"
-							   asp-action="GetCommentReport">
-								Return to CommentReport List
-							</a>
+@await Html.PartialAsync("_Alert", Model)
+
+@if (Model is not null)
+{
+	<section class="content">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-6">
+					<form asp-action="UpdateCommentReport" asp-route-id="@Model.Id">
+						<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+						<input type="hidden" asp-for="Id" />
+						<div class="form-group">
+							<label asp-for="AdditionalComment" class="control-label"></label>
+							<input asp-for="AdditionalComment" class="form-control" value="@Model.AdditionalComment" />
+							<span asp-validation-for="AdditionalComment" class="text-danger"></span>
 						</div>
-					</div>
-				</form>
+
+						<div class="form-row">
+							<div class="kt-form__actions">
+								<button class="btn btn-success"
+										type="submit">
+									Save Changes
+								</button>
+								&nbsp;
+								<a class="btn btn-primary" asp-action="GetCommentReportDetail" asp-route-id="@Model.Id">
+									Back to Details
+								</a>
+								&nbsp;
+								<a class="btn btn-primary"
+							   asp-action="GetCommentReport">
+									Back to  List
+								</a>
+							</div>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
+}

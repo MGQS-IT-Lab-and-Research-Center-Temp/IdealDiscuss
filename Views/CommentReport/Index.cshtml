@@ -1,44 +1,38 @@
 ﻿@model List<IdealDiscuss.Dtos.CommentReport.ViewCommentReportDto>
-
 @{
     ViewData["Title"] = "CommentReport List";
     int count = 1;
-    var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
 }
+@await Html.PartialAsync("_ListAlert", Model)
 
-@if (ViewBag.Message != null)
+@if (Model is not null && Model.Count >= 1)
 {
-    <div class="alert @status alert-dismissible" role="alert">
-        @ViewBag.Message
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">CommentReporter</th>
-            <th scope="col">AdditionalComment</th>
-            <th scope="col">Action</th>
-        </tr>
-    </thead>
-
-    <tbody>
-
-        @foreach (var item in Model)
-        {
+    <table class="table">
+        <thead>
             <tr>
-                <th scope="row">@count</th>
-                <td>@item.CommentReporter</td>
-                <td>@item.AdditionalComment</td>
-                <td>
-                    <div class="btn-group">
-                        <a asp-controller="CommentReport" asp-action="GetCommentReportDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
-                    </div>
-                </td>
+                <th scope="col">#</th>
+                <th scope="col">CommentReporter</th>
+                <th scope="col">AdditionalComment</th>
+                <th scope="col">Action</th>
             </tr>
-            count++;
-        }
-    </tbody>
-</table>
+        </thead>
+
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <th scope="row">@count</th>
+                    <td>@item.CommentReporter</td>
+                    <td>@item.AdditionalComment</td>
+                    <td>
+                        <div class="btn-group">
+                            <a asp-controller="CommentReport" asp-action="GetCommentReportDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                        </div>
+                    </td>
+                </tr>
+                count++;
+            }
+        </tbody>
+    </table>
+}

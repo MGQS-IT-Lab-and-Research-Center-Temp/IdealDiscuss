@@ -25,15 +25,17 @@ namespace IdealDiscuss.Controllers
         public IActionResult CreateCommentReport(CreateCommentReportDto createCommentReportDto)
         {
             var response = _commentReportService.CreateCommentReport(createCommentReportDto);
-            return View(response);
+			ViewData["Message"] = response.Message;
+			ViewData["Status"] = response.Status;
+			return View(response);
         }
 
 
         public IActionResult Index()
         {
             var response = _commentReportService.GetAllCommentReport();
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+			ViewData["Message"] = response.Message;
+			ViewData["Status"] = response.Status;
             return View(response.CommentReports);
         }
 
@@ -41,7 +43,9 @@ namespace IdealDiscuss.Controllers
         public IActionResult GetCommentReportDetail(int id)
         {
             var response = _commentReportService.GetCommentReport(id);
-            return View(response.CommentReport);
+			ViewData["Message"] = response.Message;
+			ViewData["Status"] = response.Status;
+			return View(response.CommentReport);
         }
 
 
@@ -56,15 +60,17 @@ namespace IdealDiscuss.Controllers
         public IActionResult UpdateCommentReport(int id,UpdateCommentReportDto updateCommentReportDto)
         {
             var response = _commentReportService.UpdateCommentReport(id,updateCommentReportDto);
-            return RedirectToAction("Index");
+			ViewData["Message"] = response.Message;
+			ViewData["Status"] = response.Status;
+			return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public IActionResult DeleteCommentReport([FromRoute] int id)
+        public IActionResult DeleteCommentReport(int id)
         {
             var response = _commentReportService.DeleteCommentReport(id);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+			ViewData["Message"] = response.Message;
+			ViewData["Status"] = response.Status;
 
             return RedirectToAction("Index");
         }
