@@ -1,19 +1,23 @@
-﻿@model IdealDiscuss.Dtos.CommentDto.UpdateCommentDto
+﻿@model IdealDiscuss.Dtos.CommentDto.ViewCommentDto
 @{
 	ViewData["Title"] = "Edit Comment";
 }
-<div class="container-fluid">
+<div class="body">
+
 	<div class="row">
 		<div class="col-md-6">
 			<form asp-action="Edit">
-				<div class="form-group">
+
+				<div class="col-md-12 mb-3">
 					<label asp-for="CommentText" class="control-label"></label>
-					<input asp-for="CommentText" type="text" class="form-control" />
+					<textarea asp-for="CommentText" type="text" class="form-control"></textarea>
 					<span asp-validation-for="CommentText" class="text-danger"></span>
 				</div>
+
 				<div class="col-md-12">
 					<button type="submit" class="btn btn-primary">Update</button>
 				</div>
+
 			</form>
 		</div>
 	</div>

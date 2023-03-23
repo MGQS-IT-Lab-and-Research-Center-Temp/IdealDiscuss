@@ -1,4 +1,5 @@
 using IdealDiscuss.Dtos;
+using IdealDiscuss.Dtos.CommentDto;
 using IdealDiscuss.Dtos.QuestionDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
@@ -146,13 +147,6 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             var question = _questionRepository.Get(questionId);
-
-            if (question.Comments.Count != 0)
-            {
-                response.Message = "You cannot delete question";
-                return response;
-            }
-
             question.IsDeleted = true;
 
             try
@@ -185,13 +179,20 @@ namespace IdealDiscuss.Service.Implementations
                 }
 
                 response.Questions = questions
-                    .Where(q => q.IsClosed == false && q.IsDeleted == false)
+                    .Where(q => q.IsDeleted == false)
                     .Select(question => new ViewQuestionDto
                     {
                         Id = question.Id,
                         QuestionText = question.QuestionText,
                         UserName = question.User.UserName,
                         ImageUrl = question.ImageUrl,
+                        Comments = question.Comments
+                        .Select(c => new ListCommentDto
+                        {
+                            Id = c.Id,
+                            CommentText = c.CommentText,
+                            UserName = c.User.UserName,
+                        }).ToList()
                     }).ToList();
 
                 response.Status = true;
@@ -256,7 +257,7 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Question with id {questionId} does not exist!";
                 return response;
             }
-            var question = _questionRepository.GetQuestion(c => c.Id == questionId);
+            var question = _questionRepository.GetQuestion(c => c.Id == questionId );
 
             response.Message = "Success";
             response.Status = true;
@@ -266,7 +267,17 @@ namespace IdealDiscuss.Service.Implementations
                 QuestionText = question.QuestionText,
                 UserId = question.UserId,
                 UserName = question.User.UserName,
-                ImageUrl = question.ImageUrl
+                ImageUrl = question.ImageUrl,
+                 Comments = question.Comments
+                            .Where(c => !c.IsDeleted)
+                            .Select(c => new ListCommentDto
+                            {
+                                Id = c.Id,
+                                UserId = c.UserId,
+                                CommentText = c.CommentText,
+                                UserName = c.User.UserName
+                            })
+                            .ToList()
             };
 
             return response;
@@ -306,6 +317,7 @@ namespace IdealDiscuss.Service.Implementations
 
             return response;
         }
+
         public QuestionsResponseModel DisplayQuestion()
         {
             var response = new QuestionsResponseModel();
@@ -321,13 +333,24 @@ namespace IdealDiscuss.Service.Implementations
                 }
 
                 response.Questions = questions
-                    .Where(q => q.IsDeleted == false)
+                    .Where(q => !q.IsDeleted)
                     .Select(question => new ViewQuestionDto
                     {
                         Id = question.Id,
+                        UserId = question.UserId,
                         QuestionText = question.QuestionText,
                         UserName = question.User.UserName,
                         ImageUrl = question.ImageUrl,
+                        Comments = question.Comments
+                            .Where(c => !c.IsDeleted)
+                            .Select(c => new ListCommentDto
+                            {
+                                Id = c.Id,
+                                UserId = c.UserId,
+                                CommentText = c.CommentText,
+                                UserName = c.User.UserName
+                            })
+                            .ToList()
                     }).ToList();
 
                 response.Status = true;
@@ -335,12 +358,11 @@ namespace IdealDiscuss.Service.Implementations
             }
             catch (Exception ex)
             {
-                response.Message = $"An error occured: {ex.StackTrace}";
+                response.Message = $"An error occured: {ex.Message}";
                 return response;
             }
 
             return response;
         }
-
     }
 }
