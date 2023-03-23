@@ -121,7 +121,7 @@ namespace IdealDiscuss.Service.Implementations
 
             var commentReports = _commentReportRepository.GetCommentReports();
 
-            response.Reports = commentReports.Select(commentReport => new ViewCommentReportDto
+            response.CommentReports = commentReports.Select(commentReport => new ViewCommentReportDto
             {
                 Id = commentReport.Id,
                 AdditionalComment = commentReport.AdditionalComment,
@@ -151,7 +151,7 @@ namespace IdealDiscuss.Service.Implementations
 
             response.Message = "Success";
             response.Status = true;
-            response.Report = new ViewCommentReportDto
+            response.CommentReport = new ViewCommentReportDto
             {
                 Id = commentReportId,
                 AdditionalComment = commentReport.AdditionalComment,

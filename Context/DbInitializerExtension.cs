@@ -15,7 +15,7 @@ internal static class DbInitializerExtension
             var context = services.GetRequiredService<IdealDiscussContext>();
             DbInitializer.Initialize(context);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
 
         }
