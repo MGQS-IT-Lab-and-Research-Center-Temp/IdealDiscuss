@@ -37,7 +37,12 @@ namespace IdealDiscuss.Repository.Implementations
 
         public List<Question> GetQuestions(Expression<Func<Question, bool>> expression)
         {
-            var questions = _context.Questions.Where(expression).ToList();
+            var questions = _context.Questions
+                .Where(expression)
+                .Include(u => u.User)
+                .Include(c => c.Comments)
+                .ThenInclude(u => u.User)
+                .ToList();
 
             return questions;
         }

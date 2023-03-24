@@ -35,15 +35,6 @@ namespace IdealDiscuss.Controllers
             return View(questions.Questions);
         }
 
-        public IActionResult UserQuestions()
-        {
-            var questions = _questionService.GetUserQuestions();
-            ViewData["Message"] = questions.Message;
-            ViewData["Status"] = questions.Status;
-
-            return View(questions.Questions);
-        }
-
         public IActionResult Create()
         {
             var category = _categoryService.GetAllCategory();
