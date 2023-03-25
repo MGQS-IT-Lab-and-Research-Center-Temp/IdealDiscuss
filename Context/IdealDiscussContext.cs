@@ -24,8 +24,6 @@ namespace IdealDiscuss.Context
             builder.Entity<QuestionReportFlag>().HasOne(q => q.Flag).WithMany().HasForeignKey(q => q.FlagId);*/
             //builder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-
         }
 
         public DbSet<User> Users { get; set; }

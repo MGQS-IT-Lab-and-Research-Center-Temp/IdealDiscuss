@@ -3,6 +3,8 @@ using IdealDiscuss.Dtos.UserDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
 
 namespace IdealDiscuss.Service.Implementations
 {
@@ -13,8 +15,8 @@ namespace IdealDiscuss.Service.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public UserService(
-            IUserRepository userRepository, 
-            IRoleRepository roleRepository, 
+            IUserRepository userRepository,
+            IRoleRepository roleRepository,
             IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
@@ -24,25 +26,32 @@ namespace IdealDiscuss.Service.Implementations
 
         public BaseResponseModel AddUser(CreateUserDto request, string roleName)
         {
-            if (string.IsNullOrEmpty(request.UserName))
-            {
-
-            }
             try
             {
+                byte[] salt = new byte[128 / 8];
+
+                using (var rng = RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(salt);
+                }
+
+                string saltString = Convert.ToBase64String(salt);
+
+                string hashedPassword = HashPassword(request.Password, saltString);
+
                 var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
                 var createdDate = DateTime.Now;
 
-                var formValueCheck = string.IsNullOrWhiteSpace(request.UserName) || string.IsNullOrEmpty(request.Email) || string.IsNullOrWhiteSpace(request.Password);
+                //var formValueCheck = string.IsNullOrWhiteSpace(request.UserName) || string.IsNullOrEmpty(request.Email) || string.IsNullOrWhiteSpace(request.Password);
 
-                if (formValueCheck)
-                {
-                    return new BaseResponseModel
-                    {
-                        Message = $"One or more form fields are required!",
-                        Status = false
-                    };
-                }
+                //if (formValueCheck)
+                //{
+                //    return new BaseResponseModel
+                //    {
+                //        Message = $"One or more form fields are required!",
+                //        Status = false
+                //    };
+                //}
 
                 var userExist = _userRepository.Exists(x => x.UserName == request.UserName || x.Email == request.Email);
 
@@ -63,7 +72,8 @@ namespace IdealDiscuss.Service.Implementations
                 {
                     UserName = request.UserName,
                     Email = request.Email,
-                    Password = request.Password,
+                    HashSalt = saltString,
+                    PasswordHash = hashedPassword,
                     RoleId = role.Id,
                     CreatedBy = createdBy,
                     DateCreated = createdDate,
@@ -116,13 +126,24 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var user = _userRepository.GetUser(x => (x.UserName.ToLower() == username.ToLower() || x.Email.ToLower() == username.ToLower()) && x.Password == password);
+                var user = _userRepository.GetUser(x => (x.UserName.ToLower() == username.ToLower() || x.Email.ToLower() == username.ToLower()));
 
                 if (user is null)
                 {
                     return new ViewUserDto
                     {
-                        Message = $"Invalid username or password",
+                        Message = $"Account does not exist!",
+                        Status = false
+                    };
+                }
+
+                string hashedPassword = HashPassword(password, user.HashSalt);
+
+                if (!user.PasswordHash.Equals(hashedPassword))
+                {
+                    return new ViewUserDto
+                    {
+                        Message = $"Incorrect username or password!",
                         Status = false
                     };
                 }
@@ -134,6 +155,7 @@ namespace IdealDiscuss.Service.Implementations
                 response.RoleName = user.Role.RoleName;
                 response.Message = $"User successfully retrieved";
                 response.Status = true;
+
             }
             catch (Exception ex)
             {
@@ -142,6 +164,21 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             return response;
+        }
+
+        private string HashPassword(string password, string salt)
+        {
+            byte[] saltByte = Convert.FromBase64String(salt);
+
+            // derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password,
+                salt: saltByte,
+                prf: KeyDerivationPrf.HMACSHA1,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8));
+
+            return hashed;
         }
     }
 }
