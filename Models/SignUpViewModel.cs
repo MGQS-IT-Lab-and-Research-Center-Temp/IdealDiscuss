@@ -4,8 +4,8 @@ namespace IdealDiscuss.Models
 {
     public class SignUpViewModel
     {
-        [Required]
-        [MinLength(3)]
+        [Required(ErrorMessage = "Username is required.")]
+        [MinLength(3, ErrorMessage = "The minimum lenght is 3.")]
         [MaxLength(10)]
         public string UserName { get; set; }
 

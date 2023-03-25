@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IdealDiscuss.Models.SignUpViewModel
+@{
     ViewData["Title"] = "SignUp";
 }
 
@@ -8,20 +9,24 @@
 
     <form asp-action="SignUp" class="row g-3">
         <div class="col-md-6">
-            <label for="UserName" class="form-label">UserName:</label>
-            <input type="text" class="form-control" placeholder="Enter UserName" name="UserName">
+            <label asp-for="UserName" class="form-label">UserName:</label>
+            <input type="text" class="form-control" placeholder="Enter UserName" asp-for="UserName">
+            <span asp-validation-for="UserName" class="text-danger></span>
         </div>
         <div class="col-md-6">
-            <label for="Email" class="form-label">Email:</label>
-            <input type="email" class="form-control" placeholder="Enter UserName" name="Email">
+            <label asp-for="Email" class="form-label">Email:</label>
+            <input asp-for="Email" class="form-control" placeholder="Enter UserName" />
+            <span asp-validation-for="Email" class="text-danger></span>
         </div>
         <div class="col-md-6">
-            <label for="Password" class="form-label">Password:</label>
-            <input type="password" class="form-control" placeholder="Enter password" name="Password">
+            <label asp-for="Password" class="form-label">Password:</label>
+            <input type="password" class="form-control" placeholder="Enter password" asp-for="Password">
+            <span asp-validation-for="Password" class="text-danger></span>
         </div>
         <div class="col-md-6">
-            <label for="pwd" class="form-label">Confirm Password:</label>
-            <input type="Password" class="form-control" placeholder="Confirm password" name="ConfirmPassword">
+            <label asp-for="ConfirmPassword" class="form-label">Confirm Password:</label>
+            <input type="Password" class="form-control" placeholder="Confirm password" asp-for="ConfirmPassword">
+            <span asp-validation-for="ConfirmPassword" class="text-danger></span>
         </div>
         <div class="col-12">
             <button type="submit" class="btn btn-primary">Sign Up</button>
