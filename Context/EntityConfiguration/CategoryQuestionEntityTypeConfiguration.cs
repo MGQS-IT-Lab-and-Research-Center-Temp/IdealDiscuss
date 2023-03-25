@@ -9,7 +9,6 @@ namespace IdealDiscuss.Context.EntityConfiguration
 		public void Configure(EntityTypeBuilder<CategoryQuestion> builder)
 		{
 			builder.ToTable("CategoryQuestions");
-
 			builder.HasKey(cq => new { cq.CategoryId, cq.QuestionId });
 			builder.HasOne(cq => cq.Category)
 				.WithMany(c => c.CategoryQuestions)
@@ -18,7 +17,7 @@ namespace IdealDiscuss.Context.EntityConfiguration
 			builder.HasOne(cq => cq.Question)
 				.WithMany(q => q.CategoryQuestions)
 				.HasForeignKey(cq => cq.QuestionId)
-				.IsRequired();
+				.IsRequired(); 
 		}
 	}
 
