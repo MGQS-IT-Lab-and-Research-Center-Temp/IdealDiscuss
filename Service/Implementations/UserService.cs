@@ -24,6 +24,10 @@ namespace IdealDiscuss.Service.Implementations
 
         public BaseResponseModel AddUser(CreateUserDto request, string roleName)
         {
+            if (string.IsNullOrEmpty(request.UserName))
+            {
+
+            }
             try
             {
                 var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
