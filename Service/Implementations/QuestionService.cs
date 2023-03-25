@@ -16,19 +16,22 @@ namespace IdealDiscuss.Service.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICategoryQuestionRepository _categoryQuestionRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public QuestionService(
             IQuestionRepository questionRepository,
             IUserRepository userRepository,
             IHttpContextAccessor httpContextAccessor,
             ICategoryQuestionRepository categoryQuestionRepository,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _questionRepository = questionRepository;
             _httpContextAccessor = httpContextAccessor;
             _categoryQuestionRepository = categoryQuestionRepository;
             _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public BaseResponseModel Create(CreateQuestionDto createQuestionDto)
@@ -91,7 +94,7 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Failed to create question: {ex.Message}";
                 return response;
             }
-
+            _unitOfWork.SaveChanges();
             response.Status = true;
             response.Message = "Question created successfully!";
 

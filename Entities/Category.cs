@@ -1,4 +1,7 @@
-﻿namespace IdealDiscuss.Entities
+﻿
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace IdealDiscuss.Entities
 {
     public class Category : BaseEntity
     {
