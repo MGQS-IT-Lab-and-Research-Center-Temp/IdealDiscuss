@@ -171,7 +171,7 @@ namespace IdealDiscuss.Service.Implementations
             var commentexist = _commentRepository.Exists(c => c.Id == commentId);
             if (!commentexist)
             {
-                response.Message = "Comment  does not exist.";
+                response.Message = "Comment does not exist.";
                 return response;
             }
 
