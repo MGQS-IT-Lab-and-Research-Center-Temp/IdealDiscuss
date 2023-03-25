@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdealDiscuss.Context.EntityConfiguration
 {
-	public class CategoryQuestionEntityTypeConfiguration : 
+	public class CategoryQuestionEntityTypeConfiguration : IEntityTypeConfiguration<CategoryQuestion>
 	{
 
 		
