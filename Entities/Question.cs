@@ -2,7 +2,7 @@
 {
     public class Question : BaseEntity
     {
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
         public string QuestionText { get; set; }
         public string ImageUrl { get; set; }
