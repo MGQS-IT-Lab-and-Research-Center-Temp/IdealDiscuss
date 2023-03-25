@@ -10,9 +10,9 @@ namespace IdealDiscuss.Context.EntityConfiguration
         {
             builder.ToTable("Roles");
             builder.HasKey(r => r.RoleName);
-            builder.Property(c => c.RoleName)
+            builder.Property(r => r.RoleName)
                 .IsRequired()
-                .HasMaxLength(15);
+                .HasMaxLength(30);
             builder.HasIndex(r => r.Users)
              .IsUnique();
         }
