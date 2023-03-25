@@ -48,31 +48,18 @@ namespace IdealDiscuss.Context
 
             var users = new User[]
             {
-                new User()
-                {
-                    UserName = "admin",
-                    Password = "p@ssword1",
-                    Email = "admin@gmail.com",
-                    RoleId = 1,
-                    CreatedBy = "System",
-                    DateCreated = DateTime.Now,
-                    IsDeleted = false,
-                    ModifiedBy = "",
-                    LastModified = new DateTime()
-                },
-
-                new User()
-                {
-                    UserName = "johndoe",
-                    Password = "user12345",
-                    Email = "johndoe@gmail.com",
-                    RoleId = 2,
-                    CreatedBy = "System",
-                    DateCreated = DateTime.Now,
-                    IsDeleted = false,
-                    ModifiedBy = "",
-                    LastModified = new DateTime()
-                }
+                //new User()
+                //{
+                //    UserName = "admin",
+                //    Password = "p@ssword1",
+                //    Email = "admin@gmail.com",
+                //    RoleId = 1,
+                //    CreatedBy = "System",
+                //    DateCreated = DateTime.Now,
+                //    IsDeleted = false,
+                //    ModifiedBy = "",
+                //    LastModified = new DateTime()
+                //}
             };
 
             foreach (var u in users)

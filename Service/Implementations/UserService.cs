@@ -96,7 +96,7 @@ namespace IdealDiscuss.Service.Implementations
             };
         }
 
-        public ViewUserDto GetUser(int userId)
+        public ViewUserDto GetUser(string userId)
         {
             var user = _userRepository.GetUser(x => x.Id == userId);
 

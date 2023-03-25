@@ -2,9 +2,9 @@
 {
     public class CreateCommentReportDto
     {
-        public int CommentId { get; set; }
-        public int UserId { get; set; }
-        public List<int> FlagIds { get; set; } = new List<int>();
+        public string CommentId { get; set; }
+        public string UserId { get; set; }
+        public List<string> FlagIds { get; set; } = new List<string>();
         public string AdditionalComment { get; set; }
     }
 }

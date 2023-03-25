@@ -1,8 +1,6 @@
 ﻿using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.CategoryDto;
-using IdealDiscuss.Dtos.FlagDto;
 using IdealDiscuss.Entities;
-using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using System.Linq.Expressions;
@@ -13,12 +11,12 @@ namespace IdealDiscuss.Service.Implementations
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ICategoryQuestionRepository _categoryQuestionRepository;
 
-        public CategoryService(ICategoryRepository categoryRepository, IHttpContextAccessor httpContextAccessor,ICategoryQuestionRepository categoryQuestionRepository)
+        public CategoryService(
+            ICategoryRepository categoryRepository,
+            IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _categoryQuestionRepository = categoryQuestionRepository;
             _categoryRepository = categoryRepository;
         }
 
@@ -27,7 +25,7 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
 
-            var isCategoryExist = _categoryRepository.Exists(c => c.Name == request.Name );
+            var isCategoryExist = _categoryRepository.Exists(c => c.Name == request.Name);
 
             if (isCategoryExist)
             {
@@ -65,11 +63,12 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel DeleteCategory(int categoryId)
+        public BaseResponseModel DeleteCategory(string categoryId)
         {
             var response = new BaseResponseModel();
+            var isCategoryExist = _categoryRepository.Exists(c => c.Id == categoryId && !c.IsDeleted);
 
-            if (!_categoryRepository.Exists(c => c.Id == categoryId))
+            if (!isCategoryExist)
             {
                 response.Message = "Category does not exist.";
                 return response;
@@ -116,7 +115,7 @@ namespace IdealDiscuss.Service.Implementations
                         Description = category.Description
                     }).ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.Message = ex.Message;
                 return response;
@@ -128,19 +127,19 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public CategoryResponseModel GetCategory(int categoryId)
+        public CategoryResponseModel GetCategory(string categoryId)
         {
-			var response = new CategoryResponseModel();
+            var response = new CategoryResponseModel();
 
             Expression<Func<Category, bool>> expression = c =>
                                                 (c.Id == categoryId)
-                                                && (c.Id == categoryId 
+                                                && (c.Id == categoryId
                                                 && c.IsDeleted == false);
 
             var categoryExist = _categoryRepository.Exists(expression);
 
             if (!categoryExist)
-			{
+            {
                 response.Message = $"Category with id {categoryId} does not exist.";
                 return response;
             }
@@ -159,7 +158,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateCategory(int categoryId, UpdateCategoryDto updateCategoryDto)
+        public BaseResponseModel UpdateCategory(string categoryId, UpdateCategoryDto updateCategoryDto)
         {
             var response = new BaseResponseModel();
             string modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;

@@ -1,8 +1,10 @@
-﻿namespace IdealDiscuss.Entities
+﻿using MassTransit;
+
+namespace IdealDiscuss.Entities
 {
     public abstract class BaseEntity
     {
-        public int Id { get; set; }
+        public string Id { get; set; } = NewId.Next().ToSequentialGuid().ToString();
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime DateCreated { get; set; } 

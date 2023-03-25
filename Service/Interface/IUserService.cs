@@ -5,7 +5,7 @@ namespace IdealDiscuss.Service.Interface
 {
     public interface IUserService
     {
-        ViewUserDto GetUser(int userId);
+        ViewUserDto GetUser(string userId);
         BaseResponseModel AddUser(CreateUserDto request, string roleName = null);
         ViewUserDto Login(string username, string password);
     }

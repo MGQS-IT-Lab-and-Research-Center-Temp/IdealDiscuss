@@ -34,7 +34,7 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            var reporter = _userRepository.Get(int.Parse(userIdClaim));
+            var reporter = _userRepository.Get(userIdClaim);
             var comment = _commentRepository.Get(request.CommentId);
             var reportExist = _commentReportRepository.Exists(cr => cr.UserId == reporter.Id && cr.CommentId == comment.Id);
 
@@ -108,14 +108,14 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel DeleteCommentReport(int commentReportId)
+        public BaseResponseModel DeleteCommentReport(string id)
         {
             var response = new BaseResponseModel();
 
-            var commentReport = _commentReportRepository.Get(commentReportId);
+            var commentReport = _commentReportRepository.Get(id);
             if (commentReport is null)
             {
-                response.Message = $"CommentReport with id {commentReportId} does not exist!";
+                response.Message = $"CommentReport with id {id} does not exist!";
                 return response;
             }
             commentReport.IsDeleted = true;
@@ -167,7 +167,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public CommentReportResponseModel GetCommentReport(int id)
+        public CommentReportResponseModel GetCommentReport(string id)
         {
             var response = new CommentReportResponseModel();
 
@@ -204,14 +204,14 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateCommentReport(int commentReportId, UpdateCommentReportDto updateCommentReportDto)
+        public BaseResponseModel UpdateCommentReport(string id, UpdateCommentReportDto updateCommentReportDto)
         {
             var response = new BaseResponseModel();
 
-            var commentReport = _commentReportRepository.Get(commentReportId);
+            var commentReport = _commentReportRepository.Get(id);
             if (commentReport is null)
             {
-                response.Message = $"CommentReport with id {commentReportId} does not exist!";
+                response.Message = $"CommentReport with id {id} does not exist!";
                 return response;
             }
 

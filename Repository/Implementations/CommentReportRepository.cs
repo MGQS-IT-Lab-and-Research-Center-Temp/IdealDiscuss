@@ -12,7 +12,7 @@ namespace IdealDiscuss.Repository.Implementations
             _context = context;
         }
 
-        public CommentReport GetCommentReport(int id)
+        public CommentReport GetCommentReport(string id)
         {
             var commentReport = _context.CommentReports
                 .Include(c => c.User)
