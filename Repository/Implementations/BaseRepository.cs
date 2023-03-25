@@ -12,7 +12,7 @@ namespace IdealDiscuss.Repository.Implementations
         public T Create(T entity)
         {
             _context.Set<T>().Add(entity);
-            _context.SaveChanges();
+            //_context.SaveChanges();
             return entity;
         }
 

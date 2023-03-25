@@ -11,9 +11,8 @@
     <div class="row">
         <div class="col-md-6">
             <form asp-action="create">
-                <div class="col-md-12 mb-2">
-                    <input type="hidden" class="form-control" placeholder="Enter comment" name="QuestionId" value="@questionId" />
-                </div>
+                <input type="hidden" class="form-control" name="QuestionId" value="@questionId" />
+
                 <div class="col-md-12 mb-2">
                     <label for="CommentText" class="form-label">Comment:</label>
                     <textarea class="form-control" placeholder="Enter comment" name="CommentText"></textarea>

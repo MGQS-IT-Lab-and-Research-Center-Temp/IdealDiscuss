@@ -1,0 +1,48 @@
+﻿@model IdealDiscuss.Dtos.CommentReport.ViewCommentReportDto
+
+@{
+    ViewData["Title"] = "CommentReport Details";
+}
+
+@await Html.PartialAsync("_Alert", Model)
+
+@if (Model is not null)
+{
+    <div class="body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-text-width"></i>
+                            Comment Details
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-md-4">CommentReporter:</dt>
+                            <dd class="col-md-8">@Model.CommentReporter</dd>
+                            <dt class="col-md-4">CommentText:</dt>
+                            <dd class="col-md-8">@Model.CommentText</dd>
+                            <dt class="col-md-4">Additional Comment:</dt>
+                            <dd class="col-md-8">@Model.AdditionalComment</dd>
+                            <dt class="col-md-4">FlagNames:</dt>
+                            <dd class="col-md-8">
+                                @foreach(var flag in Model.FlagNames)
+                                {
+                                    <i class="badge bg-dark">@flag</i>
+                                }
+                            </dd>
+                        </dl>
+
+                        <div class="btn-group">
+                            <a class="btn btn-primary" asp-action="Index">Back to List</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}

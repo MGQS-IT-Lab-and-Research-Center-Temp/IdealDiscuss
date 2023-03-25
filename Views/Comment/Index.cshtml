@@ -34,6 +34,9 @@ else
                             <a asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
                         </div>
                     </td>
+                    <td>
+                        <a asp-controller="CommentReport" asp-action="CreateCommentReport" asp-route-id="@item.Id" class="btn btn-primary">Report Comment</a>
+                    </td>
                 </tr>
                 count++;
             }

@@ -1,23 +1,18 @@
-﻿@model List<IdealDiscuss.Dtos.RoleDto.ViewRoleDto>
+﻿@model List<IdealDiscuss.Dtos.CommentReport.ViewCommentReportDto>
 @{
-    ViewData["Title"] = "Role List";
+    ViewData["Title"] = "CommentReport List";
     int count = 1;
 }
-
-<div>
-    <a asp-controller="Role" asp-action="Create" class="btn btn-outline-primary">Add New Role</a>
-</div>
-
 @await Html.PartialAsync("_ListAlert", Model)
 
-@if (Model is not null && Model.Count >= 1)
+@if (Model is not null)
 {
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Role Name</th>
-                <th scope="col">Role Description</th>
+                <th scope="col">CommentReporter</th>
+                <th scope="col">AdditionalComment</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -28,11 +23,13 @@
             {
                 <tr>
                     <th scope="row">@count</th>
-                    <td>@item.RoleName</td>
-                    <td>@item.Description</td>
+                    <td>@item.CommentReporter</td>
+                    <td>@item.AdditionalComment</td>
                     <td>
                         <div class="btn-group">
-                            <a asp-controller="Role" asp-action="GetRoleDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                            <a asp-controller="CommentReport" asp-action="GetCommentReportDetail" asp-route-id="@item.Id" class="btn btn-primary">
+                                View
+                            </a>
                         </div>
                     </td>
                 </tr>

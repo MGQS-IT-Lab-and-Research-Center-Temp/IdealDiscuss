@@ -7,13 +7,16 @@
 
 @await Html.PartialAsync("_ListAlert", Model)
 
-@if (Model is not null && Model.Count >= 1)
+@if (Model is not null)
 {
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Username</th>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th scope="col">Username</th>
+                }
                 <th scope="col">Question</th>
                 <th scope="col">Action</th>
             </tr>
@@ -24,7 +27,10 @@
             {
                 <tr>
                     <td scope="row">@count</td>
-                    <td scope="row">@item.UserName</td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <td scope="row">@item.UserName</td>
+                    }
                     <td scope="row">@item.QuestionText</td>
                     <td scope="row">
                         <div class="btn-group">

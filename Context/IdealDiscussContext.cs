@@ -1,5 +1,6 @@
 ﻿using IdealDiscuss.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace IdealDiscuss.Context
 {
@@ -11,7 +12,20 @@ namespace IdealDiscuss.Context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            
+            /*builder.Entity<Category>().Property(c => c.Name)
+                .IsRequired()
+                .HasColumnName("CategoryName")
+                .HasMaxLength(12);
+            builder.Entity<Question>().Property(q => q.QuestionText)
+                .IsRequired();
+            builder.Entity<Category>().ToTable("MyCategory");
+            builder.Entity<Question>().HasMany(q => q.Comments);
+            builder.Entity<QuestionReportFlag>().HasOne(q => q.QuestionReport).WithMany().HasForeignKey(q => q.QuestionReportId);
+            builder.Entity<QuestionReportFlag>().HasOne(q => q.Flag).WithMany().HasForeignKey(q => q.FlagId);*/
+            //builder.ApplyConfiguration(new CategoryEntityTypeConfiguration());
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+
         }
 
         public DbSet<User> Users { get; set; }

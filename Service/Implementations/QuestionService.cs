@@ -16,19 +16,22 @@ namespace IdealDiscuss.Service.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ICategoryQuestionRepository _categoryQuestionRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public QuestionService(
             IQuestionRepository questionRepository,
             IUserRepository userRepository,
             IHttpContextAccessor httpContextAccessor,
             ICategoryQuestionRepository categoryQuestionRepository,
-            ICategoryRepository categoryRepository)
+            ICategoryRepository categoryRepository,
+            IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _questionRepository = questionRepository;
             _httpContextAccessor = httpContextAccessor;
             _categoryQuestionRepository = categoryQuestionRepository;
             _categoryRepository = categoryRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public BaseResponseModel Create(CreateQuestionDto createQuestionDto)
@@ -91,7 +94,7 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Failed to create question: {ex.Message}";
                 return response;
             }
-
+            _unitOfWork.SaveChanges();
             response.Status = true;
             response.Message = "Question created successfully!";
 
@@ -147,13 +150,6 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             var question = _questionRepository.Get(questionId);
-
-            if (question.Comments.Count != 0)
-            {
-                response.Message = "You cannot delete question";
-                return response;
-            }
-
             question.IsDeleted = true;
 
             try
@@ -177,7 +173,12 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var questions = _questionRepository.GetQuestions();
+                var IsInRole = _httpContextAccessor.HttpContext.User.IsInRole("Admin");
+                var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+                Expression<Func<Question, bool>> expression = q => 
+                                                    q.UserId == int.Parse(userIdClaim);
+
+                var questions = IsInRole ? _questionRepository.GetQuestions() : _questionRepository.GetQuestions(expression);
 
                 if (questions.Count == 0)
                 {
@@ -223,7 +224,7 @@ namespace IdealDiscuss.Service.Implementations
                 var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
                 var user = _userRepository.Get(int.Parse(userIdClaim));
 
-                Expression<Func<Question, bool>> expression = q => (q.UserId == user.Id) 
+                Expression<Func<Question, bool>> expression = q => (q.UserId == user.Id)
                                                     && (q.IsDeleted == false);
                 var questions = _questionRepository.GetQuestions(expression);
 
@@ -258,13 +259,25 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new QuestionResponseModel();
             var questionExist = _questionRepository.Exists(q => q.Id == questionId && q.IsDeleted == false);
+            var IsInRole = _httpContextAccessor.HttpContext.User.IsInRole("Admin");
+            var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var question = new Question();
 
             if (!questionExist)
             {
                 response.Message = $"Question with id {questionId} does not exist!";
                 return response;
             }
-            var question = _questionRepository.GetQuestion(c => c.Id == questionId);
+
+            question = IsInRole ? _questionRepository.GetQuestion(q => q.Id == questionId && !q.IsDeleted) : _questionRepository.GetQuestion(q => q.Id == questionId
+                                                && q.UserId == int.Parse(userIdClaim)
+                                                && !q.IsDeleted);
+
+            if (question is null)
+            {
+                response.Message = "Question not found!";
+                return response;
+            }
 
             response.Message = "Success";
             response.Status = true;
@@ -274,7 +287,17 @@ namespace IdealDiscuss.Service.Implementations
                 QuestionText = question.QuestionText,
                 UserId = question.UserId,
                 UserName = question.User.UserName,
-                ImageUrl = question.ImageUrl
+                ImageUrl = question.ImageUrl,
+                Comments = question.Comments
+                            .Where(c => !c.IsDeleted)
+                            .Select(c => new ListCommentDto
+                            {
+                                Id = c.Id,
+                                UserId = c.UserId,
+                                CommentText = c.CommentText,
+                                UserName = c.User.UserName
+                            })
+                            .ToList()
             };
 
             return response;

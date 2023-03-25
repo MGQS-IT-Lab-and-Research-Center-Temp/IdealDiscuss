@@ -10,20 +10,22 @@
 
     @if (Model is not null)
     {
-        <div class="">
-            <p class="lead">
-                @Model.CommentText
-            </p>
+        <div class="card">
+            <div class="card-body">
+                <p class="lead">
+                    @Model.CommentText
+                </p>
 
-            <hr />
-            <div class="btn-group">
-                <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Update</a>
-                &nbsp;
-                <form asp-action="DeleteComment" asp-route-id="@Model.Id">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-                &nbsp;
-                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to list</a>
+                <hr />
+                <div class="btn-group">
+                    <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Update</a>
+                    &nbsp;
+                    <form asp-action="DeleteComment" asp-route-id="@Model.Id">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    &nbsp;
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to list</a>
+                </div>
             </div>
         </div>
     }
