@@ -9,7 +9,8 @@ namespace IdealDiscuss.Context
 		public void Configure(EntityTypeBuilder<CategoryQuestion> builder)
 		{
 			builder.ToTable("CategoryQuestions");
-			
+			builder.HasKey(cq => new { cq.CategoryId, cq.QuestionId });
+
 		}
 	}
 }
