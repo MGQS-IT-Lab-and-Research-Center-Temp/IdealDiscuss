@@ -8,21 +8,12 @@ namespace IdealDiscuss.Context
     {
         public void Configure(EntityTypeBuilder<Category> builder)
         {
-            /*builder.ToTable("Category");
+            builder.ToTable("Categories");
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Name)
                 .IsRequired()
                 .HasMaxLength(15)
-                .HasColumnName("CategoryName");*/
-          /*  builder.HasData(
-                    new Category
-                    {
-                        Id = 6,
-                        Name = "Sport"
-
-                    }
-                );*/
-
+                .HasColumnName("CategoryName");
         }
     }
 }
