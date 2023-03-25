@@ -18,6 +18,11 @@ namespace IdealDiscuss.Context.EntityConfiguration
                 .HasColumnType("text");
             builder.Property(c => c.User)
                 .IsRequired();
+            builder.HasIndex(c => c.UserId)
+                .IsUnique();
+            builder.HasIndex(c => c.QuestionId)
+                .IsUnique();
+
         }
     }
 }
