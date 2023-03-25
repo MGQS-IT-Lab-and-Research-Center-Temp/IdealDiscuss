@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace IdealDiscuss.Context
+namespace IdealDiscuss.Context.EntityConfiguration
 {
     public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category>
     {
@@ -12,8 +12,9 @@ namespace IdealDiscuss.Context
             builder.HasKey(c => c.Id);
             builder.Property(c => c.Name)
                 .IsRequired()
-                .HasMaxLength(15)
-                .HasColumnName("CategoryName");
+                .HasMaxLength(15);
+            builder.HasIndex(c => c.Name)
+             .IsUnique();
         }
     }
 }
