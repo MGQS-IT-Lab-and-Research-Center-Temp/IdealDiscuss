@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace IdealDiscuss.Context.EntityConfiguration
 {
-    public class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category>
+    public class RoleEntityTypeConfiguration : IEntityTypeConfiguration<Role>
     {
-        public void Configure(EntityTypeBuilder<Category> builder)
+        public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.ToTable("Categories");
-            builder.HasKey(c => c.Id);
-            builder.Property(c => c.Name)
+            builder.ToTable("Roles");
+            builder.HasKey(r => r.RoleName);
+            builder.Property(c => c.RoleName)
                 .IsRequired()
                 .HasMaxLength(15);
-            builder.HasIndex(c => c.Name)
+            builder.HasIndex(r => r.Users)
              .IsUnique();
         }
     }
