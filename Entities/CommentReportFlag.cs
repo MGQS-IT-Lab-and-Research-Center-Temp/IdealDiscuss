@@ -1,6 +1,6 @@
 ﻿namespace IdealDiscuss.Entities
 {
-    public class CommentReportFlag : BaseEntity
+    public class CommentReportFlag
     {
         public int CommentReportId { get; set; }
         public CommentReport CommentReport { get; set; }

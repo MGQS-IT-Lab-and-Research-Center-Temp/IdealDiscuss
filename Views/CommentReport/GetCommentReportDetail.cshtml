@@ -1,52 +1,48 @@
 ﻿@model IdealDiscuss.Dtos.CommentReport.ViewCommentReportDto
 
 @{
-	ViewData["Title"] = "CommentReport Details";
+    ViewData["Title"] = "CommentReport Details";
 }
 
 @await Html.PartialAsync("_Alert", Model)
 
 @if (Model is not null)
 {
-	<section class="content">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="card">
-						<div class="card-header">
-							<h3 class="card-title">
-								<i class="fas fa-text-width"></i>
-								Member Details
-							</h3>
-						</div>
-						<!-- /.card-header -->
-						<div class="card-body">
-							<dl class="row">
-								<dt class="col-sm-4">CommentReporter</dt>
-								<dd class="col-sm-8">@Model.CommentReporter</dd>
-								<dt class="col-sm-4">CommentText</dt>
-								<dd class="col-sm-8">@Model.CommentText</dd>
-								<dt class="col-sm-4">FlagNames</dt>
-								<dd class="col-sm-8">@Model.FlagNames</dd>
-								<dt class="col-sm-4">CommentReport Text</dt>
-								<dd class="col-sm-8">@Model.AdditionalComment</dd>
+    <div class="body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-text-width"></i>
+                            Comment Details
+                        </h3>
+                    </div>
 
-							</dl>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-md-4">CommentReporter:</dt>
+                            <dd class="col-md-8">@Model.CommentReporter</dd>
+                            <dt class="col-md-4">CommentText:</dt>
+                            <dd class="col-md-8">@Model.CommentText</dd>
+                            <dt class="col-md-4">Additional Comment:</dt>
+                            <dd class="col-md-8">@Model.AdditionalComment</dd>
+                            <dt class="col-md-4">FlagNames:</dt>
+                            <dd class="col-md-8">
+                                @foreach(var flag in Model.FlagNames)
+                                {
+                                    <i class="badge bg-dark">@flag</i>
+                                }
+                            </dd>
+                        </dl>
 
-							<div class="kt-form__actions">
-								<a class="btn btn-success" asp-action="EditCommentReport" asp-route-id="@Model.Id">Edit CommentReport</a>
-								&nbsp;
-								<form asp-action="DeleteCommentReport" asp-route-id="@Model.Id">
-									<button type="submit" class="btn btn-danger">Delete CommentReport</button>
-								</form>
-								&nbsp;
-								<a class="btn btn-primary" asp-action="Index">Back to List</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+                        <div class="btn-group">
+                            <a class="btn btn-primary" asp-action="Index">Back to List</a>
+                        </div>
+                    </div>
 
+                </div>
+            </div>
+        </div>
+    </div>
 }

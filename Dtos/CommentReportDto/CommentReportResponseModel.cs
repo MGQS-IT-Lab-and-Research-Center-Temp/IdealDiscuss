@@ -2,11 +2,11 @@
 {
     public class CommentReportResponseModel: BaseResponseModel
     {
-        public ViewCommentReportDto CommentReport { get; set; }
+        public ViewCommentReportDto Data { get; set; }
     }
 
     public class CommentReportsResponseModel : BaseResponseModel
     {
-        public List<ViewCommentReportDto> CommentReports { get; set; }
+        public List<ViewCommentReportDto> Data { get; set; }
     }
 }

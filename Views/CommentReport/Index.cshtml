@@ -5,7 +5,7 @@
 }
 @await Html.PartialAsync("_ListAlert", Model)
 
-@if (Model is not null && Model.Count >= 1)
+@if (Model is not null)
 {
     <table class="table">
         <thead>
@@ -27,7 +27,9 @@
                     <td>@item.AdditionalComment</td>
                     <td>
                         <div class="btn-group">
-                            <a asp-controller="CommentReport" asp-action="GetCommentReportDetail" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                            <a asp-controller="CommentReport" asp-action="GetCommentReportDetail" asp-route-id="@item.Id" class="btn btn-primary">
+                                View
+                            </a>
                         </div>
                     </td>
                 </tr>

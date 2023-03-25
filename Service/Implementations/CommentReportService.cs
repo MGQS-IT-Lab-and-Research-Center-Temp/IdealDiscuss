@@ -3,6 +3,7 @@ using IdealDiscuss.Dtos.CommentReport;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using System.Security.Claims;
 
 namespace IdealDiscuss.Service.Implementations
 {
@@ -12,24 +13,36 @@ namespace IdealDiscuss.Service.Implementations
         private readonly IUserRepository _userRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly ICommentReportRepository _commentReportRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public CommentReportService(
             ICommentReportRepository commentReportRepository,
             IUserRepository userRepository,
             ICommentRepository commentRepository,
-            IFlagRepository flagRepository)
+            IFlagRepository flagRepository,
+            IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _flagRepository = flagRepository;
             _commentRepository = commentRepository;
             _commentReportRepository = commentReportRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public BaseResponseModel CreateCommentReport(CreateCommentReportDto createCommentReportDto)
+        public BaseResponseModel CreateCommentReport(CreateCommentReportDto request)
         {
             var response = new BaseResponseModel();
-            var reporter = _userRepository.Get(createCommentReportDto.UserId);
-            var comment = _commentRepository.Get(createCommentReportDto.CommentId);
+            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+            var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var reporter = _userRepository.Get(int.Parse(userIdClaim));
+            var comment = _commentRepository.Get(request.CommentId);
+            var reportExist = _commentReportRepository.Exists(cr => cr.UserId == reporter.Id && cr.CommentId == comment.Id);
+
+            if(reportExist)
+            {
+                response.Message = "This comment was already reported by you";
+                return response;
+            }
 
             if (reporter is null)
             {
@@ -43,18 +56,24 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
+            if(request.FlagIds is null)
+            {
+                response.Message = "One or more flagId required to report this comment!";
+                return response;
+            }
+
             var commentReport = new CommentReport
             {
                 UserId = reporter.Id,
                 User = reporter,
                 CommentId = comment.Id,
                 Comment = comment,
-                AdditionalComment = createCommentReportDto.AdditionalComment,
-                CreatedBy = reporter.Id.ToString(),
+                AdditionalComment = request.AdditionalComment,
+                CreatedBy = createdBy,
                 DateCreated = DateTime.Now,
             };
 
-            var flags = _flagRepository.GetAllByIds(createCommentReportDto.FlagIds);
+            var flags = _flagRepository.GetAllByIds(request.FlagIds);
 
             var commentFlags = new HashSet<CommentReportFlag>();
 
@@ -70,6 +89,7 @@ namespace IdealDiscuss.Service.Implementations
 
                 commentFlags.Add(commentReportFlag);
             }
+
             commentReport.CommentReportFlags = commentFlags;
 
             try
@@ -119,47 +139,67 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new CommentReportsResponseModel();
 
-            var commentReports = _commentReportRepository.GetCommentReports();
-
-            response.CommentReports = commentReports.Select(commentReport => new ViewCommentReportDto
+            try
             {
-                Id = commentReport.Id,
-                AdditionalComment = commentReport.AdditionalComment,
-                CommentId = commentReport.Comment.Id,
-                CommentReporter = commentReport.User.UserName,
-                CommentText = commentReport.Comment.CommentText,
-               FlagNames = commentReport.CommentReportFlags.Select(f => f.Flag.FlagName).ToList(),
+                var commentReports = _commentReportRepository.GetCommentReports();
 
-            }).ToList();
+                response.Data = commentReports.Select(commentReport => new ViewCommentReportDto
+                {
+                    Id = commentReport.Id,
+                    AdditionalComment = commentReport.AdditionalComment,
+                    CommentId = commentReport.Comment.Id,
+                    CommentReporter = commentReport.User.UserName,
+                    CommentText = commentReport.Comment.CommentText,
+                    FlagNames = commentReport.CommentReportFlags
+                        .Select(f => f.Flag.FlagName)
+                        .ToList(),
+                }).ToList();
 
-            response.Status = true;
-            response.Message = "Success";
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch(Exception ex)
+            {
+                response.Message = $"An error occured: {ex.Message}";
+                return response;
+            }
 
             return response;
         }
 
-        public CommentReportResponseModel GetCommentReport(int commentReportId)
+        public CommentReportResponseModel GetCommentReport(int id)
         {
             var response = new CommentReportResponseModel();
 
-            var commentReport = _commentReportRepository.GetComment(commentReportId);
-            if (commentReport is null)
+            try
             {
-                response.Message = $"CommentReport with id {commentReportId} does not exist!";
+                var commentReport = _commentReportRepository.GetCommentReport(id);
+
+                if (commentReport is null)
+                {
+                    response.Message = $"CommentReport with id {id} does not exist!";
+                    return response;
+                }
+
+                response.Message = "Success";
+                response.Status = true;
+                response.Data = new ViewCommentReportDto
+                {
+                    Id = id,
+                    AdditionalComment = commentReport.AdditionalComment,
+                    CommentId = commentReport.Comment.Id,
+                    CommentReporter = commentReport.User.UserName,
+                    CommentText = commentReport.Comment.CommentText,
+                    FlagNames = commentReport.CommentReportFlags
+                                    .Select(f => f.Flag.FlagName)
+                                    .ToList(),
+                };
+            }
+            catch(Exception ex)
+            {
+                response.Message = ex.StackTrace;
                 return response;
             }
-
-            response.Message = "Success";
-            response.Status = true;
-            response.CommentReport = new ViewCommentReportDto
-            {
-                Id = commentReportId,
-                AdditionalComment = commentReport.AdditionalComment,
-                CommentId = commentReport.Comment.Id,
-                CommentReporter = commentReport.User.UserName,
-                CommentText = commentReport.Comment.CommentText,
-                FlagNames = commentReport.CommentReportFlags.Select(f => f.Flag.FlagName).ToList(),
-            };
 
             return response;
         }
@@ -189,6 +229,5 @@ namespace IdealDiscuss.Service.Implementations
             response.Message = "Comment report updated successfully!";
             return response;
         }
-
     }
 }

@@ -49,8 +49,8 @@ namespace IdealDiscuss.Controllers
         public IActionResult Create(CreateQuestionDto request)
         {
             var response = _questionService.Create(request);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
             return View();
         }

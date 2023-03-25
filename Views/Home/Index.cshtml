@@ -33,7 +33,7 @@
                         <li class ="list-group-item">
                             @comment.CommentText
                             <span class="badge bg-secondary">@comment.UserName</span>
-                            <a asp-controller="Comment" asp-action="Create">Report comment</a>
+                            <a asp-controller="CommentReport" asp-action="CreateCommentReport" asp-route-id="@comment.Id">Report comment</a>
                         </li>
                     }
                 </ul>
