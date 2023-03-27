@@ -6,12 +6,12 @@ namespace IdealDiscuss.Service.Interface
     public interface IQuestionService
     {
         BaseResponseModel Create(CreateQuestionDto createQuestionDto);
-        BaseResponseModel Delete(int questionId);
-        BaseResponseModel Update(int questionId, UpdateQuestionDto updatequestionDto);
-        QuestionResponseModel GetQuestion(int questionId);
+        BaseResponseModel Delete(string questionId);
+        BaseResponseModel Update(string questionId, UpdateQuestionDto updatequestionDto);
+        QuestionResponseModel GetQuestion(string questionId);
         QuestionsResponseModel GetAllQuestion();
         QuestionsResponseModel GetUserQuestions();
-        QuestionsResponseModel GetQuestionsByCategoryId(int categoryId);
+        QuestionsResponseModel GetQuestionsByCategoryId(string categoryId);
         QuestionsResponseModel DisplayQuestion();
     }
 }

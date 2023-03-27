@@ -9,11 +9,9 @@ namespace IdealDiscuss.Controllers
     public class RoleController : Controller
     {
         private readonly IRoleService _roleService;
-        private readonly ILogger<RoleController> _logger;
 
-        public RoleController(ILogger<RoleController> logger, IRoleService roleService)
+        public RoleController(IRoleService roleService)
         {
-            _logger = logger;
             _roleService = roleService;
         }
     
@@ -42,7 +40,7 @@ namespace IdealDiscuss.Controllers
             return View(response);
         }
         
-        public IActionResult GetRoleDetail(int id) 
+        public IActionResult GetRoleDetail(string id) 
         {
             var response = _roleService.GetRole(id);
             ViewData["Message"] = response.Message;
@@ -51,7 +49,7 @@ namespace IdealDiscuss.Controllers
             return View(response.Role);
         }
 
-        public IActionResult Update(int id)
+        public IActionResult Update(string id)
         {
             var response = _roleService.GetRole(id);
             ViewData["Message"] = response.Message;
@@ -61,7 +59,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(int id, UpdateRoleDto updateRoleDto)
+        public IActionResult Update(string id, UpdateRoleDto updateRoleDto)
         {
             var response = _roleService.UpdateRole(id, updateRoleDto);
             ViewData["Message"] = response.Message;
@@ -71,7 +69,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteRole([FromRoute] int id)
+        public IActionResult DeleteRole([FromRoute] string id)
         {
             var response = _roleService.DeleteRole(id);
             ViewData["Message"] = response.Message;

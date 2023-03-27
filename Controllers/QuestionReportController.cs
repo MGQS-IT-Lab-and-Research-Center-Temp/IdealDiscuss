@@ -10,21 +10,26 @@ namespace IdealDiscuss.Controllers
     public class QuestionReportController : Controller
     {
         private readonly IQuestionReportService _questionReportService;
+
         public QuestionReportController (IQuestionReportService questionReportService)
         {
             _questionReportService = questionReportService;
         }
+
         public IActionResult Index()
         {
             var response = _questionReportService.GetAllQuestionReport();
             ViewBag.Message = response.Message;
             ViewBag.status = response.Status;
+
             return View(response.Reports);
         }
+
         public IActionResult ReportQuestion()
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult ReportQuestion(CreateQuestionReportDto Report)
         {
@@ -32,8 +37,9 @@ namespace IdealDiscuss.Controllers
             ViewBag.Message = response.Message;
             ViewBag.status = response.Status;
             return View(response);
-        } 
-        public IActionResult GetQuestionReport(int id)
+        }
+        
+        public IActionResult GetQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
             return View (response.Report);
@@ -45,18 +51,22 @@ namespace IdealDiscuss.Controllers
             var response = _questionReportService.GetAllQuestionReport();
             return View(response.Reports);
         }
-        public IActionResult UpdateQuestionReport(int id)
+
+        public IActionResult UpdateQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
             return View(response.Report);
         }
+
         [HttpPost]
-        public IActionResult UpdateQuestionReport(int id, UpdateQuestionReportDto request)
+        public IActionResult UpdateQuestionReport(string id, UpdateQuestionReportDto request)
         {
             var response = _questionReportService.UpdateQuestionReport(id, request);
             return RedirectToAction("Index");
         }
-        public IActionResult DeleteQuestionReport(int id)
+
+        [HttpPost]
+        public IActionResult DeleteQuestionReport(string id)
         {
             var response = _questionReportService.DeleteQuestionReport(id);
             return RedirectToAction("Index", "QuestionReport");

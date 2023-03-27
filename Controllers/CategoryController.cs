@@ -32,8 +32,8 @@ namespace IdealDiscuss.Controllers
             return View();
         }
        
-        [HttpPost("category/{id}/delete")]
-        public IActionResult DeleteCategory([FromRoute] int id)
+        [HttpPost("{id}/delete")]
+        public IActionResult DeleteCategory([FromRoute] string id)
         {
             var response = _categoryService.DeleteCategory(id);
             ViewBag.Message = response.Message;
@@ -52,19 +52,21 @@ namespace IdealDiscuss.Controllers
             return View(response);
         }
 
-        public IActionResult GetCategory(int id)
+        public IActionResult GetCategory(string id)
         {
             var response = _categoryService.GetCategory(id);
             ViewBag.Message = response.Message;
             return View(response.Data);
         }
+
         [Authorize(Roles ="Admin")]
         public IActionResult Update()
         {
             return View();
         }
+
         [HttpPost]
-		public IActionResult Update(int id, UpdateCategoryDto updateCategoryDto)
+		public IActionResult Update(string id, UpdateCategoryDto updateCategoryDto)
 		{
 			var categoryUpdate = _categoryService.UpdateCategory(id, updateCategoryDto);
 			ViewBag.Message = categoryUpdate.Message;

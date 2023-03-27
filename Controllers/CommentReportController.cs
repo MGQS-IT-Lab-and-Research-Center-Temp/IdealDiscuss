@@ -1,5 +1,4 @@
 ﻿using IdealDiscuss.Dtos.CommentReport;
-using IdealDiscuss.Entities;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -49,7 +48,7 @@ namespace IdealDiscuss.Controllers
             return View(response.Data);
         }
 
-        public IActionResult GetCommentReportDetail(int id)
+        public IActionResult GetCommentReportDetail(string id)
         {
             var response = _commentReportService.GetCommentReport(id);
 			ViewData["Message"] = response.Message;
@@ -58,23 +57,23 @@ namespace IdealDiscuss.Controllers
 			return View(response.Data);
         }
 
-        public IActionResult UpdatecommentReport(int id)
+        public IActionResult UpdatecommentReport(string id)
         {
             var response = _commentReportService.GetCommentReport(id);
             return View(response.Data);
         }
 
         [HttpPost]
-        public IActionResult UpdateCommentReport(int id,UpdateCommentReportDto updateCommentReportDto)
+        public IActionResult UpdateCommentReport(string id,UpdateCommentReportDto updateCommentReportDto)
         {
-            var response = _commentReportService.UpdateCommentReport(id,updateCommentReportDto);
+            var response = _commentReportService.UpdateCommentReport(id, updateCommentReportDto);
 			ViewData["Message"] = response.Message;
 			ViewData["Status"] = response.Status;
 			return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public IActionResult DeleteCommentReport(int id)
+        public IActionResult DeleteCommentReport(string id)
         {
             var response = _commentReportService.DeleteCommentReport(id);
 			ViewData["Message"] = response.Message;

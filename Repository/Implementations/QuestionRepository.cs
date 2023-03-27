@@ -47,7 +47,7 @@ namespace IdealDiscuss.Repository.Implementations
             return questions;
         }
 
-        public List<CategoryQuestion> GetQuestionByCategoryId(int categoryId)
+        public List<CategoryQuestion> GetQuestionByCategoryId(string categoryId)
         {
             var questions = _context.CategoryQuestions
                 .Include(c => c.Category)

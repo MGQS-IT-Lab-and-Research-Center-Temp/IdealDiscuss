@@ -9,9 +9,7 @@ namespace IdealDiscuss.Controllers
     {
         private readonly ICommentService _commentService;
 
-        public CommentController(
-            ICommentService commentService,
-            IHttpContextAccessor httpContextAccessor)
+        public CommentController(ICommentService commentService)
         {
             _commentService = commentService;
         }
@@ -22,16 +20,16 @@ namespace IdealDiscuss.Controllers
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
 
-            return View(response.Comments);
+            return View(response.Data);
         }
 
-        public IActionResult GetCommentDetail(int id)
+        public IActionResult GetCommentDetail(string id)
         {
             var response = _commentService.GetComment(id);
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
 
-            return View(response.Comment);
+            return View(response.Data);
         }
 
         [HttpGet]
@@ -53,17 +51,17 @@ namespace IdealDiscuss.Controllers
             return View(response);
         }
 
-        public IActionResult Edit(int id)
+        public IActionResult Edit(string id)
         {
             var response = _commentService.GetComment(id);
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
 
-            return View(response.Comment);
+            return View(response.Data);
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, UpdateCommentDto request)
+        public IActionResult Edit(string id, UpdateCommentDto request)
         {
             var response = _commentService.UpdateComment(id, request);
             ViewData["Message"] = response.Message;
@@ -74,7 +72,7 @@ namespace IdealDiscuss.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("{id}/delete")]
-        public IActionResult DeleteComment([FromRoute] int id)
+        public IActionResult DeleteComment([FromRoute] string id)
         {
             var response = _commentService.DeleteComment(id);
             ViewData["Message"] = response.Message;

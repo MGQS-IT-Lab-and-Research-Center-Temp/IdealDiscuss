@@ -63,7 +63,7 @@ namespace IdealDiscuss.Service.Implementations
 
         }
 
-        public BaseResponseModel DeleteFlag(int flagId)
+        public BaseResponseModel DeleteFlag(string flagId)
         {
             var response = new BaseResponseModel();
             var flagExist = _flagRepository.Exists(x => x.Id == flagId);
@@ -126,7 +126,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public FlagResponseModel GetFlag(int flagId)
+        public FlagResponseModel GetFlag(string flagId)
         {
             var response = new FlagResponseModel();
             var flagExist = _flagRepository.Exists(f => (f.Id == flagId) && (f.Id == flagId && f.IsDeleted == false));
@@ -159,7 +159,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateFlag(int flagId, UpdateFlagDto updateFlagDto)
+        public BaseResponseModel UpdateFlag(string flagId, UpdateFlagDto updateFlagDto)
         {
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;

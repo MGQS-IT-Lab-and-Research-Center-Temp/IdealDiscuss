@@ -34,26 +34,26 @@ namespace IdealDiscuss.Service.Implementations
             _unitOfWork = unitOfWork;
         }
 
-        public BaseResponseModel Create(CreateQuestionDto createQuestionDto)
+        public BaseResponseModel Create(CreateQuestionDto request)
         {
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            var user = _userRepository.Get(int.Parse(userIdClaim));
+            var user = _userRepository.Get(userIdClaim);
 
-            if (createQuestionDto.CategoryIds is null)
+            if (request.CategoryIds is null)
             {
                 response.Message = "You can't create a question without selecting one or more categories";
                 return response;
             }
 
-            if (string.IsNullOrWhiteSpace(createQuestionDto.QuestionText))
+            if (string.IsNullOrWhiteSpace(request.QuestionText))
             {
                 response.Message = "Question text is required!";
                 return response;
             }
 
-            if (createQuestionDto.QuestionText.Length < 20 || createQuestionDto.QuestionText.Length > 150)
+            if (request.QuestionText.Length < 20 || request.QuestionText.Length > 150)
             {
                 response.Message = "Question text can only be between 20 - 150 characters";
                 return response;
@@ -62,8 +62,8 @@ namespace IdealDiscuss.Service.Implementations
             var question = new Question
             {
                 UserId = user.Id,
-                QuestionText = createQuestionDto.QuestionText,
-                ImageUrl = createQuestionDto.ImageUrl,
+                QuestionText = request.QuestionText,
+                ImageUrl = request.ImageUrl,
                 CreatedBy = createdBy,
                 DateCreated = DateTime.Now
             };
@@ -72,7 +72,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 _questionRepository.Create(question);
 
-                foreach (var item in createQuestionDto.CategoryIds)
+                foreach (var item in request.CategoryIds)
                 {
                     var categoryData = _categoryRepository.Get(item);
 
@@ -101,7 +101,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel Update(int questionId, UpdateQuestionDto updateQuestionDto)
+        public BaseResponseModel Update(string questionId, UpdateQuestionDto updateQuestionDto)
         {
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
@@ -132,7 +132,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel Delete(int questionId)
+        public BaseResponseModel Delete(string questionId)
         {
             var response = new BaseResponseModel();
 
@@ -175,8 +175,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 var IsInRole = _httpContextAccessor.HttpContext.User.IsInRole("Admin");
                 var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-                Expression<Func<Question, bool>> expression = q => 
-                                                    q.UserId == int.Parse(userIdClaim);
+                Expression<Func<Question, bool>> expression = q => q.UserId == userIdClaim;
 
                 var questions = IsInRole ? _questionRepository.GetQuestions() : _questionRepository.GetQuestions(expression);
 
@@ -222,7 +221,7 @@ namespace IdealDiscuss.Service.Implementations
             try
             {
                 var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-                var user = _userRepository.Get(int.Parse(userIdClaim));
+                var user = _userRepository.Get(userIdClaim);
 
                 Expression<Func<Question, bool>> expression = q => (q.UserId == user.Id)
                                                     && (q.IsDeleted == false);
@@ -255,7 +254,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public QuestionResponseModel GetQuestion(int questionId)
+        public QuestionResponseModel GetQuestion(string questionId)
         {
             var response = new QuestionResponseModel();
             var questionExist = _questionRepository.Exists(q => q.Id == questionId && q.IsDeleted == false);
@@ -270,7 +269,7 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             question = IsInRole ? _questionRepository.GetQuestion(q => q.Id == questionId && !q.IsDeleted) : _questionRepository.GetQuestion(q => q.Id == questionId
-                                                && q.UserId == int.Parse(userIdClaim)
+                                                && q.UserId == userIdClaim
                                                 && !q.IsDeleted);
 
             if (question is null)
@@ -303,7 +302,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public QuestionsResponseModel GetQuestionsByCategoryId(int categoryId)
+        public QuestionsResponseModel GetQuestionsByCategoryId(string categoryId)
         {
             var response = new QuestionsResponseModel();
 

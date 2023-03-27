@@ -6,9 +6,9 @@ namespace IdealDiscuss.Service.Interface
     public interface IFlagService
     {
         BaseResponseModel CreateFlag(CreateFlagDto createFlagDto);
-        BaseResponseModel DeleteFlag(int flagId);
-        BaseResponseModel UpdateFlag(int flagId, UpdateFlagDto FlagDto);
-        FlagResponseModel GetFlag(int flagId);
+        BaseResponseModel DeleteFlag(string flagId);
+        BaseResponseModel UpdateFlag(string flagId, UpdateFlagDto FlagDto);
+        FlagResponseModel GetFlag(string flagId);
         FlagsResponseModel GetAllFlag();
     }
 }

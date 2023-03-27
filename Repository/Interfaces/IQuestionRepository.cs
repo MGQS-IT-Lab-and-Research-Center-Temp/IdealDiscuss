@@ -8,7 +8,7 @@ namespace IdealDiscuss.Repository.Interfaces
         List<Question> GetQuestions();
         List<Question> GetQuestions(Expression<Func<Question, bool>> expression);
         Question GetQuestion(Expression<Func<Question, bool>> expression);
-        List<CategoryQuestion> GetQuestionByCategoryId(int categoryId);
+        List<CategoryQuestion> GetQuestionByCategoryId(string id);
         List<CategoryQuestion> SelectQuestionByCategory();
     }
 }

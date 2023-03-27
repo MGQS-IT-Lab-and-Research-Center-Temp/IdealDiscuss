@@ -15,7 +15,9 @@ namespace IdealDiscuss.Repository.Implementations
 
         public User GetUser(Expression<Func<User, bool>> expression)
         {
-            return _context.Users.Include(x => x.Role).SingleOrDefault(expression);
+            return _context.Users
+                .Include(x => x.Role)
+                .SingleOrDefault(expression);
         }
     }
 }

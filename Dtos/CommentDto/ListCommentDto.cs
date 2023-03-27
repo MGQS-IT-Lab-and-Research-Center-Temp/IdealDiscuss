@@ -2,8 +2,8 @@
 
 public class ListCommentDto
 {
-    public int Id { get; set; }
-    public int UserId { get; set; }
+    public string Id { get; set; }
+    public string UserId { get; set; }
     public string CommentText { get; set; }
     public string UserName { get; set; }
 }

@@ -56,7 +56,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetQuestionByCategory(int id)
+        public IActionResult GetQuestionByCategory(string id)
         {
             var response = _questionService.GetQuestionsByCategoryId(id);
             ViewData["Message"] = response.Message;
@@ -65,7 +65,7 @@ namespace IdealDiscuss.Controllers
             return View(response.Questions);
         }
 
-        public IActionResult GetQuestionDetail(int id)
+        public IActionResult GetQuestionDetail(string id)
         {
             var response = _questionService.GetQuestion(id);
             ViewData["Message"] = response.Message;
@@ -74,14 +74,14 @@ namespace IdealDiscuss.Controllers
             return View(response.Question);
         }
 
-        public IActionResult Update(int id)
+        public IActionResult Update(string id)
         {
             var response = _questionService.GetQuestion(id);
             return View(response.Question);
         }
 
         [HttpPost]
-        public IActionResult Update(int id, UpdateQuestionDto updateQuestionDto)
+        public IActionResult Update(string id, UpdateQuestionDto updateQuestionDto)
         {
             var response = _questionService.Update(id, updateQuestionDto);
             ViewData["Message"] = response.Message;
@@ -90,8 +90,8 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index", "Question");
         }
 
-        [HttpPost("question/{id}/delete")]
-        public IActionResult DeleteQuestion([FromRoute] int id)
+        [HttpPost("{id}/delete")]
+        public IActionResult DeleteQuestion([FromRoute] string id)
         {
             var response = _questionService.Delete(id);
             ViewData["Message"] = response.Message;
