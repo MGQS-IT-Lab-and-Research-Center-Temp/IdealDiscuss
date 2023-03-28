@@ -10,7 +10,7 @@ namespace IdealDiscuss.Context.EntityConfiguration
         {
             builder.ToTable("CommentReports");
 
-            builder.HasKey(cr => new { cr.CommentId, cr.UserId });
+            builder.HasKey(cr => cr.Id);
 
             builder.Property(ac => ac.AdditionalComment)
                    .HasMaxLength(200);

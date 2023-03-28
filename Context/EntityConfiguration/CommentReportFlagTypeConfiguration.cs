@@ -8,20 +8,20 @@ namespace IdealDiscuss.Context.EntityConfiguration
 	{
 		public void Configure(EntityTypeBuilder<CommentReportFlag> builder)
 		{
-			builder.ToTable("CommentReportFlags");
+            builder.ToTable("CommentReportFlags");
 
-			builder.HasKey(cq => new { cq.CommentReportId, cq.FlagId });
+            builder.HasKey(crf => new { crf.CommentReportId, crf.FlagId });
 
-			builder.HasOne(cq => cq.CommentReport)
-				.WithMany(c => c.CommentReportFlags)
-				.HasForeignKey(cq => cq.CommentReportId)
-				.IsRequired();
+            builder.HasOne(crf => crf.CommentReport)
+                .WithMany(cr => cr.CommentReportFlags)
+                .HasForeignKey(crf => crf.CommentReportId)
+                .IsRequired();
 
-			builder.HasOne(cq => cq.Flag)
-				.WithMany(q => q.CommentReportFlags)
-				.HasForeignKey(cq => cq.FlagId)
-				.IsRequired();
-		}
+            builder.HasOne(crf => crf.Flag)
+                .WithMany(f => f.CommentReportFlags)
+                .HasForeignKey(crf => crf.FlagId)
+                .IsRequired();
+        }
 	}
 
 }

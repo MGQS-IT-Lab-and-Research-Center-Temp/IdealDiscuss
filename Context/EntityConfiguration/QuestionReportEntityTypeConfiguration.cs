@@ -11,7 +11,7 @@ namespace IdealDiscuss.Context
         {
             builder.ToTable("QuestionReport");
 
-            builder.HasKey(qr => new { qr.UserId, qr.QuestionId });
+            builder.HasKey(qr => qr.Id);
 
             builder.Property(qr => qr.AdditionalComment)
                    .HasMaxLength(200);
