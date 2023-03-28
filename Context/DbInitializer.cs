@@ -2,6 +2,7 @@
 
 namespace IdealDiscuss.Context
 {
+    //128 bit text string - 3afgh2ef-2ydh-45yh-fgh3-123hhdhjdkdk
     internal class DbInitializer
     {
         internal static void Initialize(IdealDiscussContext context)

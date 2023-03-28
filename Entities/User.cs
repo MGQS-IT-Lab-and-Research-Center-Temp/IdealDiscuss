@@ -8,6 +8,8 @@
         public string Email { get; set; }
         public string RoleId { get; set; }
         public Role Role { get; set; }
+        public ICollection<Comment> Comments { get; set; } = new HashSet<Comment>();
         public ICollection<QuestionReport> QuestionReports { get; set; } = new HashSet<QuestionReport>();
+        public ICollection<CommentReport> CommentReports { get; set; } = new HashSet<CommentReport>();
     }
 }

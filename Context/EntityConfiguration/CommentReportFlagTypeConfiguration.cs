@@ -9,11 +9,14 @@ namespace IdealDiscuss.Context.EntityConfiguration
 		public void Configure(EntityTypeBuilder<CommentReportFlag> builder)
 		{
 			builder.ToTable("CommentReportFlags");
+
 			builder.HasKey(cq => new { cq.CommentReportId, cq.FlagId });
+
 			builder.HasOne(cq => cq.CommentReport)
 				.WithMany(c => c.CommentReportFlags)
 				.HasForeignKey(cq => cq.CommentReportId)
 				.IsRequired();
+
 			builder.HasOne(cq => cq.Flag)
 				.WithMany(q => q.CommentReportFlags)
 				.HasForeignKey(cq => cq.FlagId)

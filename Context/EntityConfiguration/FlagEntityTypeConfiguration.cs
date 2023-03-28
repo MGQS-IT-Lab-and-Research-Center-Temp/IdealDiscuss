@@ -9,10 +9,13 @@ namespace IdealDiscuss.Context.EntityConfiguration
         public void Configure(EntityTypeBuilder<Flag> builder)
 		{
 			builder.ToTable("Flags");
+
 			builder.HasKey(f => f.Id);
+
             builder.Property(f => f.FlagName)
                 .IsRequired()
-                .HasMaxLength(15);
+                .HasMaxLength(50);
+
             builder.HasIndex(f => f.FlagName)
              .IsUnique();
 		}

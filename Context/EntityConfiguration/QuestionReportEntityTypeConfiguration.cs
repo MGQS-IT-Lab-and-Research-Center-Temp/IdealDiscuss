@@ -10,17 +10,25 @@ namespace IdealDiscuss.Context
         public void Configure(EntityTypeBuilder<QuestionReport> builder)
         {
             builder.ToTable("QuestionReport");
+
             builder.HasKey(qr => new { qr.UserId, qr.QuestionId });
 
             builder.Property(qr => qr.AdditionalComment)
-                   .HasMaxLength(100);
+                   .HasMaxLength(200);
                              
             builder.HasOne(qr => qr.Question)
                    .WithMany(q => q.QuestionReports)
-                   .HasForeignKey(qr =>  qr.QuestionId );
+                   .HasForeignKey(qr =>  qr.QuestionId)
+                   .IsRequired();
+
             builder.HasOne(qr => qr.User)
                     .WithMany(u => u.QuestionReports)
-                    .HasForeignKey(qr => qr.UserId);
+                    .HasForeignKey(qr => qr.UserId)
+                    .IsRequired();
+
+            builder.HasMany(c => c.QuestionReportFlags)
+                   .WithOne(cr => cr.QuestionReport)
+                   .IsRequired();
         }
     }
 }

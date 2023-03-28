@@ -19,8 +19,8 @@ namespace IdealDiscuss.Context.EntityConfiguration
             builder.HasIndex(r => r.RoleName)
                      .IsUnique();
 
-    builder.Property(r => r.Description)
-           .HasMaxLength(200);
+            builder.Property(r => r.Description)
+                   .HasMaxLength(200);
 
             builder.HasMany(r => r.Users)
                    .WithOne(u => u.Role)
