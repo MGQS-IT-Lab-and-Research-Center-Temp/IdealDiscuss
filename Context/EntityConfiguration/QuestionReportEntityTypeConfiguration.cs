@@ -12,10 +12,9 @@ namespace IdealDiscuss.Context
             builder.ToTable("QuestionReport");
             builder.HasKey(qr => new { qr.UserId, qr.QuestionId });
 
-            builder.Property (qr => qr.AdditionalComment)
-                   .HasMaxLength(100)
-                    .IsRequired();
-          
+            builder.Property(qr => qr.AdditionalComment)
+                   .HasMaxLength(100);
+                             
             builder.HasOne(qr => qr.Question)
                    .WithMany(q => q.QuestionReports)
                    .HasForeignKey(qr =>  qr.QuestionId );
