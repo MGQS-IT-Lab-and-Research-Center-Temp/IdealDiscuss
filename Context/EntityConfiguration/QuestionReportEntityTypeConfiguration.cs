@@ -13,13 +13,15 @@ namespace IdealDiscuss.Context
             builder.HasKey(qr => new { qr.UserId, qr.QuestionId });
 
             builder.Property (qr => qr.AdditionalComment)
-                   .HasColumnType("varchar(50)")
+                   .HasMaxLength(100)
                     .IsRequired();
-            builder.HasKey(qr => new { qr.QuestionId });
+          
             builder.HasOne(qr => qr.Question)
-                   .WithMany(q => q.QuestionReports);
+                   .WithMany(q => q.QuestionReports)
+                   .HasForeignKey(qr =>  qr.QuestionId );
             builder.HasOne(qr => qr.User)
-                    .WithMany(u => u.QuestionReports);
+                    .WithMany(u => u.QuestionReports)
+                    .HasForeignKey(qr => qr.UserId);
         }
     }
 }
