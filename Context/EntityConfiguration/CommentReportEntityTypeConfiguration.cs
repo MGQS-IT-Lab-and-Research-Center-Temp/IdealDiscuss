@@ -10,10 +10,15 @@ namespace IdealDiscuss.Context.EntityConfiguration
         {
             builder.ToTable("CommentReports");
             builder.HasKey(cr => new { cr.CommentId, cr.UserId });
-            builder.Property(cr => cr.CommentReportFlags)
+            builder.HasOne(c => c.Comment)
+                   .WithMany(cr => cr.CommentReports)
+                   .HasForeignKey(c => c.CommentId)
                    .IsRequired();
-            builder.HasOne(c => c.Comment);
-            builder.HasOne(u => u.User);
+            builder.Property(ac => ac.AdditionalComment)
+                   .HasMaxLength(100);
+            builder.HasMany(c => c.CommentReportFlags)
+                   .WithOne(cr => cr.CommentReport)
+                   .IsRequired();
         }
     }
 }
