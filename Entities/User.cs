@@ -7,6 +7,7 @@
         public string PasswordHash { get; set; }
         public string Email { get; set; }
         public string RoleId { get; set; }
-        public Role Role { get; set; } 
+        public Role Role { get; set; }
+        public ICollection<QuestionReport> QuestionReports { get; set; } = new HashSet<QuestionReport>();
     }
 }
