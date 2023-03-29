@@ -1,8 +1,6 @@
 ﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.CommentReport;
 using IdealDiscuss.Dtos.QuestionReportDto;
 using IdealDiscuss.Entities;
-using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 
@@ -54,7 +52,7 @@ namespace IdealDiscuss.Service.Implementations
                     QuestionId = question.Id,
                     Question = question,
                     AdditionalComment = request.AdditionalComment,
-                    CreatedBy = reporter.Id.ToString(),
+                    CreatedBy = reporter.Id,
                     DateCreated = DateTime.Now,
                 };
 
@@ -133,7 +131,9 @@ namespace IdealDiscuss.Service.Implementations
                 QuestionId = qr.Question.Id,
                 QuestionReporter = qr.User.UserName,
                 QuestionText = qr.Question.QuestionText,
-                FlagNames = qr.QuestionReportFlags.Select(f => f.Flag.FlagName).ToList(),
+                FlagNames = qr.QuestionReportFlags
+                                .Select(f => f.Flag.FlagName)
+                                .ToList()
             }).ToList();
 
             response.Status = true;
@@ -166,7 +166,9 @@ namespace IdealDiscuss.Service.Implementations
                 QuestionId = questionReport.Question.Id,
                 QuestionReporter = questionReport.User.UserName,
                 QuestionText = questionReport.Question.QuestionText,
-                FlagNames = questionReport.QuestionReportFlags.Select(f => f.Flag.FlagName).ToList(),
+                FlagNames = questionReport.QuestionReportFlags
+                                    .Select(f => f.Flag.FlagName)
+                                    .ToList(),
             };
 
             return response;

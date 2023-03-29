@@ -2,6 +2,7 @@
 using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.RoleDto;
 using IdealDiscuss.Entities;
+using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -12,16 +13,16 @@ namespace IdealDiscuss.Service.Implementations
     {
         private readonly IRoleRepository _roleRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger<RoleService> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RoleService(
             IRoleRepository roleRepository,
             IHttpContextAccessor httpContextAccessor,
-            ILogger<RoleService> logger)
+            IUnitOfWork unitOfWork)
         {
             _roleRepository = roleRepository;
             _httpContextAccessor = httpContextAccessor;
-            _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public BaseResponseModel CreateRole(CreateRoleDto request)
@@ -59,14 +60,13 @@ namespace IdealDiscuss.Service.Implementations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message + "-" + ex.StackTrace);
-                response.Message = $"Failed to create role:";
+                response.Message = $"Failed to create role: {ex.Message}";
                 return response;
             }
 
+            _unitOfWork.SaveChanges();
             response.Status = true;
             response.Message = "Role created successfully.";
-            _logger.LogInformation(response.Message);
             return response;
         }
 
@@ -100,6 +100,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
+            _unitOfWork.SaveChanges();
             response.Status = true;
             response.Message = "Role deleted successfully.";
             return response;
@@ -143,7 +144,10 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new RoleResponseModel();
 
-            var roleExist = _roleRepository.Exists(r => (r.Id == roleId) && (r.Id == roleId && r.IsDeleted == false));
+            var roleExist = _roleRepository.Exists(r => 
+                                (r.Id == roleId) 
+                                && (r.Id == roleId 
+                                && r.IsDeleted == false));
 
             if (!roleExist)
             {
@@ -195,6 +199,8 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Could not update the role: {ex.Message}";
                 return response;
             }
+
+            _unitOfWork.SaveChanges();
             response.Message = "Role updated successfully.";
             return response;
         }
