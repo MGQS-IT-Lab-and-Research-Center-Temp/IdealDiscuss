@@ -9,7 +9,7 @@ namespace IdealDiscuss.Context.EntityConfiguration
 		public void Configure(EntityTypeBuilder<CommentReportFlag> builder)
 		{
             builder.ToTable("CommentReportFlags");
-
+            builder.Ignore(crf => crf.Id);
             builder.HasKey(crf => new { crf.CommentReportId, crf.FlagId });
 
             builder.HasOne(crf => crf.CommentReport)

@@ -42,17 +42,6 @@ namespace IdealDiscuss.Service.Implementations
                 var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
                 var createdDate = DateTime.Now;
 
-                //var formValueCheck = string.IsNullOrWhiteSpace(request.UserName) || string.IsNullOrEmpty(request.Email) || string.IsNullOrWhiteSpace(request.Password);
-
-                //if (formValueCheck)
-                //{
-                //    return new BaseResponseModel
-                //    {
-                //        Message = $"One or more form fields are required!",
-                //        Status = false
-                //    };
-                //}
-
                 var userExist = _userRepository.Exists(x => x.UserName == request.UserName || x.Email == request.Email);
 
                 if (userExist)

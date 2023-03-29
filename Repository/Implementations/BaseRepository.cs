@@ -35,20 +35,17 @@ namespace IdealDiscuss.Repository.Implementations
             _context.Set<T>().Remove(entity);
         }
 
-        public int SaveChanges()
-        {
-            return _context.SaveChanges();
-        }
-
         public T Update(T entity)
         {
             _context.Set<T>().Update(entity);
             return entity;
         }
+
         public List<T> GetAll()
         {
             return _context.Set<T>().ToList();
         }
+
         public List<T> GetAll(Expression<Func<T, bool>> expression = null)
         {
             return _context.Set<T>().Where(expression).ToList();

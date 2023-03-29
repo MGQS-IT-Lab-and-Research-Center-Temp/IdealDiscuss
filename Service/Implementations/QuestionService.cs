@@ -94,6 +94,7 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Failed to create question: {ex.Message}";
                 return response;
             }
+
             _unitOfWork.SaveChanges();
             response.Status = true;
             response.Message = "Question created successfully!";

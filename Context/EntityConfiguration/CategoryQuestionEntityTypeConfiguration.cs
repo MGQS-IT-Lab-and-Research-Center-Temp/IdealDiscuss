@@ -9,8 +9,8 @@ namespace IdealDiscuss.Context.EntityConfiguration
 		public void Configure(EntityTypeBuilder<CategoryQuestion> builder)
 		{
 			builder.ToTable("CategoryQuestions");
-
-			builder.HasKey(cq => new { cq.CategoryId, cq.QuestionId });
+            builder.Ignore(cq => cq.Id);
+            builder.HasKey(cq => new { cq.CategoryId, cq.QuestionId });
 
 			builder.HasOne(cq => cq.Category)
 				.WithMany(c => c.CategoryQuestions)

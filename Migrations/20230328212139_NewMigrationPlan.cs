@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IdealDiscuss.Migrations
 {
-    public partial class MigrationNew : Migration
+    public partial class NewMigrationPlan : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -130,7 +130,6 @@ namespace IdealDiscuss.Migrations
                 {
                     CategoryId = table.Column<string>(type: "varchar(255)", nullable: false),
                     QuestionId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Id = table.Column<string>(type: "longtext", nullable: true),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -257,7 +256,6 @@ namespace IdealDiscuss.Migrations
                 {
                     QuestionReportId = table.Column<string>(type: "varchar(255)", nullable: false),
                     FlagId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Id = table.Column<string>(type: "longtext", nullable: true),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -288,7 +286,6 @@ namespace IdealDiscuss.Migrations
                 {
                     CommentReportId = table.Column<string>(type: "varchar(255)", nullable: false),
                     FlagId = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Id = table.Column<string>(type: "longtext", nullable: true),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),

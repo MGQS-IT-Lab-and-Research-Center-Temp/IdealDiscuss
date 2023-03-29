@@ -9,7 +9,7 @@ namespace IdealDiscuss.Context.EntityConfiguration
         public void Configure(EntityTypeBuilder<QuestionReportFlag> builder)
         {
             builder.ToTable("QuestionReportFlags");
-
+            builder.Ignore(qrf => qrf.Id);
             builder.HasKey(qr => new { qr.QuestionReportId, qr.FlagId });
 
             builder.HasOne(qr => qr.QuestionReport)

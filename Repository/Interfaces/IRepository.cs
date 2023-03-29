@@ -15,6 +15,5 @@ namespace IdealDiscuss.Repository
         List<T> GetAll();
         List<T> GetAll(Expression<Func<T, bool>> expression = null);
         bool Exists(Expression<Func<T, bool>> expression);
-        int SaveChanges();
     }
 }
