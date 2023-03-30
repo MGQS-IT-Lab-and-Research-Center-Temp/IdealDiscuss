@@ -43,7 +43,7 @@ namespace IdealDiscuss.Controllers
             return View(response);
         }
 
-        public IActionResult GetFlagDetail(int id)
+        public IActionResult GetFlagDetail(string id)
         {
             var response = _flagService.GetFlag(id);
             ViewData["Message"] = response.Message;
@@ -54,7 +54,7 @@ namespace IdealDiscuss.Controllers
             return View(response.Data);
         }
 
-        public IActionResult UpdateFlag(int id)
+        public IActionResult UpdateFlag(string id)
         {
             var response = _flagService.GetFlag(id);
             ViewData["Message"] = response.Message;
@@ -66,14 +66,14 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateFlag(int id,UpdateFlagDto request)
+        public IActionResult UpdateFlag(string id,UpdateFlagDto request)
         {
             var response = _flagService.UpdateFlag(id,request);
             return RedirectToAction("Index", "Flag");
         }
 
         [HttpPost]
-        public IActionResult DeleteFlag(int id)
+        public IActionResult DeleteFlag(string id)
         {
             var response = _flagService.DeleteFlag(id);
             return RedirectToAction("Index", "Flag");

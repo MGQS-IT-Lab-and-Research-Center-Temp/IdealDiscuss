@@ -6,9 +6,9 @@ namespace IdealDiscuss.Service.Interface
     public interface IQuestionReportService
     {
         BaseResponseModel CreateQuestionReport(CreateQuestionReportDto request);
-        BaseResponseModel DeleteQuestionReport(int id);
-        BaseResponseModel UpdateQuestionReport(int id, UpdateQuestionReportDto request);
-        QuestionReportResponseModel GetQuestionReport(int id);
+        BaseResponseModel DeleteQuestionReport(string id);
+        BaseResponseModel UpdateQuestionReport(string id, UpdateQuestionReportDto request);
+        QuestionReportResponseModel GetQuestionReport(string id);
         QuestionReportsResponseModel GetAllQuestionReport();
     }
 }

@@ -12,11 +12,10 @@ namespace IdealDiscuss.Repository.Implementations
         public T Create(T entity)
         {
             _context.Set<T>().Add(entity);
-            _context.SaveChanges();
             return entity;
         }
 
-        public T Get(int id)
+        public T Get(string id)
         {
             return _context.Set<T>().Find(id);
         }
@@ -36,27 +35,23 @@ namespace IdealDiscuss.Repository.Implementations
             _context.Set<T>().Remove(entity);
         }
 
-        public int SaveChanges()
-        {
-            return _context.SaveChanges();
-        }
-
         public T Update(T entity)
         {
             _context.Set<T>().Update(entity);
-            _context.SaveChanges();
             return entity;
         }
+
         public List<T> GetAll()
         {
             return _context.Set<T>().ToList();
         }
+
         public List<T> GetAll(Expression<Func<T, bool>> expression = null)
         {
             return _context.Set<T>().Where(expression).ToList();
         }
 
-        public List<T> GetAllByIds(List<int> ids)
+        public List<T> GetAllByIds(List<string> ids)
         {
             return _context.Set<T>().Where(t => ids.Contains(t.Id)).ToList();
         }

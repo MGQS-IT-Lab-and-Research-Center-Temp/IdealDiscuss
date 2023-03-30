@@ -1,4 +1,5 @@
 using IdealDiscuss.Context;
+using IdealDiscuss.Middlewares;
 using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Implementations;
@@ -9,6 +10,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();  
+builder.Services.AddScoped<ICommentReportRepository, CommentReportRepository>();
+builder.Services.AddScoped<ICommentReportService, CommentReportService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
@@ -61,6 +66,7 @@ app.UseRouting();
 //app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<RoleBasedAuthorizationMiddleware>();
 
 app.MapControllerRoute(
     name: "default",

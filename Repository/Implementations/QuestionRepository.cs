@@ -17,6 +17,8 @@ namespace IdealDiscuss.Repository.Implementations
         {
             var question = _context.Questions
                 .Include(c => c.User)
+                .Include(c => c.Comments)
+                .ThenInclude(u => u.User)
                 .SingleOrDefault(expression);
 
             return question;
@@ -24,18 +26,28 @@ namespace IdealDiscuss.Repository.Implementations
 
         public List<Question> GetQuestions()
         {
-            var questions = _context.Questions.Include(c => c.User).ToList();
+            var questions = _context.Questions
+                .Include(u => u.User)
+                .Include(c => c.Comments)
+                .ThenInclude(u => u.User)
+                .ToList();
 
             return questions;
         }
 
         public List<Question> GetQuestions(Expression<Func<Question, bool>> expression)
         {
-            var questions = _context.Questions.Where(expression).ToList();
+            var questions = _context.Questions
+                .Where(expression)
+                .Include(u => u.User)
+                .Include(c => c.Comments)
+                .ThenInclude(u => u.User)
+                .ToList();
 
             return questions;
         }
-        public List<CategoryQuestion> GetQuestionByCategoryId(int categoryId)
+
+        public List<CategoryQuestion> GetQuestionByCategoryId(string categoryId)
         {
             var questions = _context.CategoryQuestions
                 .Include(c => c.Category)
@@ -46,6 +58,7 @@ namespace IdealDiscuss.Repository.Implementations
 
             return questions;
         }
+
         public List<CategoryQuestion> SelectQuestionByCategory()
         {
             var questions = _context.CategoryQuestions

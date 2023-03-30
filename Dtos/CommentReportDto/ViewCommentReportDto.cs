@@ -4,13 +4,13 @@ namespace IdealDiscuss.Dtos.CommentReport
 {
     public class ViewCommentReportDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string AdditionalComment { get; set; }
-        public int CommentId { get; set; }
-        public int UserId { get; set; }
-        public int FlagId { get; set; }
+        public string CommentId { get; set; }
+        public string UserId { get; set; }
         public string CommentReporter { get; set; }
         public string CommentText { get; set; }
+        public string FlagId { get; set; }
         public List<string> FlagNames { get; set; } = new List<string>();
     }
 }

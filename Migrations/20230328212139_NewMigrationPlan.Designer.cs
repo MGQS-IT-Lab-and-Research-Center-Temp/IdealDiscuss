@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IdealDiscuss.Migrations
 {
     [DbContext(typeof(IdealDiscussContext))]
-    [Migration("20230321062406_ReMigrate")]
-    partial class ReMigrate
+    [Migration("20230328212139_NewMigrationPlan")]
+    partial class NewMigrationPlan
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,9 +23,8 @@ namespace IdealDiscuss.Migrations
 
             modelBuilder.Entity("IdealDiscuss.Entities.Category", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
@@ -34,7 +33,8 @@ namespace IdealDiscuss.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -46,21 +46,25 @@ namespace IdealDiscuss.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.CategoryQuestion", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("CategoryId")
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
+                    b.Property<string>("QuestionId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
@@ -77,26 +81,21 @@ namespace IdealDiscuss.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
+                    b.HasKey("CategoryId", "QuestionId");
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("CategoryQuestions");
+                    b.ToTable("CategoryQuestions", (string)null);
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.Comment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CommentText")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
@@ -113,11 +112,13 @@ namespace IdealDiscuss.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
+                    b.Property<string>("QuestionId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -125,20 +126,21 @@ namespace IdealDiscuss.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.CommentReport", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("AdditionalComment")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
-                    b.Property<int>("CommentId")
-                        .HasColumnType("int");
+                    b.Property<string>("CommentId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
@@ -155,8 +157,9 @@ namespace IdealDiscuss.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -164,26 +167,22 @@ namespace IdealDiscuss.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CommentReports");
+                    b.ToTable("CommentReports", (string)null);
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.CommentReportFlag", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("CommentReportId")
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("CommentReportId")
-                        .HasColumnType("int");
+                    b.Property<string>("FlagId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int>("FlagId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -194,20 +193,17 @@ namespace IdealDiscuss.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommentReportId");
+                    b.HasKey("CommentReportId", "FlagId");
 
                     b.HasIndex("FlagId");
 
-                    b.ToTable("CommentReportFlags");
+                    b.ToTable("CommentReportFlags", (string)null);
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.Flag", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
@@ -219,7 +215,9 @@ namespace IdealDiscuss.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("FlagName")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -232,14 +230,16 @@ namespace IdealDiscuss.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Flags");
+                    b.HasIndex("FlagName")
+                        .IsUnique();
+
+                    b.ToTable("Flags", (string)null);
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.Question", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
@@ -248,7 +248,7 @@ namespace IdealDiscuss.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<bool>("IsClosed")
                         .HasColumnType("tinyint(1)");
@@ -263,26 +263,29 @@ namespace IdealDiscuss.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("QuestionText")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Questions");
+                    b.ToTable("Questions", (string)null);
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.QuestionReport", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("AdditionalComment")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
@@ -299,11 +302,13 @@ namespace IdealDiscuss.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
+                    b.Property<string>("QuestionId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -311,23 +316,22 @@ namespace IdealDiscuss.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("QuestionReports");
+                    b.ToTable("QuestionReport", (string)null);
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.QuestionReportFlag", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("QuestionReportId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("FlagId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int>("FlagId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -338,23 +342,17 @@ namespace IdealDiscuss.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("QuestionReportId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("QuestionReportId", "FlagId");
 
                     b.HasIndex("FlagId");
 
-                    b.HasIndex("QuestionReportId");
-
-                    b.ToTable("QuestionReportFlags");
+                    b.ToTable("QuestionReportFlags", (string)null);
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.Role", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
@@ -363,7 +361,8 @@ namespace IdealDiscuss.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
@@ -375,18 +374,22 @@ namespace IdealDiscuss.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("RoleName")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.HasIndex("RoleName")
+                        .IsUnique();
+
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("longtext");
@@ -395,6 +398,10 @@ namespace IdealDiscuss.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("HashSalt")
                         .HasColumnType("longtext");
 
                     b.Property<bool>("IsDeleted")
@@ -406,20 +413,23 @@ namespace IdealDiscuss.Migrations
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("PasswordHash")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.CategoryQuestion", b =>
@@ -450,7 +460,7 @@ namespace IdealDiscuss.Migrations
                         .IsRequired();
 
                     b.HasOne("IdealDiscuss.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Comments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -469,7 +479,7 @@ namespace IdealDiscuss.Migrations
                         .IsRequired();
 
                     b.HasOne("IdealDiscuss.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("CommentReports")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -501,7 +511,7 @@ namespace IdealDiscuss.Migrations
             modelBuilder.Entity("IdealDiscuss.Entities.Question", b =>
                 {
                     b.HasOne("IdealDiscuss.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Questions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -512,13 +522,13 @@ namespace IdealDiscuss.Migrations
             modelBuilder.Entity("IdealDiscuss.Entities.QuestionReport", b =>
                 {
                     b.HasOne("IdealDiscuss.Entities.Question", "Question")
-                        .WithMany()
+                        .WithMany("QuestionReports")
                         .HasForeignKey("QuestionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("IdealDiscuss.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("QuestionReports")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -585,6 +595,8 @@ namespace IdealDiscuss.Migrations
                     b.Navigation("CategoryQuestions");
 
                     b.Navigation("Comments");
+
+                    b.Navigation("QuestionReports");
                 });
 
             modelBuilder.Entity("IdealDiscuss.Entities.QuestionReport", b =>
@@ -595,6 +607,17 @@ namespace IdealDiscuss.Migrations
             modelBuilder.Entity("IdealDiscuss.Entities.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("IdealDiscuss.Entities.User", b =>
+                {
+                    b.Navigation("CommentReports");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("QuestionReports");
+
+                    b.Navigation("Questions");
                 });
 #pragma warning restore 612, 618
         }

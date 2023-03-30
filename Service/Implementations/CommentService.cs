@@ -3,7 +3,6 @@ using IdealDiscuss.Dtos.CommentDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System.Security.Claims;
 using static IdealDiscuss.Dtos.CommentDto.CommentResponse;
 
@@ -11,7 +10,6 @@ namespace IdealDiscuss.Service.Implementations
 {
     public class CommentService : ICommentService
     {
-
         private readonly IUserRepository _userRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IQuestionRepository _questionRepository;
@@ -23,19 +21,18 @@ namespace IdealDiscuss.Service.Implementations
             IQuestionRepository questionRepository,
             IHttpContextAccessor httpContextAccessor)
         {
-
             _userRepository = userRepository;
             _commentRepository = commentRepository;
             _questionRepository = questionRepository;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public BaseResponseModel CreateComment(CreateCommentDto createCommentDto)
+        public BaseResponseModel CreateComment(CreateCommentDto request)
         {
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            var user = _userRepository.Get(int.Parse(userIdClaim));
+            var user = _userRepository.Get(userIdClaim);
 
             if (user is null)
             {
@@ -43,7 +40,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var question = _questionRepository.Get(createCommentDto.QuestionId);
+            var question = _questionRepository.Get(request.QuestionId);
 
             if (question is null)
             {
@@ -51,7 +48,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            if (string.IsNullOrWhiteSpace(createCommentDto.CommentText))
+            if (string.IsNullOrWhiteSpace(request.CommentText))
             {
                 response.Message = "Comment text is required!";
                 return response;
@@ -63,7 +60,7 @@ namespace IdealDiscuss.Service.Implementations
                 User = user,
                 QuestionId = question.Id,
                 Question = question,
-                CommentText = createCommentDto.CommentText,
+                CommentText = request.CommentText,
                 CreatedBy = createdBy,
                 DateCreated = DateTime.Now,
             };
@@ -83,7 +80,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel DeleteComment(int commentId)
+        public BaseResponseModel DeleteComment(string commentId)
         {
             var response = new BaseResponseModel();
             var commentexist = _commentRepository.Exists(c => c.Id == commentId);
@@ -124,7 +121,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            response.Comments = comment
+            response.Data = comment
                 .Select(comment => new ViewCommentDto
                 {
                     Id = comment.Id,
@@ -140,10 +137,11 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public CommentResponseModel GetComment(int commentId)
+        public CommentResponseModel GetComment(string commentId)
         {
             var response = new CommentResponseModel();
             var commentexist = _commentRepository.Exists(c => c.Id == commentId);
+
             if (!commentexist)
             {
                 response.Message = $"Comment does not exist.";
@@ -154,7 +152,7 @@ namespace IdealDiscuss.Service.Implementations
 
             response.Message = "Success";
             response.Status = true;
-            response.Comment = new ViewCommentDto
+            response.Data = new ViewCommentDto
             {
                 Id = commentId,
                 CommentText = comment.CommentText,
@@ -164,11 +162,11 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateComment(int commentId, UpdateCommentDto updateCommentDto)
+        public BaseResponseModel UpdateComment(string commentId, UpdateCommentDto request)
         {
-
             var response = new BaseResponseModel();
             var commentexist = _commentRepository.Exists(c => c.Id == commentId);
+
             if (!commentexist)
             {
                 response.Message = "Comment  does not exist.";
@@ -177,7 +175,7 @@ namespace IdealDiscuss.Service.Implementations
 
             var comment = _commentRepository.Get(commentId);
 
-            comment.CommentText = updateCommentDto.CommentText;
+            comment.CommentText = request.CommentText;
 
             try
             {

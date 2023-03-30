@@ -2,19 +2,19 @@
 @{
 	ViewData["Title"] = "Modify Question";
 }
-<div class="container-fluid">
+<div class="body">
 	<div class="row">
 		<div class="col-md-6">
 			<form asp-action="Update">
-				<div class="form-group">
+				<div class="col-md-12 mb-3">
 					<label asp-for="QuestionText" class="control-label"></label>
-					<input asp-for="QuestionText" type="text" class="form-control" />
+					<textarea asp-for="QuestionText" type="text" class="form-control"></textarea>
 					<span asp-validation-for="QuestionText" class="text-danger"></span>
 				</div>
 
-				<div class="form-group">
+				<div class="col-md-12 mb-3">
 					<label asp-for="ImageUrl" class="control-label"></label>
-					<input asp-for="ImageUrl" type="text" class="form-control" />
+					<input asp-for="ImageUrl" type="file" class="form-control" />
 					<span asp-validation-for="ImageUrl" class="text-danger"></span>
 				</div>
 

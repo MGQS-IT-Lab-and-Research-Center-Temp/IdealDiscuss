@@ -1,10 +1,8 @@
 ﻿using IdealDiscuss.Dtos.QuestionDto;
-using IdealDiscuss.Entities;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Security.Claims;
 
 namespace IdealDiscuss.Controllers
 {
@@ -28,19 +26,9 @@ namespace IdealDiscuss.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        //[Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var questions = _questionService.GetAllQuestion();
-            ViewData["Message"] = questions.Message;
-            ViewData["Status"] = questions.Status;
-
-            return View(questions.Questions);
-        }
-
-        public IActionResult UserQuestions()
-        {
-            var questions = _questionService.GetUserQuestions();
             ViewData["Message"] = questions.Message;
             ViewData["Status"] = questions.Status;
 
@@ -61,52 +49,54 @@ namespace IdealDiscuss.Controllers
         public IActionResult Create(CreateQuestionDto request)
         {
             var response = _questionService.Create(request);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
             return View();
         }
 
-        [HttpGet("getquestionbycategory/{id}")]
-        public IActionResult GetQuestionByCategory(int id)
+        [HttpGet("{id}")]
+        public IActionResult GetQuestionByCategory(string id)
         {
             var response = _questionService.GetQuestionsByCategoryId(id);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
             return View(response.Questions);
         }
 
-        public IActionResult GetQuestionDetail(int id)
+        public IActionResult GetQuestionDetail(string id)
         {
             var response = _questionService.GetQuestion(id);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
             return View(response.Question);
         }
 
-        public IActionResult Update(int id)
+        public IActionResult Update(string id)
         {
             var response = _questionService.GetQuestion(id);
             return View(response.Question);
         }
 
         [HttpPost]
-        public IActionResult Update(int id, UpdateQuestionDto updateQuestionDto)
+        public IActionResult Update(string id, UpdateQuestionDto updateQuestionDto)
         {
-            var questionUpdate = _questionService.Update(id, updateQuestionDto);
-            ViewBag.Message = questionUpdate.Message;
-            ViewBag.Status = questionUpdate.Status;
+            var response = _questionService.Update(id, updateQuestionDto);
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
+
             return RedirectToAction("Index", "Question");
         }
 
-        [HttpPost("question/{id}/delete")]
-        public IActionResult DeleteQuestion([FromRoute] int id)
+        [HttpPost("{id}/delete")]
+        public IActionResult DeleteQuestion([FromRoute] string id)
         {
             var response = _questionService.Delete(id);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
+
             return RedirectToAction("Index", "Question");
         }
     }

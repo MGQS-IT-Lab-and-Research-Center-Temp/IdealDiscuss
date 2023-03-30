@@ -24,21 +24,21 @@ namespace IdealDiscuss.Service.Implementations
             _logger = logger;
         }
 
-        public BaseResponseModel CreateRole(CreateRoleDto createRoleDto)
+        public BaseResponseModel CreateRole(CreateRoleDto request)
         {
             var response = new BaseResponseModel();
 
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
 
-            var roleExist = _roleRepository.Exists(r => r.RoleName == createRoleDto.RoleName);
+            var roleExist = _roleRepository.Exists(r => r.RoleName == request.RoleName);
 
             if (roleExist)
             {
-                response.Message = $"Role with name {createRoleDto.RoleName} already exist!";
+                response.Message = $"Role with name {request.RoleName} already exist!";
                 return response;
             }
 
-            if (string.IsNullOrWhiteSpace(createRoleDto.RoleName))
+            if (string.IsNullOrWhiteSpace(request.RoleName))
             {
                 response.Message = "Role name is required!";
                 return response;
@@ -46,8 +46,8 @@ namespace IdealDiscuss.Service.Implementations
 
             var role = new Role()
             {
-                RoleName = createRoleDto.RoleName,
-                Description = createRoleDto.Description,
+                RoleName = request.RoleName,
+                Description = request.Description,
                 CreatedBy = createdBy,
                 DateCreated = DateTime.Now,
 
@@ -70,10 +70,11 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel DeleteRole(int roleId)
+        public BaseResponseModel DeleteRole(string roleId)
         {
             var response = new RoleResponseModel();
             var roleIdExist = _roleRepository.Exists(c => c.Id == roleId);
+            var role = _roleRepository.Get(roleId);
 
             if (!roleIdExist)
             {
@@ -81,13 +82,12 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            if (roleId == 1 || roleId == 2)
+            if (role.RoleName == "Admin" || role.RoleName == "AppUser")
             {
                 response.Message = "Role cannot be deleted!";
                 return response;
             }
 
-            var role = _roleRepository.Get(roleId);
             role.IsDeleted = true;
 
             try
@@ -139,7 +139,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public RoleResponseModel GetRole(int roleId)
+        public RoleResponseModel GetRole(string roleId)
         {
             var response = new RoleResponseModel();
 
@@ -166,7 +166,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateRole(int id, UpdateRoleDto updateRoleDto)
+        public BaseResponseModel UpdateRole(string id, UpdateRoleDto updateRoleDto)
         {
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
@@ -185,7 +185,6 @@ namespace IdealDiscuss.Service.Implementations
             role.Description = updateRoleDto.Description;
             role.ModifiedBy = modifiedBy;
             role.LastModified = DateTime.Now;
-
 
             try
             {

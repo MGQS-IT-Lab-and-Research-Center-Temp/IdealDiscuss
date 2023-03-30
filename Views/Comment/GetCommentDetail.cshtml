@@ -2,34 +2,31 @@
 
 @{
     ViewData["Title"] = "Comment Detail";
-    var status = ViewBag.Status == false ? false : true;
 }
 
 <div class="body">
 
-    @if (status is false)
-    {
-        <span class="badge text-center bg-danger">@ViewBag.Message</span>
-        <a asp-controller="Comment" asp-action="Index" class="btn btn-outline-secondary">Go back to list</a>
-        return;
-    }
-    <dl class="row">
-        <dt class="col-sm-4">
-            Comment Text:
-        </dt>
+    @await Html.PartialAsync("_Alert", Model)
 
-        <dd class="col-sm-8">
-            @Model.CommentText
-        </dd>
-    </dl>
-    <br />
-    <div class="btn-group">
-        <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Update</a>
-        &nbsp;
-        <form asp-action="DeleteComment" asp-route-id="@Model.Id">
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-        &nbsp;
-        <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to list</a>
-    </div>
+    @if (Model is not null)
+    {
+        <div class="card">
+            <div class="card-body">
+                <p class="lead">
+                    @Model.CommentText
+                </p>
+
+                <hr />
+                <div class="btn-group">
+                    <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Update</a>
+                    &nbsp;
+                    <form asp-action="DeleteComment" asp-route-id="@Model.Id">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    &nbsp;
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to list</a>
+                </div>
+            </div>
+        </div>
+    }
 </div>

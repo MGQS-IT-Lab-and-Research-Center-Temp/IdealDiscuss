@@ -14,20 +14,13 @@ namespace IdealDiscuss.Controllers
     {
         private readonly IUserService _userService;
         private readonly IQuestionService _questionService;
-        private readonly ILogger<HomeController> _logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
 
         public HomeController(
-            ILogger<HomeController> logger,
             IUserService userService,
-            IQuestionService questionService,
-            IHttpContextAccessor httpContextAccessor)
+            IQuestionService questionService)
         {
-            _logger = logger;
             _userService = userService;
             _questionService = questionService;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         [Authorize]
@@ -100,7 +93,7 @@ namespace IdealDiscuss.Controllers
             {
                 new Claim(ClaimTypes.Name, user.UserName),
                 new Claim(ClaimTypes.GivenName, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.RoleName),
             };

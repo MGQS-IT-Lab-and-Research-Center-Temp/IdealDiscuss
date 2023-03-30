@@ -1,4 +1,6 @@
 ﻿using IdealDiscuss.Entities;
+using IdealDiscuss.Helper;
+using MassTransit;
 
 namespace IdealDiscuss.Context
 {
@@ -46,27 +48,18 @@ namespace IdealDiscuss.Context
 
             context.SaveChanges();
 
+            var password = "p@ssword1";
+            var salt = HashingHelper.GenerateSalt();
+
             var users = new User[]
             {
                 new User()
                 {
                     UserName = "admin",
-                    Password = "p@ssword1",
+                    HashSalt = salt,
+                    PasswordHash = HashingHelper.HashPassword(password, salt),
                     Email = "admin@gmail.com",
-                    RoleId = 1,
-                    CreatedBy = "System",
-                    DateCreated = DateTime.Now,
-                    IsDeleted = false,
-                    ModifiedBy = "",
-                    LastModified = new DateTime()
-                },
-
-                new User()
-                {
-                    UserName = "johndoe",
-                    Password = "user12345",
-                    Email = "johndoe@gmail.com",
-                    RoleId = 2,
+                    RoleId = NewId.Next().ToSequentialGuid().ToString(),
                     CreatedBy = "System",
                     DateCreated = DateTime.Now,
                     IsDeleted = false,

@@ -5,23 +5,33 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdealDiscuss.Repository.Implementations
 {
-    public class CommentReportRepository : BaseRepository<CommentReport> , ICommentReportRepository
+    public class CommentReportRepository : BaseRepository<CommentReport>, ICommentReportRepository
     {
         public CommentReportRepository(IdealDiscussContext context) 
         { 
             _context = context;
         }
 
-        public CommentReport GetComment(int id)
+        public CommentReport GetCommentReport(string id)
         {
-            var commentReport = _context.CommentReports.Include(c => c.User).Include(c => c.Comment).Include(c => c.CommentReportFlags).SingleOrDefault();
+            var commentReport = _context.CommentReports
+                .Include(c => c.User)
+                .Include(c => c.Comment)
+                .Include(c => c.CommentReportFlags)
+                .ThenInclude(c => c.Flag)
+                .FirstOrDefault();
 
             return commentReport;
         }
 
         public List<CommentReport> GetCommentReports()
         {
-            var commentReports = _context.CommentReports.Include(c => c.User).Include(c => c.Comment).Include(c => c.CommentReportFlags).ToList();
+            var commentReports = _context.CommentReports
+                .Include(c => c.User)
+                .Include(c => c.Comment)
+                .Include(c => c.CommentReportFlags)
+                .ThenInclude(c => c.Flag)
+                .ToList();
 
             return commentReports;
         }

@@ -90,7 +90,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel DeleteQuestionReport(int id)
+        public BaseResponseModel DeleteQuestionReport(string id)
         {
             var response = new BaseResponseModel();
 
@@ -142,7 +142,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public QuestionReportResponseModel GetQuestionReport(int id)
+        public QuestionReportResponseModel GetQuestionReport(string id)
         {
             var response = new QuestionReportResponseModel();
 
@@ -172,7 +172,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateQuestionReport(int id, UpdateQuestionReportDto request)
+        public BaseResponseModel UpdateQuestionReport(string id, UpdateQuestionReportDto request)
         {
             var response = new BaseResponseModel();
 
