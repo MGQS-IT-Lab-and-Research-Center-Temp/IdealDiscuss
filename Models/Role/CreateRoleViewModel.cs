@@ -6,7 +6,7 @@ namespace IdealDiscuss.Models.Role
     {
         [Required(ErrorMessage = "Role name is required!")]
         [MinLength(3, ErrorMessage = "The minimum length acceptable is 3")]
-        [MaxLength(15)]
+        [MaxLength(50, ErrorMessage = "The maximum length acceptable is 50")]
         public string RoleName { get; set; }
 
         [MinLength(20, ErrorMessage = "The minimum length acceptable is 20")]
