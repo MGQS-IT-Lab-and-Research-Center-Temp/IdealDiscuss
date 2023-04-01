@@ -1,4 +1,4 @@
-﻿using IdealDiscuss.Dtos.RoleDto;
+﻿using IdealDiscuss.Models.Role;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ namespace IdealDiscuss.Controllers
         {
             _roleService = roleService;
         }
-    
+
         public IActionResult Index()
         {
             var roles = _roleService.GetAllRole();
@@ -31,16 +31,21 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateRoleDto request)
+        public IActionResult Create(CreateRoleViewModel request)
         {
-            var response = _roleService.CreateRole(request);
-            ViewData["Message"] = response.Message;
-            ViewData["Status"] = response.Status;
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
 
-            return View(response);
+            var response = _roleService.CreateRole(request);
+            ViewData["Status"] = response.Status;
+            ViewData["Message"] = response.Message;
+
+            return View();
         }
-        
-        public IActionResult GetRoleDetail(string id) 
+
+        public IActionResult GetRoleDetail(string id)
         {
             var response = _roleService.GetRole(id);
             ViewData["Message"] = response.Message;
@@ -55,13 +60,25 @@ namespace IdealDiscuss.Controllers
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
 
-            return View(response.Role);
+            var viewModel = new UpdateRoleViewModel
+            {
+                Id = response.Role.Id,
+                RoleName = response.Role.RoleName,
+                Description = response.Role.Description
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult Update(string id, UpdateRoleDto updateRoleDto)
+        public IActionResult Update(string id, UpdateRoleViewModel request)
         {
-            var response = _roleService.UpdateRole(id, updateRoleDto);
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var response = _roleService.UpdateRole(id, request);
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
 

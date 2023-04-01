@@ -1,6 +1,5 @@
 ﻿using IdealDiscuss.Entities;
 using IdealDiscuss.Helper;
-using MassTransit;
 
 namespace IdealDiscuss.Context
 {
@@ -50,6 +49,8 @@ namespace IdealDiscuss.Context
 
             var password = "p@ssword1";
             var salt = HashingHelper.GenerateSalt();
+            //Get the Role Id of the admin role and assign it to the RoleId
+            //property in the User object below.
 
             var users = new User[]
             {
@@ -59,7 +60,7 @@ namespace IdealDiscuss.Context
                     HashSalt = salt,
                     PasswordHash = HashingHelper.HashPassword(password, salt),
                     Email = "admin@gmail.com",
-                    RoleId = NewId.Next().ToSequentialGuid().ToString(),
+                    RoleId = "08db3079-0546-a628-b82a-72ac77620000",
                     CreatedBy = "System",
                     DateCreated = DateTime.Now,
                     IsDeleted = false,

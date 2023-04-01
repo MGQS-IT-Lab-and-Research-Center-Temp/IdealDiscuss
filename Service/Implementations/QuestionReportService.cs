@@ -1,8 +1,6 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.CommentReport;
-using IdealDiscuss.Dtos.QuestionReportDto;
-using IdealDiscuss.Entities;
-using IdealDiscuss.Repository.Implementations;
+﻿using IdealDiscuss.Entities;
+using IdealDiscuss.Models;
+using IdealDiscuss.Models.QuestionReport;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 
@@ -26,7 +24,7 @@ namespace IdealDiscuss.Service.Implementations
             _questionRepository = questionRepository;
             _questionReportRepository = questionReportRepository;
         }
-        public BaseResponseModel CreateQuestionReport(CreateQuestionReportDto request)
+        public BaseResponseModel CreateQuestionReport(CreateQuestionReportViewModel request)
         {
             var response = new BaseResponseModel();
 
@@ -54,7 +52,7 @@ namespace IdealDiscuss.Service.Implementations
                     QuestionId = question.Id,
                     Question = question,
                     AdditionalComment = request.AdditionalComment,
-                    CreatedBy = reporter.Id.ToString(),
+                    CreatedBy = reporter.Id,
                     DateCreated = DateTime.Now,
                 };
 
@@ -126,14 +124,16 @@ namespace IdealDiscuss.Service.Implementations
 
             var questionReports = _questionReportRepository.GetAll();
 
-            response.Reports = questionReports.Select(qr => new ViewQuestionReportDto
+            response.Data = questionReports.Select(qr => new QuestionReportViewModel
             {
                 Id = qr.Id,
                 AdditionalComment = qr.AdditionalComment,
                 QuestionId = qr.Question.Id,
                 QuestionReporter = qr.User.UserName,
                 QuestionText = qr.Question.QuestionText,
-                FlagNames = qr.QuestionReportFlags.Select(f => f.Flag.FlagName).ToList(),
+                FlagNames = qr.QuestionReportFlags
+                                .Select(f => f.Flag.FlagName)
+                                .ToList()
             }).ToList();
 
             response.Status = true;
@@ -159,20 +159,22 @@ namespace IdealDiscuss.Service.Implementations
             response.Message = "Success";
             response.Status = true;
 
-            response.Report = new ViewQuestionReportDto
+            response.Data = new QuestionReportViewModel
             {
                 Id = id,
                 AdditionalComment = questionReport.AdditionalComment,
                 QuestionId = questionReport.Question.Id,
                 QuestionReporter = questionReport.User.UserName,
                 QuestionText = questionReport.Question.QuestionText,
-                FlagNames = questionReport.QuestionReportFlags.Select(f => f.Flag.FlagName).ToList(),
+                FlagNames = questionReport.QuestionReportFlags
+                                    .Select(f => f.Flag.FlagName)
+                                    .ToList(),
             };
 
             return response;
         }
 
-        public BaseResponseModel UpdateQuestionReport(string id, UpdateQuestionReportDto request)
+        public BaseResponseModel UpdateQuestionReport(string id, UpdateQuestionReportViewModel request)
         {
             var response = new BaseResponseModel();
 

@@ -1,5 +1,4 @@
-﻿
-using IdealDiscuss.Entities;
+﻿using IdealDiscuss.Entities;
 using System.Linq.Expressions;
 
 namespace IdealDiscuss.Repository
@@ -15,5 +14,7 @@ namespace IdealDiscuss.Repository
         List<T> GetAll();
         List<T> GetAll(Expression<Func<T, bool>> expression = null);
         bool Exists(Expression<Func<T, bool>> expression);
+        IReadOnlyList<T> SelectAll();
+        IReadOnlyList<T> SelectAll(Expression<Func<T, bool>> expression = null);
     }
 }

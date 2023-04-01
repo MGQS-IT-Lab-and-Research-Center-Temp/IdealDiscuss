@@ -45,8 +45,8 @@ namespace IdealDiscuss.Helper
         public static byte[] ComputeHash(string password, byte[] salt)
         {
             using var sha256 = SHA256.Create();
-            var passwordBytes = Encoding.UTF8.GetBytes(password);
-            var saltedPasswordBytes = new byte[passwordBytes.Length + salt.Length];
+            byte[] passwordBytes = Encoding.UTF8.GetBytes(password);
+            byte[] saltedPasswordBytes = new byte[passwordBytes.Length + salt.Length];
             passwordBytes.CopyTo(saltedPasswordBytes, 0);
             salt.CopyTo(saltedPasswordBytes, passwordBytes.Length);
 
@@ -55,7 +55,7 @@ namespace IdealDiscuss.Helper
 
         public static string GetPasswordHash(string password, byte[] salt)
         {
-            var hash = ComputeHash(password, salt);
+            byte[] hash = ComputeHash(password, salt);
 
             return Convert.ToBase64String(hash);
         }

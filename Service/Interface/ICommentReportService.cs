@@ -1,13 +1,13 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.CommentReport;
+﻿using IdealDiscuss.Models;
+using IdealDiscuss.Models.CommentReport;
 
 namespace IdealDiscuss.Service.Interface
 {
     public interface ICommentReportService
     {
-        BaseResponseModel CreateCommentReport(CreateCommentReportDto request);
+        BaseResponseModel CreateCommentReport(CreateCommentReportViewModel request);
         BaseResponseModel DeleteCommentReport(string id);
-        BaseResponseModel UpdateCommentReport(string id, UpdateCommentReportDto request);
+        BaseResponseModel UpdateCommentReport(string id, UpdateCommentReportViewModel request);
         CommentReportResponseModel GetCommentReport(string id);
         CommentReportsResponseModel GetAllCommentReport();
     }

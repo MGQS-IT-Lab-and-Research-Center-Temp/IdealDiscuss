@@ -6,9 +6,8 @@ namespace IdealDiscuss.Repository.Implementations
 {
     public class QuestionReportRepository : BaseRepository<QuestionReport> , IQuestionReportRepository
     {
-        public QuestionReportRepository(IdealDiscussContext context)
+        public QuestionReportRepository(IdealDiscussContext context) : base(context)
         {
-            _context = context;
         }
     }
 }

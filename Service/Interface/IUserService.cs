@@ -1,12 +1,13 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.UserDto;
+﻿using IdealDiscuss.Models;
+using IdealDiscuss.Models.Auth;
+using IdealDiscuss.Models.User;
 
 namespace IdealDiscuss.Service.Interface
 {
     public interface IUserService
     {
-        ViewUserDto GetUser(string userId);
-        BaseResponseModel AddUser(CreateUserDto request, string roleName = null);
-        ViewUserDto Login(string username, string password);
+        UserResponseModel GetUser(string userId);
+        BaseResponseModel AddUser(SignUpViewModel request, string roleName = null);
+        UserResponseModel Login(string username, string password);
     }
 }
