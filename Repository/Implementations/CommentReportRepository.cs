@@ -7,9 +7,8 @@ namespace IdealDiscuss.Repository.Implementations
 {
     public class CommentReportRepository : BaseRepository<CommentReport>, ICommentReportRepository
     {
-        public CommentReportRepository(IdealDiscussContext context) 
-        { 
-            _context = context;
+        public CommentReportRepository(IdealDiscussContext context) : base(context)
+        {  
         }
 
         public CommentReport GetCommentReport(string id)

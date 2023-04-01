@@ -1,13 +1,17 @@
 ﻿using IdealDiscuss.Context;
 using IdealDiscuss.Entities;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace IdealDiscuss.Repository.Implementations
 {
     public abstract class BaseRepository<T> : IRepository<T> where T : BaseEntity, new()
     {
-        protected IdealDiscussContext _context;
+        protected readonly IdealDiscussContext _context;
+
+        protected BaseRepository(IdealDiscussContext context)
+        {
+            _context = context;
+        }
 
         public T Create(T entity)
         {

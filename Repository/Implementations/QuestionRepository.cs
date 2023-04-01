@@ -8,9 +8,8 @@ namespace IdealDiscuss.Repository.Implementations
 {
     public class QuestionRepository : BaseRepository<Question>, IQuestionRepository
     {
-        public QuestionRepository(IdealDiscussContext context)
+        public QuestionRepository(IdealDiscussContext context) : base(context)
         {
-            _context = context;
         }
 
         public Question GetQuestion(Expression<Func<Question, bool>> expression)
@@ -27,9 +26,8 @@ namespace IdealDiscuss.Repository.Implementations
         public List<Question> GetQuestions()
         {
             var questions = _context.Questions
-                .Include(u => u.User)
                 .Include(c => c.Comments)
-                .ThenInclude(u => u.User)
+                .Include(u => u.User)
                 .ToList();
 
             return questions;

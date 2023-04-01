@@ -1,13 +1,8 @@
-﻿@{
-    bool statusCheck = ViewData["Status"] != null;
-    string alertClass = (bool)ViewData["Status"] == false ? "alert-danger" : "alert-success";
-    string message = ViewData["Message"].ToString();
-}
-
-@if (statusCheck && !string.IsNullOrWhiteSpace(message))
+﻿
+@if (ViewData["Status"] != null && !string.IsNullOrWhiteSpace(ViewData["Message"]?.ToString()))
 {
-    <div class="alert @alertClass alert-dismissible fade show" role="alert">
+    <div class="mt-3 alert @((bool)ViewData["Status"] ? "alert-success" : "alert-danger") alert-dismissible fade show" role="alert">
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        @message
+        <span>@ViewData["Message"]</span>
     </div>
 }

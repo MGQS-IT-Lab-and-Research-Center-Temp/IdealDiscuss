@@ -8,9 +8,8 @@ namespace IdealDiscuss.Repository.Implementations
 {
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
-        public UserRepository(IdealDiscussContext context)
+        public UserRepository(IdealDiscussContext context) : base(context)
         {
-            _context = context;
         }
 
         public User GetUser(Expression<Func<User, bool>> expression)

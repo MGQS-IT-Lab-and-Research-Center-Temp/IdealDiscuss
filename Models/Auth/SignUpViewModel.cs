@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace IdealDiscuss.Models
+namespace IdealDiscuss.Models.Auth
 {
     public class SignUpViewModel
     {
