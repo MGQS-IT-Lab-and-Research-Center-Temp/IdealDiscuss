@@ -82,7 +82,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(string id, UpdateQuestionDto updateQuestionDto)
+        public IActionResult Update(string id, UpdateQuestionViewModel updateQuestionDto)
         {
             var response = _questionService.Update(id, updateQuestionDto);
             ViewData["Message"] = response.Message;

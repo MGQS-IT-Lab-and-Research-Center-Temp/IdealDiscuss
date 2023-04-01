@@ -3,13 +3,13 @@ using IdealDiscuss.Dtos.CommentDto;
 using IdealDiscuss.Dtos.QuestionDto;
 using IdealDiscuss.Entities;
 using IdealDiscuss.Models.Question;
-using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using System.Linq.Expressions;
 using System.Security.Claims;
 
 namespace IdealDiscuss.Service.Implementations
+
 {
     public class QuestionService : IQuestionService
     {
@@ -89,7 +89,7 @@ namespace IdealDiscuss.Service.Implementations
 
             var question = _unitOfWork.Questions.Get(questionId);
 
-            question.QuestionText = updateQuestionDto.QuestionText;
+            question.QuestionText = request.QuestionText;
             question.ModifiedBy = modifiedBy;
             question.LastModified = DateTime.Now;
 
@@ -357,5 +357,7 @@ namespace IdealDiscuss.Service.Implementations
 
             return response;
         }
+
+        
     }
 }

@@ -6,9 +6,9 @@ namespace IdealDiscuss.Service.Interface
 {
     public interface IQuestionService
     {
-        BaseResponseModel Create(CreateQuestionViewModel createQuestionDto);
+        BaseResponseModel Create(CreateQuestionViewModel request);
         BaseResponseModel Delete(string questionId);
-        BaseResponseModel Update(string questionId, UpdateQuestionDto updatequestionDto);
+        BaseResponseModel Update(string questionId, UpdateQuestionViewModel updatequestionDto);
         QuestionResponseModel GetQuestion(string questionId);
         QuestionsResponseModel GetAllQuestion();
         QuestionsResponseModel GetUserQuestions();

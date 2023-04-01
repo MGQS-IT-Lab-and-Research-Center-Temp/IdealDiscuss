@@ -11,10 +11,10 @@ namespace IdealDiscuss.Context
 
             context.Database.EnsureCreated();
 
-            if (context.Roles.Any())
-            {
-                return;
-            }
+            //if (context.Roles.Any())
+            //{
+            //    return;
+            //}
 
             var roles = new Role[]
             {
