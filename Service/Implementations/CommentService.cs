@@ -10,20 +10,14 @@ namespace IdealDiscuss.Service.Implementations
 {
     public class CommentService : ICommentService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly ICommentRepository _commentRepository;
-        private readonly IQuestionRepository _questionRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public CommentService(
-            IUserRepository userRepository,
-            ICommentRepository commentRepository,
-            IQuestionRepository questionRepository,
+            IUnitOfWork unitOfWork,
             IHttpContextAccessor httpContextAccessor)
         {
-            _userRepository = userRepository;
-            _commentRepository = commentRepository;
-            _questionRepository = questionRepository;
+            _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -32,7 +26,7 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            var user = _userRepository.Get(userIdClaim);
+            var user = _unitOfWork.Users.Get(userIdClaim);
 
             if (user is null)
             {
@@ -40,7 +34,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var question = _questionRepository.Get(request.QuestionId);
+            var question = _unitOfWork.Questions.Get(request.QuestionId);
 
             if (question is null)
             {
@@ -67,7 +61,7 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                _commentRepository.Create(comment);
+                _unitOfWork.Comments.Create(comment);
             }
             catch (Exception ex)
             {
@@ -83,7 +77,7 @@ namespace IdealDiscuss.Service.Implementations
         public BaseResponseModel DeleteComment(string commentId)
         {
             var response = new BaseResponseModel();
-            var commentexist = _commentRepository.Exists(c => c.Id == commentId);
+            var commentexist = _unitOfWork.Comments.Exists(c => c.Id == commentId);
 
             if (!commentexist)
             {
@@ -91,12 +85,12 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var comment = _commentRepository.Get(commentId);
+            var comment = _unitOfWork.Comments.Get(commentId);
             comment.IsDeleted = true;
 
             try
             {
-                _commentRepository.Update(comment);
+                _unitOfWork.Comments.Update(comment);
             }
             catch (Exception ex)
             {
@@ -113,7 +107,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new CommentsResponseModel();
 
-            var comment = _commentRepository.GetAll(c => c.IsDeleted == false);
+            var comment = _unitOfWork.Comments.GetAll(c => c.IsDeleted == false);
 
             if (comment.Count == 0)
             {
@@ -140,7 +134,7 @@ namespace IdealDiscuss.Service.Implementations
         public CommentResponseModel GetComment(string commentId)
         {
             var response = new CommentResponseModel();
-            var commentexist = _commentRepository.Exists(c => c.Id == commentId);
+            var commentexist = _unitOfWork.Comments.Exists(c => c.Id == commentId);
 
             if (!commentexist)
             {
@@ -148,7 +142,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var comment = _commentRepository.Get(commentId);
+            var comment = _unitOfWork.Comments.Get(commentId);
 
             response.Message = "Success";
             response.Status = true;
@@ -165,7 +159,7 @@ namespace IdealDiscuss.Service.Implementations
         public BaseResponseModel UpdateComment(string commentId, UpdateCommentViewModel request)
         {
             var response = new BaseResponseModel();
-            var commentexist = _commentRepository.Exists(c => c.Id == commentId);
+            var commentexist = _unitOfWork.Comments.Exists(c => c.Id == commentId);
 
             if (!commentexist)
             {
@@ -173,13 +167,13 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var comment = _commentRepository.Get(commentId);
+            var comment = _unitOfWork.Comments.Get(commentId);
 
             comment.CommentText = request.CommentText;
 
             try
             {
-                _commentRepository.Update(comment);
+                _unitOfWork.Comments.Update(comment);
             }
             catch (Exception ex)
             {
