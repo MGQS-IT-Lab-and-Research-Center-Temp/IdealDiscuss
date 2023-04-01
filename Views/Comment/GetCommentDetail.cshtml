@@ -17,6 +17,29 @@
                 </p>
 
                 <hr />
+                <div class="card-body">
+
+                    @if (Model.CommentReports.Count != 0)
+                    {
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                Reports:
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                @foreach (var report in Model.CommentReports)
+                                {
+                                    <li class="list-group-item">
+                                        @report.AdditionalComment
+                                        <span class="badge bg-dark">@report.CommentReporter</span>
+                                        <a asp-controller="CommentReport" asp-action="GetCommentReportDetail" asp-route-id="@report.Id">View Report Detail</a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                </div>
+
                 <div class="btn-group">
                     <a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Update</a>
                     &nbsp;
@@ -26,6 +49,8 @@
                     &nbsp;
                     <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Back to list</a>
                 </div>
+
+                
             </div>
         </div>
     }

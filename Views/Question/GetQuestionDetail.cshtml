@@ -43,8 +43,8 @@
                                 <li class="list-group-item">
                                     @comment.CommentText
                                     <span class="badge bg-dark">@comment.UserName</span>
+                                    <a asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@comment.Id">View Report</a>
                                 </li>
-
                             }
                         </ul>
                     </div>

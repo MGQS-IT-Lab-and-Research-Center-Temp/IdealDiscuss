@@ -20,6 +20,14 @@ namespace IdealDiscuss.Controllers
             _flagService = flagService;
         }
 
+   //     public IActionResult Index()
+   //     {
+   //         var response = _commentReportService.GetAllCommentReport();
+			//ViewData["Message"] = response.Message;
+			//ViewData["Status"] = response.Status;
+   //         return View(response.Data);
+   //     }
+
         public IActionResult CreateCommentReport()
         {
             ViewBag.FlagLists = _flagService.SelectFlags();
@@ -37,14 +45,6 @@ namespace IdealDiscuss.Controllers
 			ViewData["Status"] = response.Status;
 
 			return View();
-        }
-
-        public IActionResult Index()
-        {
-            var response = _commentReportService.GetAllCommentReport();
-			ViewData["Message"] = response.Message;
-			ViewData["Status"] = response.Status;
-            return View(response.Data);
         }
 
         public IActionResult GetCommentReportDetail(string id)

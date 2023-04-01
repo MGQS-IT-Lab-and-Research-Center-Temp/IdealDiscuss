@@ -118,14 +118,14 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             response.Data = comment
-                .Select(comment => new CommentViewModel
-                {
-                    Id = comment.Id,
-                    QuestionId = comment.QuestionId,
-                    UserId = comment.UserId,
-                    CommentText = comment.CommentText
-                })
-                .ToList();
+                    .Select(comment => new CommentViewModel
+                    {
+                        Id = comment.Id,
+                        QuestionId = comment.QuestionId,
+                        UserId = comment.UserId,
+                        CommentText = comment.CommentText
+                    })
+                    .ToList();
 
             response.Status = true;
             response.Message = "Success";
@@ -144,7 +144,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var comment = _unitOfWork.Comments.Get(commentId);
+            var comment = _unitOfWork.Comments.GetCommentWithReportList(commentId);
 
             response.Message = "Success";
             response.Status = true;
@@ -159,7 +159,7 @@ namespace IdealDiscuss.Service.Implementations
                             .Select(c => new CommentReportViewModel
                             {
                                 Id = c.Id,
-                                UserName = c.User.UserName,
+                                CommentReporter = c.User.UserName,
                                 AdditionalComment  = c.AdditionalComment                       
                             })
                             .ToList()
