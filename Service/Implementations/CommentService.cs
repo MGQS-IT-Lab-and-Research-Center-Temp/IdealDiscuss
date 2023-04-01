@@ -1,10 +1,10 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.CommentDto;
-using IdealDiscuss.Entities;
+﻿using IdealDiscuss.Entities;
+using IdealDiscuss.Models;
+using IdealDiscuss.Models.Comment;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using System.Security.Claims;
-using static IdealDiscuss.Dtos.CommentDto.CommentResponse;
+using static IdealDiscuss.Models.Comment.CommentResponse;
 
 namespace IdealDiscuss.Service.Implementations
 {
@@ -27,7 +27,7 @@ namespace IdealDiscuss.Service.Implementations
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public BaseResponseModel CreateComment(CreateCommentDto request)
+        public BaseResponseModel CreateComment(CreateCommentViewModel request)
         {
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
@@ -122,7 +122,7 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             response.Data = comment
-                .Select(comment => new ViewCommentDto
+                .Select(comment => new ViewCommentModel
                 {
                     Id = comment.Id,
                     CommentText = comment.CommentText,
@@ -152,7 +152,7 @@ namespace IdealDiscuss.Service.Implementations
 
             response.Message = "Success";
             response.Status = true;
-            response.Data = new ViewCommentDto
+            response.Data = new ViewCommentModel
             {
                 Id = commentId,
                 CommentText = comment.CommentText,
@@ -162,7 +162,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateComment(string commentId, UpdateCommentDto request)
+        public BaseResponseModel UpdateComment(string commentId, UpdateCommentViewModel request)
         {
             var response = new BaseResponseModel();
             var commentexist = _commentRepository.Exists(c => c.Id == commentId);

@@ -1,13 +1,13 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.QuestionReportDto;
+﻿using IdealDiscuss.Models;
+using IdealDiscuss.Models.QuestionReport;
 
 namespace IdealDiscuss.Service.Interface
 {
     public interface IQuestionReportService
     {
-        BaseResponseModel CreateQuestionReport(CreateQuestionReportDto request);
+        BaseResponseModel CreateQuestionReport(CreateQuestionReportViewModel request);
         BaseResponseModel DeleteQuestionReport(string id);
-        BaseResponseModel UpdateQuestionReport(string id, UpdateQuestionReportDto request);
+        BaseResponseModel UpdateQuestionReport(string id, UpdateQuestionReportViewModel request);
         QuestionReportResponseModel GetQuestionReport(string id);
         QuestionReportsResponseModel GetAllQuestionReport();
     }

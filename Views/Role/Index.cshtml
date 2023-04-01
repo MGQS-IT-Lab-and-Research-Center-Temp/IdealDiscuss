@@ -1,4 +1,4 @@
-﻿@model List<IdealDiscuss.Dtos.RoleDto.ViewRoleDto>
+﻿@model List<IdealDiscuss.Models.Role.RoleViewModel>
 @{
     ViewData["Title"] = "Role List";
     int count = 1;
@@ -10,7 +10,7 @@
 
 @await Html.PartialAsync("_ListAlert", Model)
 
-@if (Model is not null && Model.Count >= 1)
+@if (Model is not null)
 {
     <table class="table">
         <thead>

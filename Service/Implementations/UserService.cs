@@ -1,74 +1,69 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.UserDto;
-using IdealDiscuss.Entities;
+﻿using IdealDiscuss.Entities;
+using IdealDiscuss.Helper;
+using IdealDiscuss.Models;
+using IdealDiscuss.Models.Auth;
+using IdealDiscuss.Models.User;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using System.Security.Cryptography;
 
 namespace IdealDiscuss.Service.Implementations
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IRoleRepository _roleRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(
-            IUserRepository userRepository,
-            IRoleRepository roleRepository,
-            IHttpContextAccessor httpContextAccessor)
+        public UserService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
-            _roleRepository = roleRepository;
             _httpContextAccessor = httpContextAccessor;
+            _unitOfWork = unitOfWork;
         }
 
-        public BaseResponseModel AddUser(CreateUserDto request, string roleName)
+        public BaseResponseModel AddUser(SignUpViewModel request, string roleName)
         {
+            var response = new BaseResponseModel();
+            string saltString = HashingHelper.GenerateSalt();
+            string hashedPassword = HashingHelper.HashPassword(request.Password, saltString);
+            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+            var createdDate = DateTime.Now;
+
+            var userExist = _unitOfWork.Users.Exists(x => x.UserName == request.UserName || x.Email == request.Email);
+
+            if (userExist)
+            {
+                response.Message = $"User with {request.UserName} or {request.Email} already exist";
+                return response;
+            }
+
+            roleName ??= "AppUser";
+
+            var role = _unitOfWork.Roles.Get(x => x.RoleName == roleName);
+
+            if (role is null)
+            {
+                response.Message = $"Role does not exist";
+                return response;
+            }
+
+            var user = new User
+            {
+                UserName = request.UserName,
+                Email = request.Email,
+                HashSalt = saltString,
+                PasswordHash = hashedPassword,
+                RoleId = role.Id,
+                CreatedBy = createdBy,
+                DateCreated = createdDate,
+            };
+
             try
             {
-                byte[] salt = new byte[128 / 8];
+                _unitOfWork.Users.Create(user);
+                _unitOfWork.SaveChanges();
+                response.Message = $"User with {request.UserName} added succesfully";
+                response.Status = true;
 
-                using (var rng = RandomNumberGenerator.Create())
-                {
-                    rng.GetBytes(salt);
-                }
-
-                string saltString = Convert.ToBase64String(salt);
-
-                string hashedPassword = HashPassword(request.Password, saltString);
-
-                var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-                var createdDate = DateTime.Now;
-
-                var userExist = _userRepository.Exists(x => x.UserName == request.UserName || x.Email == request.Email);
-
-                if (userExist)
-                {
-                    return new BaseResponseModel
-                    {
-                        Message = $"User with {request.UserName} or {request.Email} already exist",
-                        Status = false
-                    };
-                }
-
-                roleName ??= "AppUser";
-
-                var role = _roleRepository.Get(x => x.RoleName == roleName);
-
-                var user = new User
-                {
-                    UserName = request.UserName,
-                    Email = request.Email,
-                    HashSalt = saltString,
-                    PasswordHash = hashedPassword,
-                    RoleId = role.Id,
-                    CreatedBy = createdBy,
-                    DateCreated = createdDate,
-                };
-
-                _userRepository.Create(user);
+                return response;
             }
             catch (Exception ex)
             {
@@ -77,97 +72,74 @@ namespace IdealDiscuss.Service.Implementations
                     Message = $"Unable to create user: {ex.Message}"
                 };
             }
-
-            return new BaseResponseModel
-            {
-                Message = $"User with {request.UserName} added succesfully",
-                Status = true
-            };
         }
 
-        public ViewUserDto GetUser(string userId)
+        public UserResponseModel GetUser(string userId)
         {
-            var user = _userRepository.GetUser(x => x.Id == userId);
+            var response = new UserResponseModel();
+            var user = _unitOfWork.Users.GetUser(x => x.Id == userId);
 
             if (user is null)
             {
-                return new ViewUserDto
-                {
-                    Message = $"User with {userId} does not exist",
-                    Status = false
-                };
+                response.Message = $"User with {userId} does not exist";
+                return response;
             }
 
-            return new ViewUserDto
+            response.Data = new UserViewModel
             {
                 UserName = user.UserName,
                 Email = user.Email,
                 RoleId = user.RoleId,
                 RoleName = user.Role.RoleName,
-                Message = $"User successfully retrieved",
-                Status = true
             };
+            response.Message = $"User successfully retrieved";
+            response.Status = true;
+
+            return response;
         }
 
-        public ViewUserDto Login(string username, string password)
+        public UserResponseModel Login(string username, string password)
         {
-            var response = new ViewUserDto();
+            var response = new UserResponseModel();
 
             try
             {
-                var user = _userRepository.GetUser(x => (x.UserName.ToLower() == username.ToLower() || x.Email.ToLower() == username.ToLower()));
+                var user = _unitOfWork.Users.GetUser(x =>
+                                (x.UserName.ToLower() == username.ToLower()
+                                || x.Email.ToLower() == username.ToLower()));
 
                 if (user is null)
                 {
-                    return new ViewUserDto
-                    {
-                        Message = $"Account does not exist!",
-                        Status = false
-                    };
+                    response.Message = $"Account does not exist!";
+                    return response;
                 }
 
-                string hashedPassword = HashPassword(password, user.HashSalt);
+                string hashedPassword = HashingHelper.HashPassword(password, user.HashSalt);
 
                 if (!user.PasswordHash.Equals(hashedPassword))
                 {
-                    return new ViewUserDto
-                    {
-                        Message = $"Incorrect username or password!",
-                        Status = false
-                    };
+                    response.Message = $"Incorrect username or password!";
+                    return response;
                 }
 
-                response.Id = user.Id;
-                response.UserName = user.UserName;
-                response.Email = user.Email;
-                response.RoleId = user.RoleId;
-                response.RoleName = user.Role.RoleName;
+                response.Data = new UserViewModel
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    RoleId = user.RoleId,
+                    RoleName = user.Role.RoleName,
+                };
                 response.Message = $"User successfully retrieved";
                 response.Status = true;
 
+                return response;
             }
             catch (Exception ex)
             {
                 response.Message = $"An error occured: {ex.Message}";
                 return response;
             }
-
-            return response;
-        }
-
-        private string HashPassword(string password, string salt)
-        {
-            byte[] saltByte = Convert.FromBase64String(salt);
-
-            // derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: saltByte,
-                prf: KeyDerivationPrf.HMACSHA1,
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8));
-
-            return hashed;
         }
     }
 }

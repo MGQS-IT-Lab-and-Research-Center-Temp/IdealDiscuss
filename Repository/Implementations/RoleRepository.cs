@@ -6,9 +6,8 @@ namespace IdealDiscuss.Repository.Implementations
 {
     public class RoleRepository : BaseRepository<Role>, IRoleRepository
     {
-        public RoleRepository(IdealDiscussContext context)
+        public RoleRepository(IdealDiscussContext context) : base(context)
         {
-            _context = context;
         }
     }
 }

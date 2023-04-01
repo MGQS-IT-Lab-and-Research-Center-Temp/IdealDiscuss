@@ -1,4 +1,4 @@
-﻿using IdealDiscuss.Dtos.FlagDto;
+﻿using IdealDiscuss.Models.Flag;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +34,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateFlag(CreateFlagDto request)
+        public IActionResult CreateFlag(CreateFlagViewModel request)
         {
             var response = _flagService.CreateFlag(request);
             ViewData["Message"] = response.Message;
@@ -66,7 +66,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateFlag(string id,UpdateFlagDto request)
+        public IActionResult UpdateFlag(string id, UpdateFlagViewModel request)
         {
             var response = _flagService.UpdateFlag(id,request);
             return RedirectToAction("Index", "Flag");

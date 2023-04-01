@@ -6,9 +6,8 @@ namespace IdealDiscuss.Repository.Implementations
 {
     public class CommentRepository : BaseRepository<Comment>, ICommentRepository
     {
-        public CommentRepository(IdealDiscussContext context)
+        public CommentRepository(IdealDiscussContext context): base(context)
         {
-            _context = context;
         }
     }
 }

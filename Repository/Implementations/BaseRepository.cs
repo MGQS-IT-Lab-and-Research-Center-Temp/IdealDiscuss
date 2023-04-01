@@ -1,13 +1,17 @@
 ﻿using IdealDiscuss.Context;
 using IdealDiscuss.Entities;
-using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace IdealDiscuss.Repository.Implementations
 {
     public abstract class BaseRepository<T> : IRepository<T> where T : BaseEntity, new()
     {
-        protected IdealDiscussContext _context;
+        protected readonly IdealDiscussContext _context;
+
+        protected BaseRepository(IdealDiscussContext context)
+        {
+            _context = context;
+        }
 
         public T Create(T entity)
         {
@@ -54,6 +58,16 @@ namespace IdealDiscuss.Repository.Implementations
         public List<T> GetAllByIds(List<string> ids)
         {
             return _context.Set<T>().Where(t => ids.Contains(t.Id)).ToList();
+        }
+
+        public IReadOnlyList<T> SelectAll()
+        {
+            return _context.Set<T>().ToList();
+        }
+
+        public IReadOnlyList<T> SelectAll(Expression<Func<T, bool>> expression = null)
+        {
+            return _context.Set<T>().Where(expression).ToList();
         }
     }
 }

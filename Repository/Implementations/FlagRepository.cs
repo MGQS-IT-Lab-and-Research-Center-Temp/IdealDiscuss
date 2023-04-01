@@ -6,10 +6,8 @@ namespace IdealDiscuss.Repository.Implementations
 {
     public class FlagRepository : BaseRepository<Flag>, IFlagRepository
     {
-        public FlagRepository(IdealDiscussContext context) 
+        public FlagRepository(IdealDiscussContext context) : base(context)
         {
-            _context = context;
         }
-
     }
 }

@@ -1,4 +1,4 @@
-﻿using IdealDiscuss.Dtos.CommentReport;
+﻿using IdealDiscuss.Models.CommentReport;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,8 +22,7 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult CreateCommentReport()
         {
-            var flags = _flagService.GetAllFlag();
-            ViewData["FlagLists"] = new SelectList(flags.Data, "Id", "FlagName");
+            ViewBag.FlagLists = _flagService.SelectFlags();
             ViewData["Message"] = "";
             ViewData["Status"] = false;
 
@@ -31,7 +30,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateCommentReport(CreateCommentReportDto request)
+        public IActionResult CreateCommentReport(CreateCommentReportViewModel request)
         {
             var response = _commentReportService.CreateCommentReport(request);
 			ViewData["Message"] = response.Message;
@@ -64,9 +63,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateCommentReport(string id,UpdateCommentReportDto updateCommentReportDto)
+        public IActionResult UpdateCommentReport(string id, UpdateCommentReportViewModel request)
         {
-            var response = _commentReportService.UpdateCommentReport(id, updateCommentReportDto);
+            var response = _commentReportService.UpdateCommentReport(id, request);
 			ViewData["Message"] = response.Message;
 			ViewData["Status"] = response.Status;
 			return RedirectToAction("Index");
