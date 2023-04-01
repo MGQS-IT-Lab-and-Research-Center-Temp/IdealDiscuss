@@ -1,24 +1,27 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.CategoryDto;
-using IdealDiscuss.Entities;
+﻿using IdealDiscuss.Entities;
+using IdealDiscuss.Models;
+using IdealDiscuss.Models.Category;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq.Expressions;
 
 namespace IdealDiscuss.Service.Implementations
 {
     public class CategoryService : ICategoryService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public CategoryService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
+        public CategoryService(
+            IUnitOfWork unitOfWork,
+            IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
         }
 
-        public BaseResponseModel CreateCategory(CreateCategoryDto request)
+        public BaseResponseModel CreateCategory(CreateCategoryViewModel request)
         {
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
@@ -61,10 +64,10 @@ namespace IdealDiscuss.Service.Implementations
             }
         }
 
-        public BaseResponseModel DeleteCategory(string id)
+        public BaseResponseModel DeleteCategory(string categoryId)
         {
             var response = new BaseResponseModel();
-            var isCategoryExist = _unitOfWork.Categories.Exists(c => c.Id == id && !c.IsDeleted);
+            var isCategoryExist = _unitOfWork.Categories.Exists(c => c.Id == categoryId && !c.IsDeleted);
 
             if (!isCategoryExist)
             {
@@ -72,7 +75,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var category = _unitOfWork.Categories.Get(id);
+            var category = _unitOfWork.Categories.Get(categoryId);
             category.IsDeleted = true;
 
             try
@@ -107,7 +110,7 @@ namespace IdealDiscuss.Service.Implementations
                 }
 
                 response.Data = category.Select(
-                    category => new ViewCategoryDto
+                    category => new CategoryViewModel
                     {
                         Id = category.Id,
                         Name = category.Name,
@@ -126,28 +129,28 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public CategoryResponseModel GetCategory(string id)
+        public CategoryResponseModel GetCategory(string categoryId)
         {
             var response = new CategoryResponseModel();
 
             Expression<Func<Category, bool>> expression = c =>
-                                                (c.Id == id)
-                                                && (c.Id == id
+                                                (c.Id == categoryId)
+                                                && (c.Id == categoryId
                                                 && c.IsDeleted == false);
 
             var categoryExist = _unitOfWork.Categories.Exists(expression);
 
             if (!categoryExist)
             {
-                response.Message = $"Category with id {id} does not exist.";
+                response.Message = $"Category with id {categoryId} does not exist.";
                 return response;
             }
 
-            var category = _unitOfWork.Categories.Get(id);
+            var category = _unitOfWork.Categories.Get(categoryId);
 
             response.Message = "Success";
             response.Status = true;
-            response.Data = new ViewCategoryDto
+            response.Data = new CategoryViewModel
             {
                 Id = category.Id,
                 Name = category.Name,
@@ -157,11 +160,11 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateCategory(string id, UpdateCategoryDto request)
+        public BaseResponseModel UpdateCategory(string categoryId, UpdateCategoryViewModel updateCategoryDto)
         {
             var response = new BaseResponseModel();
             string modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-            var categoryExist = _unitOfWork.Categories.Exists(c => c.Id == id);
+            var categoryExist = _unitOfWork.Categories.Exists(c => c.Id == categoryId);
 
             if (!categoryExist)
             {
@@ -169,16 +172,16 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var category = _unitOfWork.Categories.Get(id);
-            category.Description = request.Description;
+            var category = _unitOfWork.Categories.Get(categoryId);
+            category.Description = updateCategoryDto.Description;
             category.ModifiedBy = modifiedBy;
             category.LastModified = DateTime.Now;
-
             try
             {
                 _unitOfWork.Categories.Update(category);
                 _unitOfWork.SaveChanges();
                 response.Message = "Category updated successfully.";
+
                 return response;
             }
             catch (Exception ex)
@@ -186,6 +189,15 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Could not update the category: {ex.Message}";
                 return response;
             }
+        }
+
+        public IEnumerable<SelectListItem> SelectCategories()
+        {
+            return _unitOfWork.Categories.SelectAll().Select(cat => new SelectListItem()
+            {
+                Text = cat.Name,
+                Value = cat.Id
+            });
         }
     }
 }

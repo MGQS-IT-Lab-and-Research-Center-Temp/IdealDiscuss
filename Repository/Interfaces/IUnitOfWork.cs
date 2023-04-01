@@ -1,4 +1,6 @@
-﻿namespace IdealDiscuss.Repository.Interfaces
+﻿namespace IdealDiscuss.Repository.Interfaces;
+
+public interface IUnitOfWork : IDisposable
 {
     IRoleRepository Roles { get; }
     IUserRepository Users { get; }

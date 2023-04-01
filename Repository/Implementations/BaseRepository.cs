@@ -59,5 +59,15 @@ namespace IdealDiscuss.Repository.Implementations
         {
             return _context.Set<T>().Where(t => ids.Contains(t.Id)).ToList();
         }
+
+        public IReadOnlyList<T> SelectAll()
+        {
+            return _context.Set<T>().ToList();
+        }
+
+        public IReadOnlyList<T> SelectAll(Expression<Func<T, bool>> expression = null)
+        {
+            return _context.Set<T>().Where(expression).ToList();
+        }
     }
 }

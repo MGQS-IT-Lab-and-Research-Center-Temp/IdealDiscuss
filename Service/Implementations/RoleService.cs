@@ -1,6 +1,5 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.RoleDto;
-using IdealDiscuss.Entities;
+﻿using IdealDiscuss.Entities;
+using IdealDiscuss.Models;
 using IdealDiscuss.Models.Role;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
@@ -56,11 +55,6 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = $"Failed to create role: {ex.Message}";
                 return response;
             }
-
-            response.Status = true;
-            response.Message = "Role created successfully.";
-            _logger.LogInformation(response.Message);
-            return response;
         }
 
         public BaseResponseModel DeleteRole(string roleId)

@@ -1,6 +1,6 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.QuestionReportDto;
-using IdealDiscuss.Entities;
+﻿using IdealDiscuss.Entities;
+using IdealDiscuss.Models;
+using IdealDiscuss.Models.QuestionReport;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 
@@ -24,7 +24,7 @@ namespace IdealDiscuss.Service.Implementations
             _questionRepository = questionRepository;
             _questionReportRepository = questionReportRepository;
         }
-        public BaseResponseModel CreateQuestionReport(CreateQuestionReportDto request)
+        public BaseResponseModel CreateQuestionReport(CreateQuestionReportViewModel request)
         {
             var response = new BaseResponseModel();
 
@@ -124,7 +124,7 @@ namespace IdealDiscuss.Service.Implementations
 
             var questionReports = _questionReportRepository.GetAll();
 
-            response.Reports = questionReports.Select(qr => new ViewQuestionReportDto
+            response.Data = questionReports.Select(qr => new QuestionReportViewModel
             {
                 Id = qr.Id,
                 AdditionalComment = qr.AdditionalComment,
@@ -159,7 +159,7 @@ namespace IdealDiscuss.Service.Implementations
             response.Message = "Success";
             response.Status = true;
 
-            response.Report = new ViewQuestionReportDto
+            response.Data = new QuestionReportViewModel
             {
                 Id = id,
                 AdditionalComment = questionReport.AdditionalComment,
@@ -174,7 +174,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateQuestionReport(string id, UpdateQuestionReportDto request)
+        public BaseResponseModel UpdateQuestionReport(string id, UpdateQuestionReportViewModel request)
         {
             var response = new BaseResponseModel();
 

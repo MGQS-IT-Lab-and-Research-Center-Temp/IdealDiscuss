@@ -1,7 +1,7 @@
 ﻿using IdealDiscuss.Service.Interface;
-using IdealDiscuss.Dtos.CommentDto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using IdealDiscuss.Models.Comment;
 
 namespace IdealDiscuss.Controllers
 {
@@ -42,7 +42,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateCommentDto request)
+        public IActionResult Create(CreateCommentViewModel request)
         {
             var response = _commentService.CreateComment(request);
             ViewData["Message"] = response.Message;
@@ -61,7 +61,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(string id, UpdateCommentDto request)
+        public IActionResult Edit(string id, UpdateCommentViewModel request)
         {
             var response = _commentService.UpdateComment(id, request);
             ViewData["Message"] = response.Message;

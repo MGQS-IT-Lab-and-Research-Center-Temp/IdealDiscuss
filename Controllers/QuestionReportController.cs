@@ -1,7 +1,4 @@
-﻿using IdealDiscuss.Dtos.FlagDto;
-using IdealDiscuss.Dtos.QuestionReportDto;
-using IdealDiscuss.Entities;
-using IdealDiscuss.Service.Implementations;
+﻿using IdealDiscuss.Models.QuestionReport;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +19,7 @@ namespace IdealDiscuss.Controllers
             ViewBag.Message = response.Message;
             ViewBag.status = response.Status;
 
-            return View(response.Reports);
+            return View(response.Data);
         }
 
         public IActionResult ReportQuestion()
@@ -31,7 +28,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReportQuestion(CreateQuestionReportDto Report)
+        public IActionResult ReportQuestion(CreateQuestionReportViewModel Report)
         {
             var response = _questionReportService.CreateQuestionReport(Report);
             ViewBag.Message = response.Message;
@@ -42,24 +39,24 @@ namespace IdealDiscuss.Controllers
         public IActionResult GetQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
-            return View (response.Report);
+            return View (response.Data);
         }
 
         [HttpGet]
         public IActionResult GetAllQuestionReport()
         {
             var response = _questionReportService.GetAllQuestionReport();
-            return View(response.Reports);
+            return View(response.Data);
         }
 
         public IActionResult UpdateQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
-            return View(response.Report);
+            return View(response.Data);
         }
 
         [HttpPost]
-        public IActionResult UpdateQuestionReport(string id, UpdateQuestionReportDto request)
+        public IActionResult UpdateQuestionReport(string id, UpdateQuestionReportViewModel request)
         {
             var response = _questionReportService.UpdateQuestionReport(id, request);
             return RedirectToAction("Index");

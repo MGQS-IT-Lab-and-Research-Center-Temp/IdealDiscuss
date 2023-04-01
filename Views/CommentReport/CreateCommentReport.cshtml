@@ -1,4 +1,4 @@
-﻿@model IdealDiscuss.Dtos.CommentReport.CreateCommentReportDto
+﻿@model CreateCommentReportViewModel
 @{
     ViewData["Title"] = "Report Comment";
     var commentId = ViewContext.RouteData.Values["id"];
@@ -16,7 +16,7 @@
                 <div class="col-md-12 mb-3">
                     <select type="checkbox" class="form-control" multiple="multiple"
                             name="FlagIds" required="required"
-                            asp-items="@((SelectList)ViewData["FlagLists"])">
+                            asp-items="@ViewBag.FlagLists">
                         <option value="">--Select Flags--</option>
                     </select>
                 </div>

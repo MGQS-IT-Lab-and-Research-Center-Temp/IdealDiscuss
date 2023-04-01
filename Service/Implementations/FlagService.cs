@@ -1,38 +1,40 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.FlagDto;
-using IdealDiscuss.Entities;
+﻿using IdealDiscuss.Entities;
+using IdealDiscuss.Models;
+using IdealDiscuss.Models.Flag;
+using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq.Expressions;
 
 namespace IdealDiscuss.Service.Implementations
 {
     public class FlagService : IFlagService
     {
-        private readonly IFlagRepository _flagRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FlagService(IFlagRepository flagRepository, IHttpContextAccessor httpContextAccessor)
+        public FlagService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
         {
-            _flagRepository = flagRepository;
+            _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public BaseResponseModel CreateFlag(CreateFlagDto createFlagDto)
+        public BaseResponseModel CreateFlag(CreateFlagViewModel request)
         {
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var createdDate = DateTime.Now;
 
-            var isFlagExist = _flagRepository.Exists(c => c.FlagName == createFlagDto.FlagName);
+            var isFlagExist = _unitOfWork.Flags.Exists(c => c.FlagName == request.FlagName);
 
             if (isFlagExist)
             {
-                response.Message = $"Flag with {createFlagDto.FlagName} already exist!";
+                response.Message = $"Flag with {request.FlagName} already exist!";
                 return response;
             }
 
-            if (string.IsNullOrWhiteSpace(createFlagDto.FlagName))
+            if (string.IsNullOrWhiteSpace(request.FlagName))
             {
                 response.Message = "Flag name is required!";
                 return response;
@@ -40,33 +42,32 @@ namespace IdealDiscuss.Service.Implementations
 
             var flag = new Flag()
             {
-                FlagName = createFlagDto.FlagName,
-                Description = createFlagDto.Description,
+                FlagName = request.FlagName,
+                Description = request.Description,
                 CreatedBy = createdBy,
                 DateCreated = createdDate
             };
 
             try
             {
-                _flagRepository.Create(flag);
+                _unitOfWork.Flags.Create(flag);
+                _unitOfWork.SaveChanges();
+                response.Status = true;
+                response.Message = "Flag created successfully.";
+
+                return response;
             }
             catch (Exception ex)
             {
                 response.Message = $"Failed to create Flag. {ex.Message}";
                 return response;
             }
-
-            response.Status = true;
-            response.Message = "Flag created successfully.";
-
-            return response;
-
         }
 
         public BaseResponseModel DeleteFlag(string flagId)
         {
             var response = new BaseResponseModel();
-            var flagExist = _flagRepository.Exists(x => x.Id == flagId);
+            var flagExist = _unitOfWork.Flags.Exists(x => x.Id == flagId);
 
             if (!flagExist)
             {
@@ -74,22 +75,23 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var flags = _flagRepository.Get(flagId);
+            var flags = _unitOfWork.Flags.Get(flagId);
             flags.IsDeleted = true;
 
             try
             {
-                _flagRepository.Update(flags);
+                _unitOfWork.Flags.Update(flags);
+                _unitOfWork.SaveChanges();
+                response.Status = true;
+                response.Message = "Flag deleted successfully.";
+
+                return response;
             }
             catch (Exception)
             {
                 response.Message = "Flag delete failed";
                 return response;
             }
-
-            response.Status = true;
-            response.Message = "Flag deleted successfully.";
-            return response;
         }
 
         public FlagsResponseModel GetAllFlag()
@@ -98,7 +100,7 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var flags = _flagRepository.GetAll(f => f.IsDeleted == false);
+                var flags = _unitOfWork.Flags.GetAll(f => f.IsDeleted == false);
 
                 if (flags is null || flags.Count == 0)
                 {
@@ -107,7 +109,7 @@ namespace IdealDiscuss.Service.Implementations
                 }
 
                 response.Data = flags
-                   .Select(f => new ViewFlagDto
+                   .Select(f => new FlagViewModel
                    {
                        Id = f.Id,
                        FlagName = f.FlagName,
@@ -117,7 +119,7 @@ namespace IdealDiscuss.Service.Implementations
                 response.Status = true;
                 response.Message = "Success";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.Message = ex.StackTrace;
                 return response;
@@ -129,7 +131,10 @@ namespace IdealDiscuss.Service.Implementations
         public FlagResponseModel GetFlag(string flagId)
         {
             var response = new FlagResponseModel();
-            var flagExist = _flagRepository.Exists(f => (f.Id == flagId) && (f.Id == flagId && f.IsDeleted == false));
+            var flagExist = _unitOfWork.Flags.Exists(f =>
+                                (f.Id == flagId)
+                                && (f.Id == flagId
+                                && f.IsDeleted == false));
 
             if (!flagExist)
             {
@@ -139,11 +144,11 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var flags = _flagRepository.Get(flagId);
+                var flags = _unitOfWork.Flags.Get(flagId);
 
                 response.Message = "Success";
                 response.Status = true;
-                response.Data = new ViewFlagDto
+                response.Data = new FlagViewModel
                 {
                     Id = flags.Id,
                     FlagName = flags.FlagName,
@@ -159,15 +164,17 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateFlag(string flagId, UpdateFlagDto updateFlagDto)
+        public BaseResponseModel UpdateFlag(string flagId, UpdateFlagViewModel request)
         {
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var modifiedDate = DateTime.Now;
-            Expression<Func<Flag, bool>> expression = f => (f.Id == flagId) 
-                                                && (f.Id == flagId 
+            Expression<Func<Flag, bool>> expression = f =>
+                                                (f.Id == flagId)
+                                                && (f.Id == flagId
                                                 && f.IsDeleted == false);
-            var isFlagExist = _flagRepository.Exists(expression);
+
+            var isFlagExist = _unitOfWork.Flags.Exists(expression);
 
             if (!isFlagExist)
             {
@@ -175,30 +182,41 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            if(string.IsNullOrWhiteSpace(updateFlagDto.FlagName))
+            if (string.IsNullOrWhiteSpace(request.FlagName))
             {
                 response.Message = "Flag name cannot be null!";
                 return response;
             }
 
-            var flag = _flagRepository.Get(flagId);
+            var flag = _unitOfWork.Flags.Get(flagId);
 
-            flag.FlagName = updateFlagDto.FlagName;
-            flag.Description = updateFlagDto.Description;
+            flag.FlagName = request.FlagName;
+            flag.Description = request.Description;
             flag.ModifiedBy = modifiedBy;
             flag.LastModified = modifiedDate;
 
             try
             {
-                _flagRepository.Update(flag);
+                _unitOfWork.Flags.Update(flag);
+                _unitOfWork.SaveChanges();
+                response.Message = "Flag updated successfully.";
+
+                return response;
             }
             catch (Exception ex)
             {
                 response.Message = $"Could not update the flag: {ex.Message}";
                 return response;
             }
-            response.Message = "Flag updated successfully.";
-            return response;
+        }
+
+        public IEnumerable<SelectListItem> SelectFlags()
+        {
+            return _unitOfWork.Categories.SelectAll().Select(cat => new SelectListItem()
+            {
+                Text = cat.Name,
+                Value = cat.Id
+            });
         }
     }
 }
