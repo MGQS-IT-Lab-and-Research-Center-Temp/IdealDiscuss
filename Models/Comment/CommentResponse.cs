@@ -9,6 +9,6 @@ public class CommentResponse
 
     public class CommentsResponseModel : BaseResponseModel
     {
-        public List<ViewCommentModel> Data { get; set; }
+        public  List<ViewCommentModel> Data { get; set; }
     }
 }
