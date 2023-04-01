@@ -138,7 +138,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 var commentReports = _unitOfWork.CommentReports.GetCommentReports();
 
-                response.Data = commentReports.Select(commentReport => new ViewCommentReportViewModel
+                response.Data = commentReports.Select(commentReport => new CommentReportViewModel
                 {
                     Id = commentReport.Id,
                     AdditionalComment = commentReport.AdditionalComment,
@@ -178,7 +178,7 @@ namespace IdealDiscuss.Service.Implementations
 
                 response.Message = "Success";
                 response.Status = true;
-                response.Data = new ViewCommentReportViewModel
+                response.Data = new CommentReportViewModel
                 {
                     Id = id,
                     AdditionalComment = commentReport.AdditionalComment,

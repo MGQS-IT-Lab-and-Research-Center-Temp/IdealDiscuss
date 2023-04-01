@@ -1,6 +1,7 @@
 ﻿using IdealDiscuss.Entities;
 using IdealDiscuss.Models;
 using IdealDiscuss.Models.Comment;
+using IdealDiscuss.Models.CommentReport;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using System.Security.Claims;
@@ -152,7 +153,17 @@ namespace IdealDiscuss.Service.Implementations
                 Id = comment.Id,
                 QuestionId = comment.QuestionId,
                 UserId = comment.UserId,
-                CommentText = comment.CommentText
+                CommentText = comment.CommentText,
+                CommentReports =  comment.CommentReports
+                            .Where(c => !c.IsDeleted)
+                            .Select(c => new CommentReportViewModel
+                            {
+                                Id = c.Id,
+                                UserName = c.User.UserName,
+                                AdditionalComment  = c.AdditionalComment                       
+                            })
+                            .ToList()
+
             };
             return response;
         }
