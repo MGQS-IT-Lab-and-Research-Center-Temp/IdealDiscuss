@@ -8,21 +8,12 @@ namespace IdealDiscuss.Service.Implementations
 {
     public class QuestionReportService : IQuestionReportService
     {
-        private readonly IFlagRepository _flagRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IQuestionRepository _questionRepository;
-        private readonly IQuestionReportRepository _questionReportRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
         public QuestionReportService(
-            IFlagRepository flagRepository,
-            IUserRepository userRepository,
-            IQuestionRepository questionRepository,
-            IQuestionReportRepository questionReportRepository)
+            IUnitOfWork unitOfWork)
         {
-            _flagRepository = flagRepository;
-            _userRepository = userRepository;
-            _questionRepository = questionRepository;
-            _questionReportRepository = questionReportRepository;
+            _unitOfWork = unitOfWork;
         }
         public BaseResponseModel CreateQuestionReport(CreateQuestionReportViewModel request)
         {
@@ -30,8 +21,8 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var reporter = _userRepository.Get(request.UserId);
-                var question = _questionRepository.Get(request.QuestionId);
+                var reporter = _unitOfWork.Users.Get(request.UserId);
+                var question = _unitOfWork.Questions.Get(request.QuestionId);
 
                 if (reporter is null)
                 {
@@ -56,7 +47,7 @@ namespace IdealDiscuss.Service.Implementations
                     DateCreated = DateTime.Now,
                 };
 
-                var flags = _flagRepository.GetAllByIds(request.FlagIds);
+                var flags = _unitOfWork.Flags.GetAllByIds(request.FlagIds);
 
                 var questionFlags = new HashSet<QuestionReportFlag>();
 
@@ -75,7 +66,7 @@ namespace IdealDiscuss.Service.Implementations
 
                 questionReport.QuestionReportFlags = questionFlags;
 
-                _questionReportRepository.Create(questionReport);
+                _unitOfWork.QuestionReports.Create(questionReport);
 
                 response.Status = true;
                 response.Message = "Report created successfully!";
@@ -92,7 +83,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
 
-            var isQuestionReportExist = _questionReportRepository.Exists(c => c.Id == id);
+            var isQuestionReportExist = _unitOfWork.QuestionReports.Exists(c => c.Id == id);
 
             if (!isQuestionReportExist)
             {
@@ -100,12 +91,12 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var questionReport = _questionReportRepository.Get(id);
+            var questionReport = _unitOfWork.QuestionReports.Get(id);
             questionReport.IsDeleted = true;
 
             try
             {
-                _questionReportRepository.Update(questionReport);
+                _unitOfWork.QuestionReports.Update(questionReport);
             }
             catch (Exception ex)
             {
@@ -122,7 +113,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new QuestionReportsResponseModel();
 
-            var questionReports = _questionReportRepository.GetAll();
+            var questionReports = _unitOfWork.QuestionReports.GetAll();
 
             response.Data = questionReports.Select(qr => new QuestionReportViewModel
             {
@@ -146,7 +137,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new QuestionReportResponseModel();
 
-            var isQuestionReportExist = _questionReportRepository.Exists(c => c.Id == id);
+            var isQuestionReportExist = _unitOfWork.QuestionReports.Exists(c => c.Id == id);
 
             if (!isQuestionReportExist)
             {
@@ -154,7 +145,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var questionReport = _questionReportRepository.Get(id);
+            var questionReport = _unitOfWork.QuestionReports.Get(id);
 
             response.Message = "Success";
             response.Status = true;
@@ -178,7 +169,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
 
-            var questionReportExist = _questionReportRepository.Exists(c => c.Id == id);
+            var questionReportExist = _unitOfWork.QuestionReportsy.Exists(c => c.Id == id);
 
             if (!questionReportExist)
             {
@@ -186,13 +177,13 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var questionReport = _questionReportRepository.Get(id);
+            var questionReport = _unitOfWork.QuestionReports.Get(id);
 
             questionReport.AdditionalComment = request.AdditionalComment;
 
             try
             {
-                _questionReportRepository.Update(questionReport);
+                _unitOfWork.QuestionReports.Update(questionReport);
             }
             catch (Exception ex)
             {
