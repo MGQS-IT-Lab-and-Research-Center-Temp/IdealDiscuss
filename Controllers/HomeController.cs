@@ -1,6 +1,6 @@
 ﻿using IdealDiscuss.ActionFilters;
 using IdealDiscuss.Dtos.UserDto;
-using IdealDiscuss.Models;
+using IdealDiscuss.Models.Auth;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

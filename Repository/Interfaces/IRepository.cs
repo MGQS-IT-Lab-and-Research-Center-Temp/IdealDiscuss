@@ -1,5 +1,4 @@
-﻿
-using IdealDiscuss.Entities;
+﻿using IdealDiscuss.Entities;
 using System.Linq.Expressions;
 
 namespace IdealDiscuss.Repository

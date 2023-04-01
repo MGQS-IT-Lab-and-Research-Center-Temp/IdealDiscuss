@@ -1,8 +1,7 @@
-﻿namespace IdealDiscuss.Dtos.RoleDto
+﻿namespace IdealDiscuss.Dtos.RoleDto;
+
+public class CreateRoleDto
 {
-    public class CreateRoleDto
-    {
-        public string RoleName { get; set; }
-        public string Description { get; set; }
-    }
+    public string RoleName { get; set; }
+    public string Description { get; set; }
 }

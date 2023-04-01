@@ -1,31 +1,37 @@
-﻿@{
+﻿@model IdealDiscuss.Models.Role.CreateRoleViewModel
+@{
     ViewData["Title"] = "Create New Role";
-    var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
 }
 
-@if (ViewBag.Message != null)
-{
-    <div class="alert @status alert-dismissible" role="alert">
-        @ViewBag.Message
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="body">
+
+    @await Html.PartialAsync("_NoModelAlert")
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <form asp-action="Create">
+                <div class="col-md-12 mb-2">
+                    <label asp-for="RoleName" class="form-label">RoleName:</label>
+                    <input type="text" class="form-control" placeholder="Enter Role name" asp-for="RoleName">
+                    <span asp-validation-for="RoleName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12 mb-2">
+                    <label asp-for="Description" class="form-label">Description:</label>
+                    <textarea class="form-control" placeholder="Enter Role Description" asp-for="Description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">Create Role</button>
+                </div>
+            </form>
+        </div>
     </div>
-}
 
-<div class="d-flex justify-content-center">
-
-    <form asp-action="Create">
-        <div class="col-md-12 mb-2">
-            <label for="RoleName" class="form-label">RoleName:</label>
-            <input type="text" class="form-control" placeholder="Enter Role name" name="RoleName">
-        </div>
-
-        <div class="col-md-12 mb-2">
-            <label for="Description" class="form-label">Description:</label>
-            <textarea class="form-control" placeholder="Enter UserName" name="Description"></textarea>
-        </div>
-
-        <div class="col-md-12">
-            <button type="submit" class="btn btn-primary">Create Role</button>
-        </div>
-    </form>
 </div>
+
+@*@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}*@

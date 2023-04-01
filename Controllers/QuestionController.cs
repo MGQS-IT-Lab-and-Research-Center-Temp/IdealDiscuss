@@ -1,4 +1,5 @@
 ﻿using IdealDiscuss.Dtos.QuestionDto;
+using IdealDiscuss.Models.Question;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +47,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateQuestionDto request)
+        public IActionResult Create(CreateQuestionViewModel request)
         {
             var response = _questionService.Create(request);
             ViewData["Message"] = response.Message;

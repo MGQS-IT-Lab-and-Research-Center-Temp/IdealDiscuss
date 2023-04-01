@@ -1,4 +1,4 @@
-﻿@model IdealDiscuss.Dtos.QuestionDto.CreateQuestionDto
+﻿@model IdealDiscuss.Models.Question.CreateQuestionViewModel
 
 @{
     ViewData["Title"] = "Create A Question";
@@ -12,15 +12,17 @@
         <div class="col-md-6">
             <form asp-action="Create">
                 <div class="col-md-12 mb-2">
-                    <label class="control-label">Categories</label>
+                    <label class="control-label">Categories: </label>
                     <select asp-for="CategoryIds" class="form-control" asp-items="@((SelectList)ViewData["Categories"])" multiple>
                         <option value="">--Select Categories--</option>
                     </select>
+                    <span asp-validation-for="CategoryIds" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-12 mb-2">
-                    <label for="QuestionText" class="form-label">Question:</label>
-                    <textarea class="form-control" placeholder="Enter your question" name="QuestionText"></textarea>
+                    <label class="form-label">Question:</label>
+                    <textarea class="form-control" placeholder="Enter your question" asp-for="QuestionText"></textarea>
+                    <span asp-validation-for="QuestionText" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-12">

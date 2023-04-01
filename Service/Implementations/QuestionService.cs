@@ -2,6 +2,8 @@ using IdealDiscuss.Dtos;
 using IdealDiscuss.Dtos.CommentDto;
 using IdealDiscuss.Dtos.QuestionDto;
 using IdealDiscuss.Entities;
+using IdealDiscuss.Models.Question;
+using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using System.Linq.Expressions;
@@ -11,53 +13,21 @@ namespace IdealDiscuss.Service.Implementations
 {
     public class QuestionService : IQuestionService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IQuestionRepository _questionRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ICategoryQuestionRepository _categoryQuestionRepository;
-        private readonly ICategoryRepository _categoryRepository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public QuestionService(
-            IQuestionRepository questionRepository,
-            IUserRepository userRepository,
-            IHttpContextAccessor httpContextAccessor,
-            ICategoryQuestionRepository categoryQuestionRepository,
-            ICategoryRepository categoryRepository,
-            IUnitOfWork unitOfWork)
+        public QuestionService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
-            _questionRepository = questionRepository;
             _httpContextAccessor = httpContextAccessor;
-            _categoryQuestionRepository = categoryQuestionRepository;
-            _categoryRepository = categoryRepository;
             _unitOfWork = unitOfWork;
         }
 
-        public BaseResponseModel Create(CreateQuestionDto request)
+        public BaseResponseModel Create(CreateQuestionViewModel request)
         {
             var response = new BaseResponseModel();
             var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            var user = _userRepository.Get(userIdClaim);
-
-            if (request.CategoryIds is null)
-            {
-                response.Message = "You can't create a question without selecting one or more categories";
-                return response;
-            }
-
-            if (string.IsNullOrWhiteSpace(request.QuestionText))
-            {
-                response.Message = "Question text is required!";
-                return response;
-            }
-
-            if (request.QuestionText.Length < 20 || request.QuestionText.Length > 150)
-            {
-                response.Message = "Question text can only be between 20 - 150 characters";
-                return response;
-            }
+            var user = _unitOfWork.Users.Get(userIdClaim);
 
             var question = new Question
             {
@@ -68,45 +38,48 @@ namespace IdealDiscuss.Service.Implementations
                 DateCreated = DateTime.Now
             };
 
+            var categories = _unitOfWork.Categories.GetAllByIds(request.CategoryIds);
+
+            var categoryQuestions = new HashSet<CategoryQuestion>();
+
+            foreach (var category in categories)
+            {
+                var categoryQuestion = new CategoryQuestion
+                {
+                    CategoryId = category.Id,
+                    QuestionId = question.Id,
+                    Category = category,
+                    Question = question,
+                    CreatedBy = createdBy,
+                    DateCreated = DateTime.Now
+                };
+
+                categoryQuestions.Add(categoryQuestion);
+            }
+
+            question.CategoryQuestions = categoryQuestions;
+
             try
             {
-                _questionRepository.Create(question);
+                _unitOfWork.Questions.Create(question);
+                _unitOfWork.SaveChanges();
+                response.Status = true;
+                response.Message = "Question created successfully!";
 
-                foreach (var item in request.CategoryIds)
-                {
-                    var categoryData = _categoryRepository.Get(item);
-
-                    CategoryQuestion categoryQuestion = new()
-                    {
-                        CategoryId = item,
-                        QuestionId = question.Id,
-                        Category = categoryData,
-                        Question = question,
-                        CreatedBy = createdBy,
-                        DateCreated = DateTime.Now
-                    };
-
-                    _categoryQuestionRepository.Create(categoryQuestion);
-                }
+                return response;
             }
             catch (Exception ex)
             {
                 response.Message = $"Failed to create question: {ex.Message}";
                 return response;
             }
-
-            _unitOfWork.SaveChanges();
-            response.Status = true;
-            response.Message = "Question created successfully!";
-
-            return response;
         }
 
-        public BaseResponseModel Update(string questionId, UpdateQuestionDto updateQuestionDto)
+        public BaseResponseModel Update(string questionId, UpdateQuestionViewModel request)
         {
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-            var questionExist = _questionRepository.Exists(c => c.Id == questionId);
+            var questionExist = _unitOfWork.Questions.Exists(c => c.Id == questionId);
 
             if (!questionExist)
             {
@@ -114,7 +87,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var question = _questionRepository.Get(questionId);
+            var question = _unitOfWork.Questions.Get(questionId);
 
             question.QuestionText = updateQuestionDto.QuestionText;
             question.ModifiedBy = modifiedBy;
@@ -122,7 +95,7 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                _questionRepository.Update(question);
+                _unitOfWork.Questions.Update(question);
             }
             catch (Exception ex)
             {
@@ -142,7 +115,7 @@ namespace IdealDiscuss.Service.Implementations
                                         && q.IsDeleted == false
                                         && q.IsClosed == false));
 
-            var questionExist = _questionRepository.Exists(expression);
+            var questionExist = _unitOfWork.Questions.Exists(expression);
 
             if (!questionExist)
             {
@@ -150,12 +123,12 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var question = _questionRepository.Get(questionId);
+            var question = _unitOfWork.Questions.Get(questionId);
             question.IsDeleted = true;
 
             try
             {
-                _questionRepository.Update(question);
+                _unitOfWork.Questions.Update(question);
             }
             catch (Exception ex)
             {
@@ -178,7 +151,7 @@ namespace IdealDiscuss.Service.Implementations
                 var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
                 Expression<Func<Question, bool>> expression = q => q.UserId == userIdClaim;
 
-                var questions = IsInRole ? _questionRepository.GetQuestions() : _questionRepository.GetQuestions(expression);
+                var questions = IsInRole ? _unitOfWork.Questions.GetQuestions() : _unitOfWork.Questions.GetQuestions(expression);
 
                 if (questions.Count == 0)
                 {
@@ -195,11 +168,11 @@ namespace IdealDiscuss.Service.Implementations
                         UserName = question.User.UserName,
                         ImageUrl = question.ImageUrl,
                         Comments = question.Comments
-                        .Select(c => new ListCommentDto
+                        .Select(comment => new ListCommentDto
                         {
-                            Id = c.Id,
-                            CommentText = c.CommentText,
-                            UserName = c.User.UserName,
+                            Id = comment.Id,
+                            CommentText = comment.CommentText,
+                            UserName = comment.User.UserName,
                         }).ToList()
                     }).ToList();
 
@@ -222,11 +195,11 @@ namespace IdealDiscuss.Service.Implementations
             try
             {
                 var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-                var user = _userRepository.Get(userIdClaim);
+                var user = _unitOfWork.Questions.Get(userIdClaim);
 
                 Expression<Func<Question, bool>> expression = q => (q.UserId == user.Id)
                                                     && (q.IsDeleted == false);
-                var questions = _questionRepository.GetQuestions(expression);
+                var questions = _unitOfWork.Questions.GetQuestions(expression);
 
                 if (questions.Count == 0)
                 {
@@ -258,7 +231,7 @@ namespace IdealDiscuss.Service.Implementations
         public QuestionResponseModel GetQuestion(string questionId)
         {
             var response = new QuestionResponseModel();
-            var questionExist = _questionRepository.Exists(q => q.Id == questionId && q.IsDeleted == false);
+            var questionExist = _unitOfWork.Questions.Exists(q => q.Id == questionId && q.IsDeleted == false);
             var IsInRole = _httpContextAccessor.HttpContext.User.IsInRole("Admin");
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             var question = new Question();
@@ -269,7 +242,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            question = IsInRole ? _questionRepository.GetQuestion(q => q.Id == questionId && !q.IsDeleted) : _questionRepository.GetQuestion(q => q.Id == questionId
+            question = IsInRole ? _unitOfWork.Questions.GetQuestion(q => q.Id == questionId && !q.IsDeleted) : _unitOfWork.Questions.GetQuestion(q => q.Id == questionId
                                                 && q.UserId == userIdClaim
                                                 && !q.IsDeleted);
 
@@ -309,7 +282,7 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var questions = _questionRepository.GetQuestionByCategoryId(categoryId);
+                var questions = _unitOfWork.Questions.GetQuestionByCategoryId(categoryId);
 
                 if (questions.Count == 0)
                 {
@@ -344,7 +317,7 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var questions = _questionRepository.GetQuestions();
+                var questions = _unitOfWork.Questions.GetQuestions();
 
                 if (questions.Count == 0)
                 {

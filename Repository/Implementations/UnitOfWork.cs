@@ -9,37 +9,35 @@ namespace IdealDiscuss.Repository.Implementations
     {
         private readonly IdealDiscussContext _context;
         private bool _disposed = false;
-
-        public IRepository<Role> RoleRepository { get; }
-        public IRepository<User> UserRepository { get; }
-        public IRepository<Category> CategoryRepository { get; }
-        public IRepository<Question> QuestionRepository { get; }
-        public IRepository<Comment> CommentRepository { get; }
-        public IRepository<Flag> FlagRepository { get; }
-        public IRepository<QuestionReport> QuestionReportRepository { get; }
-        public IRepository<CommentReport> CommentReportRepository { get; }
+        public IRoleRepository Roles { get; }
+        public IUserRepository Users { get; }
+        public ICategoryRepository Categories { get; }
+        public IQuestionRepository Questions { get; }
+        public ICommentRepository Comments { get; }
+        public IFlagRepository Flags { get; }
+        public IQuestionReportRepository QuestionReports { get; }
+        public ICommentReportRepository CommentReports { get; }
 
         public UnitOfWork(
             IdealDiscussContext context,
-            IRepository<Role> roleRepository,
-            IRepository<User> userRepository,
-            IRepository<Category> categoryRepository,
-            IRepository<Question> questionRepository,
-            IRepository<Comment> commentRepository,
-            IRepository<Flag> flagRepository,
-            IRepository<QuestionReport> questionReportRepository,
-            IRepository<CommentReport> commentReportRepository
-            )
+            IRoleRepository roleRepository,
+            IUserRepository userRepository,
+            ICategoryRepository categoryRepository,
+            IQuestionRepository questionRepository,
+            ICommentRepository commentRepository,
+            IFlagRepository flagRepository,
+            IQuestionReportRepository questionReportRepository,
+            ICommentReportRepository commentReportRepository)
         {
             _context = context;
-            RoleRepository = roleRepository;
-            UserRepository = userRepository;
-            CategoryRepository = categoryRepository;
-            QuestionRepository = questionRepository;
-            CommentRepository = commentRepository;
-            FlagRepository = flagRepository;
-            QuestionReportRepository = questionReportRepository;
-            CommentReportRepository = commentReportRepository;
+            Roles = roleRepository;
+            Users = userRepository;
+            Categories = categoryRepository;
+            Questions = questionRepository;
+            Comments = commentRepository;
+            Flags = flagRepository;
+            QuestionReports = questionReportRepository;
+            CommentReports = commentReportRepository;
         }
 
         public int SaveChanges()
