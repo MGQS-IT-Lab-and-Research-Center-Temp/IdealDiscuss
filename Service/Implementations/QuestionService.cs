@@ -75,7 +75,7 @@ namespace IdealDiscuss.Service.Implementations
             }
         }
 
-        public BaseResponseModel Update(string questionId, UpdateQuestionDto updateQuestionDto)
+        public BaseResponseModel Update(string questionId, UpdateQuestionViewModel request)
         {
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
