@@ -1,4 +1,6 @@
-﻿namespace IdealDiscuss.Models.Comment;
+﻿using IdealDiscuss.Models.CommentReport;
+
+namespace IdealDiscuss.Models.Comment;
 
 public class CommentViewModel
 {
@@ -7,4 +9,5 @@ public class CommentViewModel
     public string QuestionId { get; set; }
     public string CommentText { get; set; }
     public string UserName { get; set; }
+    public List<CommentReportViewModel> CommentReports = new();
 }
