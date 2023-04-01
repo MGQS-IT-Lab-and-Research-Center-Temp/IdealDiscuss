@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IdealDiscuss.Models.QuestionReport.CreateQuestionReportViewModel
+@{
     ViewData["Title"] = "Create New Question Report";
     var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
 }
@@ -13,8 +14,9 @@
 
      <form asp-action="ReportQuestion">
           <div class="col-md-12 mb-2">
-               <label for="AdditionalComment" class="form-label">Additional Comment:</label>
-               <textarea class="form-control" placeholder="Additional Comment" name="AdditionalComment"></textarea>
+               <label asp-for="AdditionalComment" class="form-label">Additional Comment:</label>
+               <textarea class="form-control" placeholder="Additional Comment" asp-for="AdditionalComment"></textarea>
+               <span asp-validation-for="AdditionalComment" class="text-danger"></span>
           </div>
 
           <div class="col-md-12">
