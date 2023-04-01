@@ -1,6 +1,4 @@
 ﻿using IdealDiscuss.Context;
-using IdealDiscuss.Entities;
-using IdealDiscuss.Middlewares;
 using IdealDiscuss.Repository.Interfaces;
 
 namespace IdealDiscuss.Repository.Implementations
