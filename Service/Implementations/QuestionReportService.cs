@@ -169,7 +169,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
 
-            var questionReportExist = _unitOfWork.QuestionReportsy.Exists(c => c.Id == id);
+            var questionReportExist = _unitOfWork.QuestionReports.Exists(c => c.Id == id);
 
             if (!questionReportExist)
             {

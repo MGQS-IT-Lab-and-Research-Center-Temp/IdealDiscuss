@@ -212,10 +212,10 @@ namespace IdealDiscuss.Service.Implementations
 
         public IEnumerable<SelectListItem> SelectFlags()
         {
-            return _unitOfWork.Categories.SelectAll().Select(cat => new SelectListItem()
+            return _unitOfWork.Flags.SelectAll().Select(f => new SelectListItem()
             {
-                Text = cat.Name,
-                Value = cat.Id
+                Text = f.FlagName,
+                Value = f.Id
             });
         }
     }

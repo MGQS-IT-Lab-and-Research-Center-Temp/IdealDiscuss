@@ -159,7 +159,7 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.Questions = questions
+                response.Data = questions
                     .Where(q => q.IsDeleted == false)
                     .Select(question => new QuestionViewModel
                     {
@@ -207,7 +207,7 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.Questions = questions
+                response.Data = questions
                     .Select(question => new QuestionViewModel
                     {
                         Id = question.Id,
@@ -254,7 +254,7 @@ namespace IdealDiscuss.Service.Implementations
 
             response.Message = "Success";
             response.Status = true;
-            response.Question = new QuestionViewModel
+            response.Data = new QuestionViewModel
             {
                 Id = question.Id,
                 QuestionText = question.QuestionText,
@@ -290,7 +290,7 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.Questions = questions
+                response.Data = questions
                                     .Select(question => new QuestionViewModel
                                     {
                                         Id = question.Id,
@@ -325,7 +325,7 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.Questions = questions
+                response.Data = questions
                     .Where(q => !q.IsDeleted)
                     .Select(question => new QuestionViewModel
                     {

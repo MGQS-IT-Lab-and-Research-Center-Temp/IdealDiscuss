@@ -62,16 +62,17 @@ namespace IdealDiscuss.Service.Implementations
             try
             {
                 _unitOfWork.Comments.Create(comment);
+                _unitOfWork.SaveChanges();
+                response.Status = true;
+                response.Message = "Comment  created successfully.";
+
+                return response;
             }
             catch (Exception ex)
             {
                 response.Message = $"Failed to create comment . {ex.Message}";
                 return response;
             }
-            response.Status = true;
-            response.Message = "Comment  created successfully.";
-
-            return response;
         }
 
         public BaseResponseModel DeleteComment(string commentId)
@@ -116,12 +117,12 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             response.Data = comment
-                .Select(comment => new ViewCommentModel
+                .Select(comment => new CommentViewModel
                 {
                     Id = comment.Id,
-                    CommentText = comment.CommentText,
                     QuestionId = comment.QuestionId,
                     UserId = comment.UserId,
+                    CommentText = comment.CommentText
                 })
                 .ToList();
 
@@ -146,12 +147,12 @@ namespace IdealDiscuss.Service.Implementations
 
             response.Message = "Success";
             response.Status = true;
-            response.Data = new ViewCommentModel
+            response.Data = new CommentViewModel
             {
-                Id = commentId,
-                CommentText = comment.CommentText,
+                Id = comment.Id,
                 QuestionId = comment.QuestionId,
                 UserId = comment.UserId,
+                CommentText = comment.CommentText
             };
             return response;
         }
@@ -181,8 +182,8 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
             response.Message = "Comment  updated successfully.";
+
             return response;
         }
-
     }
 }

@@ -29,7 +29,7 @@ namespace IdealDiscuss.Controllers
             ViewData["Message"] = questions.Message;
             ViewData["Status"] = questions.Status;
 
-            return View(questions.Questions);
+            return View(questions.Data);
         }
 
         public IActionResult SignUp()
@@ -71,12 +71,13 @@ namespace IdealDiscuss.Controllers
         [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {
-            var user = _userService.Login(model.UserName, model.Password);
+            var response = _userService.Login(model.UserName, model.Password);
+            var user = response.Data;
 
-            if (user.Status == false)
+            if (response.Status == false)
             {
-                ViewData["Message"] = user.Message;
-                ViewData["Status"] = user.Status;
+                ViewData["Message"] = response.Message;
+                ViewData["Status"] = response.Status;
 
                 return View();
             }

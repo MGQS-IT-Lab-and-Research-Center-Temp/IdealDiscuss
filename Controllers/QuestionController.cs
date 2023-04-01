@@ -28,7 +28,7 @@ namespace IdealDiscuss.Controllers
             ViewData["Message"] = questions.Message;
             ViewData["Status"] = questions.Status;
 
-            return View(questions.Questions);
+            return View(questions.Data);
         }
 
         public IActionResult Create()
@@ -57,7 +57,7 @@ namespace IdealDiscuss.Controllers
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
 
-            return View(response.Questions);
+            return View(response.Data);
         }
 
         public IActionResult GetQuestionDetail(string id)
@@ -66,13 +66,13 @@ namespace IdealDiscuss.Controllers
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
 
-            return View(response.Question);
+            return View(response.Data);
         }
 
         public IActionResult Update(string id)
         {
             var response = _questionService.GetQuestion(id);
-            return View(response.Question);
+            return View(response.Data);
         }
 
         [HttpPost]

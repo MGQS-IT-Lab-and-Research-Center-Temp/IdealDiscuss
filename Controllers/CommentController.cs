@@ -2,16 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using IdealDiscuss.Models.Comment;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IdealDiscuss.Controllers
 {
     public class CommentController : Controller
     {
         private readonly ICommentService _commentService;
+        private readonly IQuestionService _questionService;
 
-        public CommentController(ICommentService commentService)
+        public CommentController(
+            ICommentService commentService, 
+            IQuestionService questionService)
         {
             _commentService = commentService;
+            _questionService = questionService;
         }
 
         public IActionResult Index()
@@ -35,8 +41,10 @@ namespace IdealDiscuss.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            //var response = _questionService.GetQuestion();
             ViewData["Message"] = "";
             ViewData["Status"] = false;
+            //ViewData["Question"] = response.Data.QuestionText;
 
             return View();
         }
@@ -48,7 +56,7 @@ namespace IdealDiscuss.Controllers
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
 
-            return View(response);
+            return View();
         }
 
         public IActionResult Edit(string id)
