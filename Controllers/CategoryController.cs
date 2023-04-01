@@ -1,7 +1,7 @@
 ﻿using IdealDiscuss.Service.Interface;
-using IdealDiscuss.Dtos.CategoryDto;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using IdealDiscuss.Models.Category;
 
 namespace IdealDiscuss.Controllers
 {
@@ -42,7 +42,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateCategoryDto request)
+        public IActionResult Create(CreateCategoryViewModel request)
         {
             var response = _categoryService.CreateCategory(request);
 
@@ -66,7 +66,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-		public IActionResult Update(string id, UpdateCategoryDto updateCategoryDto)
+		public IActionResult Update(string id, UpdateCategoryViewModel updateCategoryDto)
 		{
 			var categoryUpdate = _categoryService.UpdateCategory(id, updateCategoryDto);
 			ViewBag.Message = categoryUpdate.Message;

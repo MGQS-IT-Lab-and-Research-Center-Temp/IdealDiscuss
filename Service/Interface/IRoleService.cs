@@ -1,5 +1,4 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.RoleDto;
+﻿using IdealDiscuss.Models;
 using IdealDiscuss.Models.Role;
 
 namespace IdealDiscuss.Service.Interface

@@ -1,5 +1,4 @@
 ﻿using IdealDiscuss.ActionFilters;
-using IdealDiscuss.Dtos.UserDto;
 using IdealDiscuss.Models.Auth;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication;
@@ -44,14 +43,7 @@ namespace IdealDiscuss.Controllers
         [HttpPost]
         public IActionResult SignUp(SignUpViewModel model)
         {
-            var user = new CreateUserDto
-            {
-                UserName = model.UserName,
-                Email = model.Email,
-                Password = model.Password,
-            };
-
-            var result = _userService.AddUser(user);
+            var result = _userService.AddUser(model);
 
             if (result.Status == false)
             {

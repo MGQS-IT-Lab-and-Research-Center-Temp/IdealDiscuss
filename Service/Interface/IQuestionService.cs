@@ -1,5 +1,4 @@
-using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.QuestionDto;
+using IdealDiscuss.Models;
 using IdealDiscuss.Models.Question;
 
 namespace IdealDiscuss.Service.Interface

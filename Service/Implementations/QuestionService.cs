@@ -1,7 +1,6 @@
-using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.CommentDto;
-using IdealDiscuss.Dtos.QuestionDto;
 using IdealDiscuss.Entities;
+using IdealDiscuss.Models;
+using IdealDiscuss.Models.Comment;
 using IdealDiscuss.Models.Question;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
@@ -96,14 +95,15 @@ namespace IdealDiscuss.Service.Implementations
             try
             {
                 _unitOfWork.Questions.Update(question);
+                _unitOfWork.SaveChanges();
+                response.Message = "Question updated successfully!";
+                return response;
             }
             catch (Exception ex)
             {
                 response.Message = $"Could not update the Question: {ex.Message}";
                 return response;
             }
-            response.Message = "Question updated successfully!";
-            return response;
         }
 
         public BaseResponseModel Delete(string questionId)
@@ -129,16 +129,17 @@ namespace IdealDiscuss.Service.Implementations
             try
             {
                 _unitOfWork.Questions.Update(question);
+                _unitOfWork.SaveChanges();
+                response.Status = true;
+                response.Message = "Question deleted successfully!";
+
+                return response;
             }
             catch (Exception ex)
             {
                 response.Message = $"Question delete failed: {ex.Message}";
                 return response;
             }
-
-            response.Status = true;
-            response.Message = "Question deleted successfully!";
-            return response;
         }
 
         public QuestionsResponseModel GetAllQuestion()
@@ -161,14 +162,14 @@ namespace IdealDiscuss.Service.Implementations
 
                 response.Questions = questions
                     .Where(q => q.IsDeleted == false)
-                    .Select(question => new ViewQuestionDto
+                    .Select(question => new QuestionViewModel
                     {
                         Id = question.Id,
                         QuestionText = question.QuestionText,
                         UserName = question.User.UserName,
                         ImageUrl = question.ImageUrl,
                         Comments = question.Comments
-                        .Select(comment => new ListCommentDto
+                        .Select(comment => new CommentViewModel
                         {
                             Id = comment.Id,
                             CommentText = comment.CommentText,
@@ -208,7 +209,7 @@ namespace IdealDiscuss.Service.Implementations
                 }
 
                 response.Questions = questions
-                    .Select(question => new ViewQuestionDto
+                    .Select(question => new QuestionViewModel
                     {
                         Id = question.Id,
                         QuestionText = question.QuestionText,
@@ -254,7 +255,7 @@ namespace IdealDiscuss.Service.Implementations
 
             response.Message = "Success";
             response.Status = true;
-            response.Question = new ViewQuestionDto
+            response.Question = new QuestionViewModel
             {
                 Id = question.Id,
                 QuestionText = question.QuestionText,
@@ -263,7 +264,7 @@ namespace IdealDiscuss.Service.Implementations
                 ImageUrl = question.ImageUrl,
                 Comments = question.Comments
                             .Where(c => !c.IsDeleted)
-                            .Select(c => new ListCommentDto
+                            .Select(c => new CommentViewModel
                             {
                                 Id = c.Id,
                                 UserId = c.UserId,
@@ -291,7 +292,7 @@ namespace IdealDiscuss.Service.Implementations
                 }
 
                 response.Questions = questions
-                                    .Select(question => new ViewQuestionDto
+                                    .Select(question => new QuestionViewModel
                                     {
                                         Id = question.Id,
                                         QuestionText = question.Question.QuestionText,
@@ -327,7 +328,7 @@ namespace IdealDiscuss.Service.Implementations
 
                 response.Questions = questions
                     .Where(q => !q.IsDeleted)
-                    .Select(question => new ViewQuestionDto
+                    .Select(question => new QuestionViewModel
                     {
                         Id = question.Id,
                         UserId = question.UserId,
@@ -336,7 +337,7 @@ namespace IdealDiscuss.Service.Implementations
                         ImageUrl = question.ImageUrl,
                         Comments = question.Comments
                             .Where(c => !c.IsDeleted)
-                            .Select(c => new ListCommentDto
+                            .Select(c => new CommentViewModel
                             {
                                 Id = c.Id,
                                 UserId = c.UserId,

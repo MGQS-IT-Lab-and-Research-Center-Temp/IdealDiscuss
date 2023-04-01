@@ -1,9 +1,7 @@
-﻿using IdealDiscuss.Dtos.QuestionDto;
-using IdealDiscuss.Models.Question;
+﻿using IdealDiscuss.Models.Question;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace IdealDiscuss.Controllers
 {
@@ -13,15 +11,12 @@ namespace IdealDiscuss.Controllers
         private readonly IQuestionService _questionService;
         private readonly ICategoryService _categoryService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger<QuestionController> _logger;
 
         public QuestionController(
-            ILogger<QuestionController> logger, 
             IQuestionService questionService, 
             ICategoryService categoryService, 
             IHttpContextAccessor httpContextAccessor)
         {
-            _logger = logger;
             _questionService = questionService;
             _categoryService = categoryService;
             _httpContextAccessor = httpContextAccessor;
@@ -38,8 +33,7 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult Create()
         {
-            var category = _categoryService.GetAllCategory();
-            ViewData["Categories"] = new SelectList(category.Data, "Id", "Name");
+            ViewBag.Categories = _categoryService.SelectCategories();
             ViewData["Message"] = "";
             ViewData["Status"] = false;
 
@@ -82,9 +76,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(string id, UpdateQuestionViewModel updateQuestionDto)
+        public IActionResult Update(string id, UpdateQuestionViewModel request)
         {
-            var response = _questionService.Update(id, updateQuestionDto);
+            var response = _questionService.Update(id, request);
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
 

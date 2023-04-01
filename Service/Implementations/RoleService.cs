@@ -1,6 +1,5 @@
-﻿using IdealDiscuss.Dtos;
-using IdealDiscuss.Dtos.RoleDto;
-using IdealDiscuss.Entities;
+﻿using IdealDiscuss.Entities;
+using IdealDiscuss.Models;
 using IdealDiscuss.Models.Role;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
