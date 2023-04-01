@@ -41,10 +41,8 @@ namespace IdealDiscuss.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            //var response = _questionService.GetQuestion();
             ViewData["Message"] = "";
             ViewData["Status"] = false;
-            //ViewData["Question"] = response.Data.QuestionText;
 
             return View();
         }
