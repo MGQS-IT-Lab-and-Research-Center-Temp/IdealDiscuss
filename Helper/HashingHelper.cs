@@ -22,7 +22,8 @@ namespace IdealDiscuss.Helper
         {
             byte[] saltByte = Convert.FromBase64String(salt);
 
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+            string hashed = Convert.ToBase64String
+                (KeyDerivation.Pbkdf2(
                 password: password,
                 salt: saltByte,
                 prf: KeyDerivationPrf.HMACSHA1,
