@@ -9,7 +9,7 @@ public class CreateCommentReportViewModel
     public List<string> FlagIds { get; set; } = new List<string>();
     public string QuestionId { get; set; }
     [Required(ErrorMessage = "Comment text cannot be empty")]
-    [MinLength(3, ErrorMessage = "The minimum lenghth is 3.")]
-    [MaxLength(150, ErrorMessage = "The Maximum lenghth is 150.")]
+    [MinLength(3, ErrorMessage = "The minimum length is 3.")]
+    [MaxLength(150, ErrorMessage = "The Maximum length is 150.")]
     public string AdditionalComment { get; set; }
 }
