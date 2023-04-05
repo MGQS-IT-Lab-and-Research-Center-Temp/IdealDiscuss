@@ -28,6 +28,10 @@
             <a asp-controller="Comment" asp-action="Create" asp-route-id="@question.Id" class="btn btn-success btn-sm">
                 Add Comment
             </a>
+
+            <a class="btn btn-danger btn-sm">
+                Report Question
+            </a>
         </div>
 
         @if (question.Comments.Count == 0)
