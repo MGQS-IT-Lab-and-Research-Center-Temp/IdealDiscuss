@@ -14,10 +14,11 @@ namespace IdealDiscuss.Repository.Implementations
         public CommentReport GetCommentReport(string id)
         {
             var commentReport = _context.CommentReports
-                .Include(c => c.User)
+                .Include(u => u.User)
                 .Include(c => c.Comment)
-                .Include(c => c.CommentReportFlags)
-                .ThenInclude(c => c.Flag)
+                .Include(crf => crf.CommentReportFlags)
+                .ThenInclude(f => f.Flag)
+                .Where(cr => cr.Id.Equals(id))
                 .FirstOrDefault();
 
             return commentReport;

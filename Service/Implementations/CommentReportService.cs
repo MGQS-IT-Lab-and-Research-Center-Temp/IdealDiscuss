@@ -75,7 +75,9 @@ namespace IdealDiscuss.Service.Implementations
                     FlagId = flag.Id,
                     CommentReportId = commentReport.Id,
                     Flag = flag,
-                    CommentReport = commentReport
+                    CommentReport = commentReport,
+                    CreatedBy = createdBy,
+                    DateCreated = DateTime.Now
                 };
 
                 commentFlags.Add(commentReportFlag);

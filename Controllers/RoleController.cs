@@ -1,4 +1,5 @@
-﻿using IdealDiscuss.Models.Role;
+﻿using IdealDiscuss.ActionFilters;
+using IdealDiscuss.Models.Role;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,12 +32,13 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
+        [ValidateModel]
         public IActionResult Create(CreateRoleViewModel request)
         {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return View(request);
+            //}
 
             var response = _roleService.CreateRole(request);
             ViewData["Status"] = response.Status;

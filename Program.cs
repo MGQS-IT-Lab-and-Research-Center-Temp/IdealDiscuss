@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();  
 builder.Services.AddScoped<ICommentReportRepository, CommentReportRepository>();
 builder.Services.AddScoped<ICommentReportService, CommentReportService>();
@@ -43,13 +42,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
                });
 builder.Services.AddHttpContextAccessor();
 
-
 var app = builder.Build();
-
-app.SeedToDatabase();
-
-var loggerFactory = app.Services.GetService<ILoggerFactory>();
-loggerFactory.AddFile(builder.Configuration["Logging:LogFilePath"].ToString());
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -60,6 +53,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.SeedToDatabase();
 
 app.UseRouting();
 app.UseAuthentication();

@@ -11,9 +11,24 @@
     @foreach (var question in Model)
     {
         <h4>@question.QuestionText</h4>
-        <span class="badge bg-warning">By @question.UserName</span>
-        <span class="badge bg-primary">Comments @question.Comments.Count</span>
-        <a asp-controller="Comment" asp-action="Create" asp-route-id="@question.Id">Add Comment</a>
+
+        <div>
+            <button type="button" class="btn btn-warning btn-sm">
+                By @question.UserName
+            </button>
+
+            <button type="button" class="btn btn-primary btn-sm">
+                Comments
+                <span class="badge rounded-pill bg-danger">
+                    @question.Comments.Count
+                    <span class="visually-hidden">Comments Count</span>
+                </span>
+            </button>
+
+            <a asp-controller="Comment" asp-action="Create" asp-route-id="@question.Id" class="btn btn-success btn-sm">
+                Add Comment
+            </a>
+        </div>
 
         @if (question.Comments.Count == 0)
         {
@@ -30,7 +45,7 @@
 
                     @foreach (var comment in question.Comments)
                     {
-                        <li class ="list-group-item">
+                        <li class="list-group-item">
                             @comment.CommentText
                             <span class="badge bg-secondary">@comment.UserName</span>
                             <a asp-controller="CommentReport" asp-action="CreateCommentReport" asp-route-id="@comment.Id">Report comment</a>
