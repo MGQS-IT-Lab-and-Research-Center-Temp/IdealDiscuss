@@ -113,7 +113,8 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Login", "Home");
         }
 
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
+        [RoleAuthorize("Admin")]
         public IActionResult AdminDashboard()
         {
             return View();
