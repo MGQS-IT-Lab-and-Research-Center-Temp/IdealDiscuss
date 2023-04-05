@@ -114,6 +114,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        //[RoleAuthorize("Admin")]
         public IActionResult AdminDashboard()
         {
             return View();
