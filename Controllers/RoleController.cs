@@ -1,5 +1,4 @@
-﻿using IdealDiscuss.ActionFilters;
-using IdealDiscuss.Models.Role;
+﻿using IdealDiscuss.Models.Role;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

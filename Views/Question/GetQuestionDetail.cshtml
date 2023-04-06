@@ -18,18 +18,29 @@
 
                 <h5>
                     @Model.QuestionText
-
-                    @if (Model.Comments.Count == 0 && User.IsInRole("AppUser"))
-                    {
-                        <a asp-controller="Question" asp-action="Update" asp-route-id="@Model.Id" class="text-primary">
-                            <i class="fas fa-edit"></i>
-                        </a>
-
-                        <a asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@Model.Id" class="text-danger">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    }
                 </h5>
+
+                @if (Model.Comments.Count == 0 && User.IsInRole("AppUser"))
+                {
+                    <a asp-controller="Question" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i>
+                    </a>
+
+                    <form asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@Model.Id" method="post" style="display:inline-block">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                }
+
+                @if (Model.QuestionReports.Count != 0 && User.IsInRole("Admin"))
+                {
+                    <form asp-controller="Comment" asp-action="DeleteComment" asp-route-id="@Model.Id" method="post" style="display:inline-block">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                }
 
             </div>
 
@@ -47,7 +58,12 @@
                                 <li class="list-group-item">
                                     @comment.CommentText
                                     <span class="badge bg-dark">@comment.UserName</span>
-                                    <a asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@comment.Id">View Report</a>
+
+                                    <a asp-controller="Comment" asp-action="GetCommentDetail"
+                           asp-route-id="@comment.Id">
+                                        View Report
+                                    </a>
+
                                 </li>
                             }
                         </ul>

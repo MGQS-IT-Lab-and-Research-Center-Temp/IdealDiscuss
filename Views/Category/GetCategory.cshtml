@@ -1,41 +1,40 @@
 ﻿@model IdealDiscuss.Models.Category.CategoryViewModel
 @{
     ViewData["Title"] = "Category Detail";
-    var status = ViewBag.Status == false ? false : true;
 }
 
 <div class="body">
 
-    @if (status is false)
+    @await Html.PartialAsync("_Alert", Model)
+
+    @if (Model is not null)
     {
-        <span class="badge text-center bg-danger">@ViewBag.Message</span>
-        return;
+        <dl class="row">
+            <dt class="col-sm-4">
+                Category Name:
+            </dt>
+
+            <dd class="col-sm-8">
+                @Model.Name
+            </dd>
+
+            <dt class="col-sm-4">
+                Description:
+            </dt>
+
+            <dd class="col-sm-8">
+                @Model.Description
+            </dd>
+        </dl>
+        <br />
+        <div class="btn-group">
+            <a asp-controller="Category" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-success">Update</a>
+            &nbsp;
+            <form asp-action="DeleteCategory" asp-route-id="@Model.Id">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+            &nbsp;
+            <a asp-controller="Category" asp-action="Index" class="btn btn-outline-secondary">Go back to list</a>
+        </div>
     }
-    <dl class="row">
-        <dt class="col-sm-4">
-            Category Name:
-        </dt>
-
-        <dd class="col-sm-8">
-            @Model.Name
-        </dd>
-
-        <dt class="col-sm-4">
-            Description:
-        </dt>
-
-        <dd class="col-sm-8">
-            @Model.Description
-        </dd>
-    </dl>
-    <br />
-    <div class="btn-group">
-        <a asp-controller="Category" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-success">Update</a>
-        &nbsp;
-        <form asp-action="DeleteCategory" asp-route-id="@Model.Id">
-            <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-        &nbsp;
-        <a asp-controller="Category" asp-action="Index" class="btn btn-outline-secondary">Go back to list</a>
-    </div>
 </div>
