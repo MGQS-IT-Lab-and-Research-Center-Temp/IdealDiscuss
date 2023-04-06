@@ -36,9 +36,23 @@
                             </dd>
                         </dl>
 
-                        <div class="btn-group">
-                            <a class="btn btn-primary" asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@Model.CommentId">Go back</a>
-                        </div>
+                         @if (Model.UserId == "1")
+                         {
+                            <form asp-action="DeleteCommentReport" asp-route-id="@Model.Id" style="display:inline">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+
+                            <div class="btn-group">
+                                <a class="btn btn-primary" asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@Model.CommentId">Go back</a>
+                            </div>
+                         }
+                         else
+                         {
+                            <div class="btn-group">
+                                <a class="btn btn-primary" asp-controller="Comment" asp-action="GetCommentDetail" asp-route-id="@Model.CommentId">Go back</a>
+                            </div>
+                         }
+
                     </div>
 
                 </div>

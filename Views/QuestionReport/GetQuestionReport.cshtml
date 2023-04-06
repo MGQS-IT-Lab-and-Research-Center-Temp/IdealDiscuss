@@ -19,15 +19,20 @@
 	 </dl>
 
 	 <div class="kt-form__actions">
+		@if (Model.UserId == "1")
+		{
+			<form asp-action="DeleteQuestionReport" asp-route-id="@Model.Id" style="display:inline">
+				<button type="submit" class="btn btn-danger">Delete</button>
+			</form>
+
+			<a class="btn btn-primary" asp-action="Index" asp-controller="QuestionReport">Back to List</a>
+		}
+		else
+		{
+			<a class="btn btn-primary" asp-action="Index" asp-controller="QuestionReport">Back to List</a>
+		}
 		  <a class="btn btn-success" asp-action="UpdateQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">update</a>
- 
 		  &nbsp;
-		  <a class="btn btn-primary" asp-action="Index" asp-controller="QuestionReport">Back to List</a>
-		  &nbsp;
-		  <hr />
-		  <form asp-action="DeleteQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">
-			   <button type="submit" class="btn btn-danger">Delete</button>
-		  </form>
 		  <a asp-controller="QuestionReport" asp-action="GetAllQuestionReport" asp-route-id="@Model.Id class="btn btn-success">Flag this question</a>
 	 </div>
 </div>
