@@ -25,7 +25,7 @@
                     <span class="visually-hidden">Comments Count</span>
                 </span>
             </button>
-            <a asp-controller="Comment" asp-action="Create" asp-route-id="@question.Id" class="btn btn-success btn-sm">
+            <a asp-controller="Comment" asp-action="Create" asp-route-id="@question.Id" class="btn btn-danger btn-sm">
                 Add Comment
             </a>
             @if (question.UserId != User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value || User.IsInRole("Admin"))
