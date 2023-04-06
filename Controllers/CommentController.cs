@@ -71,7 +71,7 @@ public class CommentController : Controller
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("{id}/delete")]
+    [HttpPost]
     public IActionResult DeleteComment([FromRoute] string id)
     {
         var response = _commentService.DeleteComment(id);

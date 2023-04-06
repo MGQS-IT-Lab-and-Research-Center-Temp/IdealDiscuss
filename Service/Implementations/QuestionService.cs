@@ -2,6 +2,7 @@ using IdealDiscuss.Entities;
 using IdealDiscuss.Models;
 using IdealDiscuss.Models.Comment;
 using IdealDiscuss.Models.Question;
+using IdealDiscuss.Models.QuestionReport;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using System.Linq.Expressions;
@@ -228,21 +229,21 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public QuestionResponseModel GetQuestion(string questionId)
+        public QuestionResponseModel GetQuestion(string id)
         {
             var response = new QuestionResponseModel();
-            var questionExist = _unitOfWork.Questions.Exists(q => q.Id == questionId && q.IsDeleted == false);
+            var questionExist = _unitOfWork.Questions.Exists(q => q.Id == id && q.IsDeleted == false);
             var IsInRole = _httpContextAccessor.HttpContext.User.IsInRole("Admin");
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             var question = new Question();
 
             if (!questionExist)
             {
-                response.Message = $"Question with id {questionId} does not exist!";
+                response.Message = $"Question with id {id} does not exist!";
                 return response;
             }
 
-            question = IsInRole ? _unitOfWork.Questions.GetQuestion(q => q.Id == questionId && !q.IsDeleted) : _unitOfWork.Questions.GetQuestion(q => q.Id == questionId
+            question = IsInRole ? _unitOfWork.Questions.GetQuestion(q => q.Id == id && !q.IsDeleted) : _unitOfWork.Questions.GetQuestion(q => q.Id == id
                                                 && q.UserId == userIdClaim
                                                 && !q.IsDeleted);
 
@@ -269,8 +270,15 @@ namespace IdealDiscuss.Service.Implementations
                                 UserId = c.UserId,
                                 CommentText = c.CommentText,
                                 UserName = c.User.UserName
-                            })
-                            .ToList()
+                            }).ToList(),
+                QuestionReports = question.QuestionReports
+                                  .Where(qr => !qr.IsDeleted)
+                                  .Select(qr => new QuestionReportViewModel
+                                  {
+                                      Id = qr.Id,
+                                      QuestionReporter = qr.User.UserName,
+                                      AdditionalComment = qr.AdditionalComment
+                                  }).ToList()
             };
 
             return response;

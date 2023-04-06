@@ -1,4 +1,5 @@
 ﻿using IdealDiscuss.Models.Comment;
+using IdealDiscuss.Models.QuestionReport;
 
 namespace IdealDiscuss.Models.Question;
 
@@ -10,4 +11,5 @@ public class QuestionViewModel
     public string ImageUrl { get; set; }
     public string UserName { get; set; }
     public List<CommentViewModel> Comments { get; set; }
+    public List<QuestionReportViewModel> QuestionReports { get; set; }
 }

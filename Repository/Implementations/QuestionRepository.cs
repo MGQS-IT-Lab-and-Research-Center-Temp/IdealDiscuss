@@ -29,6 +29,7 @@ namespace IdealDiscuss.Repository.Implementations
                 .Include(uq => uq.User)
                 .Include(c => c.Comments)
                 .ThenInclude(u => u.User)
+                .Include(qr => qr.QuestionReports)
                 .ToList();
 
             return questions;
@@ -41,6 +42,7 @@ namespace IdealDiscuss.Repository.Implementations
                 .Include(u => u.User)
                 .Include(c => c.Comments)
                 .ThenInclude(u => u.User)
+                .Include(qr => qr.QuestionReports)
                 .ToList();
 
             return questions;

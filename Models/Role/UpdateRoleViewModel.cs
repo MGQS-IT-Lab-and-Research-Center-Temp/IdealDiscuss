@@ -11,7 +11,7 @@ namespace IdealDiscuss.Models.Role
         [ReadOnly(true)]
         public string RoleName { get; set; }
 
-        [MinLength(20, ErrorMessage = "The minimum length acceptable is 20")]
+        [MinLength(5, ErrorMessage = "The minimum length acceptable is 5")]
         [MaxLength(200)]
         public string Description { get; set; }
     }

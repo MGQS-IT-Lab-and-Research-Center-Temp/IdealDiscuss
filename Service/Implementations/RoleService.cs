@@ -11,10 +11,8 @@ namespace IdealDiscuss.Service.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
         public IUnitOfWork _unitOfWork;
 
-        public RoleService(
-            IHttpContextAccessor httpContextAccessor,
-            IUnitOfWork unitOfWork)
-        {
+        public RoleService(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork)
+        { 
             _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
         }
@@ -37,8 +35,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 RoleName = request.RoleName,
                 Description = request.Description,
-                CreatedBy = createdBy,
-                DateCreated = DateTime.Now,
+                CreatedBy = createdBy
             };
 
             try
@@ -172,7 +169,6 @@ namespace IdealDiscuss.Service.Implementations
 
             role.Description = request.Description;
             role.ModifiedBy = modifiedBy;
-            role.LastModified = DateTime.Now;
 
             try
             {

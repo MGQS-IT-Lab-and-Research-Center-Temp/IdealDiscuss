@@ -44,8 +44,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 Name = request.Name,
                 Description = request.Description,
-                CreatedBy = createdBy,
-                DateCreated = DateTime.Now
+                CreatedBy = createdBy
             };
 
             try
@@ -154,7 +153,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 Id = category.Id,
                 Name = category.Name,
-                Description = category.Description,
+                Description = category.Description
             };
 
             return response;
@@ -175,7 +174,7 @@ namespace IdealDiscuss.Service.Implementations
             var category = _unitOfWork.Categories.Get(categoryId);
             category.Description = updateCategoryDto.Description;
             category.ModifiedBy = modifiedBy;
-            category.LastModified = DateTime.Now;
+            //category.LastModified = DateTime.Now;
             try
             {
                 _unitOfWork.Categories.Update(category);
