@@ -24,9 +24,7 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             string saltString = HashingHelper.GenerateSalt();
             string hashedPassword = HashingHelper.HashPassword(request.Password, saltString);
-            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-            var createdDate = DateTime.Now;
-
+            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;           
             var userExist = _unitOfWork.Users.Exists(x => x.UserName == request.UserName || x.Email == request.Email);
 
             if (userExist)
@@ -52,8 +50,7 @@ namespace IdealDiscuss.Service.Implementations
                 HashSalt = saltString,
                 PasswordHash = hashedPassword,
                 RoleId = role.Id,
-                CreatedBy = createdBy,
-                DateCreated = createdDate,
+                CreatedBy = createdBy,                
             };
 
             try

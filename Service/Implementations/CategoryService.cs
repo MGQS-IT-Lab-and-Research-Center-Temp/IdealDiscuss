@@ -174,7 +174,7 @@ namespace IdealDiscuss.Service.Implementations
             var category = _unitOfWork.Categories.Get(categoryId);
             category.Description = updateCategoryDto.Description;
             category.ModifiedBy = modifiedBy;
-            //category.LastModified = DateTime.Now;
+            
             try
             {
                 _unitOfWork.Categories.Update(category);
