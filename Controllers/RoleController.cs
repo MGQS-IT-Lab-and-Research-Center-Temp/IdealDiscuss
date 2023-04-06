@@ -32,13 +32,12 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        [ValidateModel]
         public IActionResult Create(CreateRoleViewModel request)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return View(request);
-            //}
+            if (!ModelState.IsValid)
+            {
+                return View(request);
+            }
 
             var response = _roleService.CreateRole(request);
             ViewData["Status"] = response.Status;

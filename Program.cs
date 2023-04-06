@@ -1,5 +1,4 @@
 using IdealDiscuss.Context;
-using IdealDiscuss.Middlewares;
 using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Implementations;
@@ -59,7 +58,6 @@ app.SeedToDatabase();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<RoleBasedAuthorizationMiddleware>();
 
 app.MapControllerRoute(
     name: "default",
