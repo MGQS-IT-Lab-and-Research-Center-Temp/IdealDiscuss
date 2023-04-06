@@ -49,8 +49,7 @@ namespace IdealDiscuss.Context
 
             var password = "p@ssword1";
             var salt = HashingHelper.GenerateSalt();
-            //Get the Role Id of the admin role and assign it to the RoleId
-            //property in the User object below.
+            var admin = context.Roles.Where(r => r.RoleName == "Admin").SingleOrDefault();
 
             var users = new User[]
             {
@@ -60,7 +59,7 @@ namespace IdealDiscuss.Context
                     HashSalt = salt,
                     PasswordHash = HashingHelper.HashPassword(password, salt),
                     Email = "admin@gmail.com",
-                    RoleId = "08db3079-0546-a628-b82a-72ac77620000",
+                    RoleId = admin.Id,
                     CreatedBy = "System",
                     DateCreated = DateTime.Now,
                     IsDeleted = false,
