@@ -1,4 +1,5 @@
-﻿using IdealDiscuss.Models.QuestionReport;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using IdealDiscuss.Models.QuestionReport;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,10 +8,11 @@ namespace IdealDiscuss.Controllers
     public class QuestionReportController : Controller
     {
         private readonly IQuestionReportService _questionReportService;
-
-        public QuestionReportController (IQuestionReportService questionReportService)
+        private readonly INotyfService _notyf;
+        public QuestionReportController (IQuestionReportService questionReportService, INotyfService notyf)
         {
             _questionReportService = questionReportService;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
@@ -31,42 +33,72 @@ namespace IdealDiscuss.Controllers
         public IActionResult ReportQuestion(CreateQuestionReportViewModel Report)
         {
             var response = _questionReportService.CreateQuestionReport(Report);
-            ViewBag.Message = response.Message;
-            ViewBag.status = response.Status;
-            return View(response);
+            if(response.Status is false)
+            {
+                return View(response);
+            }
+            _notyf.Success(response.Message);
+            return RedirectToAction("Index");
         }
         
         public IActionResult GetQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
-            return View (response.Data);
+            if (response.Status is false)
+            {
+                return View(response);
+            }
+            _notyf.Success(response.Message);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
         public IActionResult GetAllQuestionReport()
         {
             var response = _questionReportService.GetAllQuestionReport();
-            return View(response.Data);
+            if (response.Status is false)
+            {
+                return View(response);
+            }
+            _notyf.Success(response.Message);
+            return RedirectToAction("Index", "QuestionReports");
         }
 
         public IActionResult UpdateQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
-            return View(response.Data);
+            if (response.Status is false)
+            {
+                return View(response);
+            }
+            _notyf.Success(response.Message);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
         public IActionResult UpdateQuestionReport(string id, UpdateQuestionReportViewModel request)
         {
             var response = _questionReportService.UpdateQuestionReport(id, request);
-            return RedirectToAction("Index");
+            if (response.Status is false)
+            {
+                return View(response);
+            }
+            _notyf.Success(response.Message);
+            return RedirectToAction("Index", "Question");
         }
 
         [HttpPost]
         public IActionResult DeleteQuestionReport(string id)
         {
             var response = _questionReportService.DeleteQuestionReport(id);
-            return RedirectToAction("Index", "QuestionReport");
+            if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Question");
+            }
+
+            _notyf.Success(response.Message);
+            return RedirectToAction("Index", "Question");
         }
     }
 }
