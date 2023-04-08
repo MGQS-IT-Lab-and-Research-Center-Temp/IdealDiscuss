@@ -61,7 +61,7 @@ namespace IdealDiscuss.Service.Implementations
                 Comment = comment,
                 AdditionalComment = request.AdditionalComment,
                 CreatedBy = createdBy,
-                DateCreated = DateTime.Now,
+               
             };
 
             var flags = _unitOfWork.Flags.GetAllByIds(request.FlagIds);
@@ -77,7 +77,7 @@ namespace IdealDiscuss.Service.Implementations
                     Flag = flag,
                     CommentReport = commentReport,
                     CreatedBy = createdBy,
-                    DateCreated = DateTime.Now
+                    
                 };
 
                 commentFlags.Add(commentReportFlag);

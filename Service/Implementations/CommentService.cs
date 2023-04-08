@@ -57,7 +57,6 @@ namespace IdealDiscuss.Service.Implementations
                 Question = question,
                 CommentText = request.CommentText,
                 CreatedBy = createdBy,
-                DateCreated = DateTime.Now,
             };
 
             try
