@@ -118,14 +118,20 @@ namespace IdealDiscuss.Service.Implementations
                                         && q.IsClosed == false));
 
             var questionExist = _unitOfWork.Questions.Exists(expression);
+            var hasComment = _unitOfWork.Comments.Exists(c => c.Id == questionId);
 
             if (!questionExist)
             {
                 response.Message = "Question does not exist!";
                 return response;
             }
+            if (hasComment is true)
+            {
+                response.Message = $"Could not delete the Question";
+                return response;
+            }
 
-            var question = _unitOfWork.Questions.Get(questionId);
+                var question = _unitOfWork.Questions.Get(questionId);
             question.IsDeleted = true;
 
             try
