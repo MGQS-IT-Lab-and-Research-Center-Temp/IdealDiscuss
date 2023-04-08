@@ -1,4 +1,5 @@
-﻿using IdealDiscuss.ActionFilters;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using IdealDiscuss.ActionFilters;
 using IdealDiscuss.Models.Auth;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication;
@@ -13,13 +14,16 @@ namespace IdealDiscuss.Controllers
     {
         private readonly IUserService _userService;
         private readonly IQuestionService _questionService;
+        private readonly INotyfService _notyf;
 
         public HomeController(
             IUserService userService,
-            IQuestionService questionService)
+            IQuestionService questionService,
+            INotyfService notyf)
         {
             _userService = userService;
             _questionService = questionService;
+            _notyf = notyf;
         }
 
         [Authorize]
@@ -34,50 +38,41 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult SignUp()
         {
-            ViewData["Message"] = "";
-            ViewData["Status"] = false;
-
             return View();
         }
 
         [HttpPost]
         public IActionResult SignUp(SignUpViewModel model)
         {
-            var result = _userService.AddUser(model);
+            var response = _userService.Register(model);
 
-            if (result.Status == false)
+            if (response.Status is false)
             {
-                ViewData["Message"] = result.Message;
-                ViewData["Status"] = result.Status;
+                _notyf.Error(response.Message);
 
-                return View();
+                return View(model);
             }
 
-            ViewData["Message"] = result.Message;
-            ViewData["Status"] = result.Status;
+            _notyf.Success(response.Message);
 
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
         [RedirectIfAuthenticated]
         public IActionResult Login()
         {
-            ViewData["Message"] = "";
-            ViewData["Status"] = false;
-
             return View();
         }
 
         [HttpPost]
         public IActionResult Login(LoginViewModel model)
         {
-            var response = _userService.Login(model.UserName, model.Password);
+            var response = _userService.Login(model);
             var user = response.Data;
 
             if (response.Status == false)
             {
-                ViewData["Message"] = response.Message;
-                ViewData["Status"] = response.Status;
+                _notyf.Error(response.Message);
 
                 return View();
             }
@@ -99,6 +94,8 @@ namespace IdealDiscuss.Controllers
 
             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authenticationProperties);
 
+            _notyf.Success(response.Message);
+
             if (user.RoleName == "Admin")
             {
                 return RedirectToAction("AdminDashboard", "Home");
@@ -110,6 +107,7 @@ namespace IdealDiscuss.Controllers
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            _notyf.Success("You have successfully signed out!");
             return RedirectToAction("Login", "Home");
         }
 
