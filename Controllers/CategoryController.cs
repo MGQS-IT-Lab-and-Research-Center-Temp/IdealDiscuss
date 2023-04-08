@@ -85,7 +85,7 @@ namespace IdealDiscuss.Controllers
 			return RedirectToAction("Index", "Category");
 		}
 
-        [HttpPost("{id}/delete")]
+        [HttpPost]
         public IActionResult DeleteCategory([FromRoute] string id)
         {
             var response = _categoryService.DeleteCategory(id);
