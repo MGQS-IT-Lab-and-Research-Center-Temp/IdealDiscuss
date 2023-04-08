@@ -1,4 +1,5 @@
-﻿using IdealDiscuss.Models.Role;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using IdealDiscuss.Models.Role;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,11 @@ namespace IdealDiscuss.Controllers
     public class RoleController : Controller
     {
         private readonly IRoleService _roleService;
-
-        public RoleController(IRoleService roleService)
+        private readonly INotyfService _notyf;
+        public RoleController(IRoleService roleService, INotyfService notyf)
         {
             _roleService = roleService;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
@@ -39,26 +41,33 @@ namespace IdealDiscuss.Controllers
             }
 
             var response = _roleService.CreateRole(request);
-            ViewData["Status"] = response.Status;
-            ViewData["Message"] = response.Message;
-
-            return View();
+            if (response.Status is false)
+            {
+                return View(response);
+            }
+            _notyf.Success(response.Message);
+            return RedirectToAction("Index");
         }
 
         public IActionResult GetRoleDetail(string id)
         {
             var response = _roleService.GetRole(id);
-            ViewData["Message"] = response.Message;
-            ViewData["Status"] = response.Status;
-
-            return View(response.Role);
+            if (response.Status is false)
+            {
+                return View(response);
+            }
+            _notyf.Success(response.Message);
+            return RedirectToAction("Index");
         }
 
         public IActionResult Update(string id)
         {
             var response = _roleService.GetRole(id);
-            ViewData["Message"] = response.Message;
-            ViewData["Status"] = response.Status;
+            if (response.Status is false)
+            {
+                return View(response);
+            }
+            _notyf.Success(response.Message);         
 
             var viewModel = new UpdateRoleViewModel
             {
@@ -79,9 +88,11 @@ namespace IdealDiscuss.Controllers
             }
 
             var response = _roleService.UpdateRole(id, request);
-            ViewData["Message"] = response.Message;
-            ViewData["Status"] = response.Status;
-
+            if (response.Status is false)
+            {
+                return View(response);
+            }
+            _notyf.Success(response.Message);
             return RedirectToAction("Index");
         }
 
@@ -89,9 +100,11 @@ namespace IdealDiscuss.Controllers
         public IActionResult DeleteRole([FromRoute] string id)
         {
             var response = _roleService.DeleteRole(id);
-            ViewData["Message"] = response.Message;
-            ViewData["Status"] = response.Status;
-
+            if (response.Status is false)
+            {
+                return View(response);
+            }
+            _notyf.Success(response.Message);
             return RedirectToAction("Index");
         }
     }
