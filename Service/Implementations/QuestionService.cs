@@ -34,7 +34,6 @@ namespace IdealDiscuss.Service.Implementations
                 QuestionText = request.QuestionText,
                 ImageUrl = request.ImageUrl,
                 CreatedBy = createdBy,
-                DateCreated = DateTime.Now
             };
 
             var categories = _unitOfWork.Categories.GetAllByIds(request.CategoryIds);
@@ -49,8 +48,7 @@ namespace IdealDiscuss.Service.Implementations
                     QuestionId = question.Id,
                     Category = category,
                     Question = question,
-                    CreatedBy = createdBy,
-                    DateCreated = DateTime.Now
+                    CreatedBy = createdBy
                 };
 
                 categoryQuestions.Add(categoryQuestion);
@@ -79,10 +77,15 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var questionExist = _unitOfWork.Questions.Exists(c => c.Id == questionId);
-
+            var hasComment =  _unitOfWork.Comments.Exists(c => c.Id == questionId);
             if (!questionExist)
             {
                 response.Message = "Question does not exist!";
+                return response;
+            }
+            if (hasComment is true)
+            {
+                response.Message = $"Could not update the Question";
                 return response;
             }
 
@@ -90,7 +93,6 @@ namespace IdealDiscuss.Service.Implementations
 
             question.QuestionText = request.QuestionText;
             question.ModifiedBy = modifiedBy;
-            question.LastModified = DateTime.Now;
 
             try
             {
@@ -116,14 +118,20 @@ namespace IdealDiscuss.Service.Implementations
                                         && q.IsClosed == false));
 
             var questionExist = _unitOfWork.Questions.Exists(expression);
+            var hasComment = _unitOfWork.Comments.Exists(c => c.Id == questionId);
 
             if (!questionExist)
             {
                 response.Message = "Question does not exist!";
                 return response;
             }
+            if (hasComment is true)
+            {
+                response.Message = $"Could not delete the Question";
+                return response;
+            }
 
-            var question = _unitOfWork.Questions.Get(questionId);
+                var question = _unitOfWork.Questions.Get(questionId);
             question.IsDeleted = true;
 
             try

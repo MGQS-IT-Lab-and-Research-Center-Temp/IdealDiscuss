@@ -23,8 +23,7 @@ namespace IdealDiscuss.Service.Implementations
         public BaseResponseModel CreateFlag(CreateFlagViewModel request)
         {
             var response = new BaseResponseModel();
-            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-            var createdDate = DateTime.Now;
+            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;        
 
             var isFlagExist = _unitOfWork.Flags.Exists(c => c.FlagName == request.FlagName);
 
@@ -45,7 +44,7 @@ namespace IdealDiscuss.Service.Implementations
                 FlagName = request.FlagName,
                 Description = request.Description,
                 CreatedBy = createdBy,
-                DateCreated = createdDate
+                
             };
 
             try
@@ -168,7 +167,7 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-            var modifiedDate = DateTime.Now;
+            
             Expression<Func<Flag, bool>> expression = f =>
                                                 (f.Id == flagId)
                                                 && (f.Id == flagId
@@ -193,7 +192,6 @@ namespace IdealDiscuss.Service.Implementations
             flag.FlagName = request.FlagName;
             flag.Description = request.Description;
             flag.ModifiedBy = modifiedBy;
-            flag.LastModified = modifiedDate;
 
             try
             {

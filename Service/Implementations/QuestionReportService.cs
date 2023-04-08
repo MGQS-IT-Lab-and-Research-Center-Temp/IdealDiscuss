@@ -44,7 +44,6 @@ namespace IdealDiscuss.Service.Implementations
                     Question = question,
                     AdditionalComment = request.AdditionalComment,
                     CreatedBy = reporter.Id,
-                    DateCreated = DateTime.Now,
                 };
 
                 var flags = _unitOfWork.Flags.GetAllByIds(request.FlagIds);
