@@ -9,6 +9,8 @@
      <a asp-controller="QuestionReport" asp-action="ReportQuestion" class="btn btn-outline-primary">Report a question</a>
 </div>
 
+ @await Html.PartialAsync("_ListAlert", Model)
+
 @if (status is false)
 {
     <span>@ViewBag.Message</span>
