@@ -3,80 +3,84 @@ using IdealDiscuss.Models;
 using IdealDiscuss.Models.QuestionReport;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
+using System.Security.Claims;
 
 namespace IdealDiscuss.Service.Implementations
 {
     public class QuestionReportService : IQuestionReportService
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUnitOfWork _unitOfWork;
 
-        public QuestionReportService(
+        public QuestionReportService(IHttpContextAccessor httpContextAccessor,
             IUnitOfWork unitOfWork)
         {
+            _httpContextAccessor = httpContextAccessor;
             _unitOfWork = unitOfWork;
         }
         public BaseResponseModel CreateQuestionReport(CreateQuestionReportViewModel request)
         {
             var response = new BaseResponseModel();
-
-            try
+            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
+            var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var reporter = _unitOfWork.Users.Get(userIdClaim);
+            var question = _unitOfWork.Questions.Get(request.QuestionId);
+       
+            if (reporter is null)
             {
-                var reporter = _unitOfWork.Users.Get(request.UserId);
-                var question = _unitOfWork.Questions.Get(request.QuestionId);
+                response.Message = "User not found!";
+                return response;
+            }
 
-                if (reporter is null)
-                {
-                    response.Message = "User not found!";
-                    return response;
-                }
+            if (question is null)
+            {
+                response.Message = "Question not found!";
+                return response;
+            }
 
-                if (question is null)
-                {
-                    response.Message = "Question not found!";
-                    return response;
-                }
+            var questionReport = new QuestionReport
+            {
+                UserId = reporter.Id,
+                User = reporter,
+                QuestionId = question.Id,
+                Question = question,
+                AdditionalComment = request.AdditionalComment,
+                CreatedBy = createdBy
+            };
 
-                var questionReport = new QuestionReport
+            var flags = _unitOfWork.Flags.GetAllByIds(request.FlagIds);
+
+            var questionFlags = new HashSet<QuestionReportFlag>();
+
+            foreach (var flag in flags)
+            {
+                var questionReportFlag = new QuestionReportFlag
                 {
-                    UserId = reporter.Id,
-                    User = reporter,
-                    QuestionId = question.Id,
-                    Question = question,
-                    AdditionalComment = request.AdditionalComment,
-                    CreatedBy = reporter.Id,
+                    FlagId = flag.Id,
+                    QuestionReportId = questionReport.Id,
+                    Flag = flag,
+                    QuestionReport = questionReport
                 };
 
-                var flags = _unitOfWork.Flags.GetAllByIds(request.FlagIds);
-
-                var questionFlags = new HashSet<QuestionReportFlag>();
-
-                foreach (var flag in flags)
-                {
-                    var questionReportFlag = new QuestionReportFlag
-                    {
-                        FlagId = flag.Id,
-                        QuestionReportId = questionReport.Id,
-                        Flag = flag,
-                        QuestionReport = questionReport
-                    };
-
-                    questionFlags.Add(questionReportFlag);
-                }
-
-                questionReport.QuestionReportFlags = questionFlags;
+                questionFlags.Add(questionReportFlag);
+            }
+            questionReport.QuestionReportFlags = questionFlags;
+            try
+            {
 
                 _unitOfWork.QuestionReports.Create(questionReport);
+                response.Status = true;
+                response.Message = "Report created successfully!";
+                _unitOfWork.SaveChanges();
+                return response;
 
             }
             catch (Exception ex)
             {
                 response.Message = $"An error occured: {ex.StackTrace}";
+                return response;
             }
 
-            response.Status = true;
-            response.Message = "Report created successfully!";
-            _unitOfWork.SaveChanges();
-            return response;
         }
 
         public BaseResponseModel DeleteQuestionReport(string id)

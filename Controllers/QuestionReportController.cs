@@ -40,7 +40,7 @@ namespace IdealDiscuss.Controllers
             var response = _questionReportService.CreateQuestionReport(Report);
             ViewBag.Message = response.Message;
             ViewBag.status = response.Status;
-            return View(response);
+            return View();
         }
         
         public IActionResult GetQuestionReport(string id)

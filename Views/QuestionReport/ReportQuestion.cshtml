@@ -4,6 +4,13 @@
     var questionId = ViewContext.RouteData.Values["id"];
 }
 
+@section Styles {
+    @{
+        await Html.RenderPartialAsync("_Select2CssPartial");
+    }
+}
+
+
 <div class="body">
 
     @await Html.PartialAsync("_NoModelAlert")
@@ -11,7 +18,7 @@
     <div class="row">
         <div class="col-md-6">
             <form asp-action="ReportQuestion" asp-controller="QuestionReport">
-                <input type="hidden" class="form-control" name="CommentId" value="@questionId" />
+                <input type="hidden" class="form-control" name="QuestionId" value="@questionId" />
 
                 <div class="col-md-12 mb-3">
                     <select type="checkbox" class="form-control" multiple="multiple"
@@ -28,9 +35,14 @@
                 </div>
 
                 <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary">Report Comment</button>
+                    <button type="submit" class="btn btn-primary">Report Question</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_Select2JsPartial");
+    }
+}
