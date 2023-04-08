@@ -11,6 +11,7 @@ namespace IdealDiscuss.Controllers
     {
         private readonly IRoleService _roleService;
         private readonly INotyfService _notyf;
+
         public RoleController(IRoleService roleService, INotyfService notyf)
         {
             _roleService = roleService;
@@ -24,7 +25,7 @@ namespace IdealDiscuss.Controllers
             ViewData["Message"] = roles.Message;
             ViewData["Status"] = roles.Status;
 
-            return View(roles.Roles);
+            return View(roles.Data);
         }
 
         public IActionResult Create()
@@ -35,45 +36,48 @@ namespace IdealDiscuss.Controllers
         [HttpPost]
         public IActionResult Create(CreateRoleViewModel request)
         {
-            if (!ModelState.IsValid)
+            var response = _roleService.CreateRole(request);
+
+            if (response.Status is false)
             {
+                _notyf.Error(response.Message);
+
                 return View(request);
             }
 
-            var response = _roleService.CreateRole(request);
-            if (response.Status is false)
-            {
-                return View(response);
-            }
             _notyf.Success(response.Message);
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Index", "Role");
         }
 
         public IActionResult GetRoleDetail(string id)
         {
             var response = _roleService.GetRole(id);
+
             if (response.Status is false)
             {
-                return View(response);
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Role");
             }
-            _notyf.Success(response.Message);
-            return RedirectToAction("Index");
+
+            return View(response.Data);
         }
 
         public IActionResult Update(string id)
         {
             var response = _roleService.GetRole(id);
+
             if (response.Status is false)
             {
-                return View(response);
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Role");
             }
-            _notyf.Success(response.Message);         
 
             var viewModel = new UpdateRoleViewModel
             {
-                Id = response.Role.Id,
-                RoleName = response.Role.RoleName,
-                Description = response.Role.Description
+                Id = response.Data.Id,
+                RoleName = response.Data.RoleName,
+                Description = response.Data.Description
             };
 
             return View(viewModel);
@@ -82,30 +86,33 @@ namespace IdealDiscuss.Controllers
         [HttpPost]
         public IActionResult Update(string id, UpdateRoleViewModel request)
         {
-            if (!ModelState.IsValid)
-            {
-                return View();
-            }
-
             var response = _roleService.UpdateRole(id, request);
+
             if (response.Status is false)
             {
-                return View(response);
+                _notyf.Error(response.Message);
+                return View(request);
             }
+
             _notyf.Success(response.Message);
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Index", "Role");
         }
 
         [HttpPost]
         public IActionResult DeleteRole([FromRoute] string id)
         {
             var response = _roleService.DeleteRole(id);
+
             if (response.Status is false)
             {
-                return View(response);
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Role"); ;
             }
+
             _notyf.Success(response.Message);
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Index", "Role");
         }
     }
 }

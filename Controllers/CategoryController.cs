@@ -20,11 +20,11 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult Index()
         {
-            var categories = _categoryService.GetAllCategory();
-            ViewData["Message"] = categories.Message;
-            ViewData["Status"] = categories.Status;
+            var response = _categoryService.GetAllCategory();
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
-            return View(categories.Data);
+            return View(response.Data);
         }
 
         public IActionResult Create()
@@ -32,29 +32,15 @@ namespace IdealDiscuss.Controllers
             return View();
         }
 
-        [HttpPost("{id}/delete")]
-        public IActionResult DeleteCategory([FromRoute] string id)
-        {
-            var response = _categoryService.DeleteCategory(id);
-			if (response.Status is false)
-			{
-				_notyf.Error(response.Message);
-				return View();
-			}
-
-			_notyf.Success(response.Message);
-
-		    return RedirectToAction("Index", "Category");
-        }
-
         [HttpPost]
         public IActionResult Create(CreateCategoryViewModel request)
         {
             var response = _categoryService.CreateCategory(request);
+
 			if (response.Status is false)
 			{
 				_notyf.Error(response.Message);
-				return View();
+				return View(request);
 			}
 
 			_notyf.Success(response.Message);
@@ -65,36 +51,54 @@ namespace IdealDiscuss.Controllers
         public IActionResult GetCategory(string id)
         {
             var response = _categoryService.GetCategory(id);
+
 			if (response.Status is false)
 			{
 				_notyf.Error(response.Message);
-				return View();
-			}
+                return RedirectToAction("Index", "Category");
+            }
 
-			_notyf.Success(response.Message);
+            _notyf.Success(response.Message);
 
-			return RedirectToAction("Index", "Category");
-		}
+            return View(response.Data);
 
-        [Authorize(Roles = "Admin")]
+        }
+
         public IActionResult Update()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Update(string id, UpdateCategoryViewModel updateCategoryDto)
+        public IActionResult Update(string id, UpdateCategoryViewModel request)
         {
-            var response = _categoryService.UpdateCategory(id, updateCategoryDto);
+            var response = _categoryService.UpdateCategory(id, request);
+
 			if (response.Status is false)
 			{
 				_notyf.Error(response.Message);
-				return View();
+				return View(request);
 			}
 
 			_notyf.Success(response.Message);
 
 			return RedirectToAction("Index", "Category");
 		}
+
+        [HttpPost("{id}/delete")]
+        public IActionResult DeleteCategory([FromRoute] string id)
+        {
+            var response = _categoryService.DeleteCategory(id);
+
+            if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Category");
+            }
+
+            _notyf.Success(response.Message);
+
+            return RedirectToAction("Index", "Category");
+        }
     }
 }

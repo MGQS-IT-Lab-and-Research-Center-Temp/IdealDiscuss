@@ -10,8 +10,11 @@ namespace IdealDiscuss.Controllers
         private readonly IQuestionReportService _questionReportService;
         private readonly INotyfService _notyf;
         private readonly IFlagService _flagService;
-        
-        public QuestionReportController (IQuestionReportService questionReportService, INotyfService notyf)
+
+        public QuestionReportController(
+            IQuestionReportService questionReportService,
+            IFlagService flagService,
+            INotyfService notyf)
         {
             _questionReportService = questionReportService;
             _notyf = notyf;
@@ -30,9 +33,6 @@ namespace IdealDiscuss.Controllers
         public IActionResult ReportQuestion()
         {
             ViewBag.FlagLists = _flagService.SelectFlags();
-            ViewData["Message"] = "";
-            ViewData["Status"] = false;
-
 
             return View();
         }
@@ -48,19 +48,21 @@ namespace IdealDiscuss.Controllers
             }
             
             _notyf.Success(response.Message);
-            return RedirectToAction("Index");
 
-            return View();
+            return RedirectToAction("Index");
         }
         
         public IActionResult GetQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
+
             if (response.Status is false)
             {
                 return View(response);
             }
+
             _notyf.Success(response.Message);
+
             return RedirectToAction("Index");
         }
 
@@ -68,11 +70,14 @@ namespace IdealDiscuss.Controllers
         public IActionResult GetAllQuestionReport()
         {
             var response = _questionReportService.GetAllQuestionReport();
+
             if (response.Status is false)
             {
                 return View(response);
             }
+
             _notyf.Success(response.Message);
+
             return RedirectToAction("Index", "QuestionReports");
         }
 
@@ -91,11 +96,14 @@ namespace IdealDiscuss.Controllers
         public IActionResult UpdateQuestionReport(string id, UpdateQuestionReportViewModel request)
         {
             var response = _questionReportService.UpdateQuestionReport(id, request);
+
             if (response.Status is false)
             {
                 return View(response);
             }
+
             _notyf.Success(response.Message);
+
             return RedirectToAction("Index", "Question");
         }
 

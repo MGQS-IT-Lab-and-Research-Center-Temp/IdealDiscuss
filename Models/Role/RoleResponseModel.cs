@@ -2,11 +2,11 @@
 {
     public class RoleResponseModel : BaseResponseModel
     {
-        public RoleViewModel Role { get; set; }
+        public RoleViewModel Data { get; set; }
     }
 
     public class RolesResponseModel : BaseResponseModel
     {
-        public List<RoleViewModel> Roles { get; set; }
+        public List<RoleViewModel> Data { get; set; }
     }
 }

@@ -103,14 +103,13 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.Roles = role
+                response.Data = role
                     .Select(r => new RoleViewModel
                     {
                         Id = r.Id,
                         RoleName = r.RoleName,
                         Description = r.Description
-                    })
-                .ToList();
+                    }).ToList();
 
                 response.Status = true;
                 response.Message = "Success";
@@ -140,7 +139,7 @@ namespace IdealDiscuss.Service.Implementations
 
             var role = _unitOfWork.Roles.Get(roleId);
 
-            response.Role = new RoleViewModel
+            response.Data = new RoleViewModel
             {
                 Id = roleId,
                 RoleName = role.RoleName,
@@ -175,6 +174,8 @@ namespace IdealDiscuss.Service.Implementations
                 _unitOfWork.Roles.Update(role);
                 _unitOfWork.SaveChanges();
                 response.Message = "Role updated successfully.";
+                response.Status = true;
+
                 return response;
             }
             catch (Exception ex)
