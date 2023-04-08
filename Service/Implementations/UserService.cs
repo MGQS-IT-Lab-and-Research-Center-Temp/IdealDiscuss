@@ -127,7 +127,7 @@ namespace IdealDiscuss.Service.Implementations
                     RoleId = user.RoleId,
                     RoleName = user.Role.RoleName,
                 };
-                response.Message = $"You are successfully logged in";
+                response.Message = $"Welcome {user.UserName}";
                 response.Status = true;
 
                 return response;
