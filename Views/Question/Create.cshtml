@@ -4,6 +4,12 @@
     ViewData["Title"] = "Create A Question";
 }
 
+@section Styles {
+    @{
+       await Html.RenderPartialAsync("_Select2CssPartial");
+    }
+}
+
 <div class="body">
 
     @await Html.PartialAsync("_NoModelAlert")
@@ -12,9 +18,8 @@
         <div class="col-md-6">
             <form asp-action="Create">
                 <div class="col-md-12 mb-2">
-                    <label class="control-label">Categories: </label>
-                    <select asp-for="CategoryIds" class="form-control" asp-items="@ViewBag.Categories" multiple>
-                        <option value="">--Select Categories--</option>
+                    <label class="form-label">Categories:</label>
+                    <select asp-for="CategoryIds" class="form-control" asp-items="@ViewBag.Categories" data-placeholder="Select Categories" multiple>
                     </select>
                     <span asp-validation-for="CategoryIds" class="text-danger"></span>
                 </div>
@@ -32,3 +37,9 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_Select2JsPartial");
+    }
+}
