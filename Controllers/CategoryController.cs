@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using IdealDiscuss.Models.Category;
+using AspNetCoreHero.ToastNotification.Abstractions;
 
 namespace IdealDiscuss.Controllers
 {
@@ -9,10 +10,12 @@ namespace IdealDiscuss.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
+		private readonly INotyfService _notyf;
 
-        public CategoryController(ICategoryService categoryService)
+		public CategoryController(ICategoryService categoryService, INotyfService notyfService)
         {
             _categoryService = categoryService;
+            _notyf = notyfService;
         }
 
         public IActionResult Index()
@@ -26,9 +29,6 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult Create()
         {
-            ViewData["Message"] = "";
-            ViewData["Status"] = false;
-
             return View();
         }
 
@@ -36,28 +36,45 @@ namespace IdealDiscuss.Controllers
         public IActionResult DeleteCategory([FromRoute] string id)
         {
             var response = _categoryService.DeleteCategory(id);
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
-            return RedirectToAction("Index", "Category");
+			if (response.Status is false)
+			{
+				_notyf.Error(response.Message);
+				return View();
+			}
+
+			_notyf.Success(response.Message);
+
+		    return RedirectToAction("Index", "Category");
         }
 
         [HttpPost]
         public IActionResult Create(CreateCategoryViewModel request)
         {
             var response = _categoryService.CreateCategory(request);
+			if (response.Status is false)
+			{
+				_notyf.Error(response.Message);
+				return View();
+			}
 
-            ViewBag.Message = response.Message;
-            ViewBag.Status = response.Status;
+			_notyf.Success(response.Message);
 
-            return View(response);
-        }
+			return RedirectToAction("Index", "Category"); ;
+		}
 
         public IActionResult GetCategory(string id)
         {
             var response = _categoryService.GetCategory(id);
-            ViewBag.Message = response.Message;
-            return View(response.Data);
-        }
+			if (response.Status is false)
+			{
+				_notyf.Error(response.Message);
+				return View();
+			}
+
+			_notyf.Success(response.Message);
+
+			return RedirectToAction("Index", "Category");
+		}
 
         [Authorize(Roles = "Admin")]
         public IActionResult Update()
@@ -68,10 +85,16 @@ namespace IdealDiscuss.Controllers
         [HttpPost]
         public IActionResult Update(string id, UpdateCategoryViewModel updateCategoryDto)
         {
-            var categoryUpdate = _categoryService.UpdateCategory(id, updateCategoryDto);
-            ViewBag.Message = categoryUpdate.Message;
-            ViewBag.Status = categoryUpdate.Status;
-            return RedirectToAction("Index", "Category");
-        }
+            var response = _categoryService.UpdateCategory(id, updateCategoryDto);
+			if (response.Status is false)
+			{
+				_notyf.Error(response.Message);
+				return View();
+			}
+
+			_notyf.Success(response.Message);
+
+			return RedirectToAction("Index", "Category");
+		}
     }
 }

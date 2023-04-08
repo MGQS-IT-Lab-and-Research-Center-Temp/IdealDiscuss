@@ -101,6 +101,7 @@ namespace IdealDiscuss.Service.Implementations
                 _unitOfWork.Questions.Update(question);
                 _unitOfWork.SaveChanges();
                 response.Message = "Question updated successfully!";
+                response.Status = true;
                 return response;
             }
             catch (Exception ex)

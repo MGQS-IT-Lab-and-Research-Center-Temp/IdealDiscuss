@@ -1,4 +1,5 @@
-﻿using IdealDiscuss.Models.Question;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using IdealDiscuss.Models.Question;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +12,18 @@ public class QuestionController : Controller
     private readonly IQuestionService _questionService;
     private readonly ICategoryService _categoryService;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly INotyfService _notyf;
 
     public QuestionController(
         IQuestionService questionService,
         ICategoryService categoryService,
-        IHttpContextAccessor httpContextAccessor)
+        IHttpContextAccessor httpContextAccessor,
+        INotyfService notyf)
     {
         _questionService = questionService;
         _categoryService = categoryService;
         _httpContextAccessor = httpContextAccessor;
+         _notyf = notyf;
     }
 
     public IActionResult Index()
@@ -44,10 +48,16 @@ public class QuestionController : Controller
     public IActionResult Create(CreateQuestionViewModel request)
     {
         var response = _questionService.Create(request);
-        ViewData["Message"] = response.Message;
-        ViewData["Status"] = response.Status;
+        if (response.Status is false)
+        {
+            _notyf.Error(response.Message);
+            return View();
+        }
 
-        return View();
+        _notyf.Success(response.Message);
+
+        return RedirectToAction("Index"); ;
+        
     }
 
     public IActionResult GetQuestionByCategory(string id)
@@ -78,8 +88,15 @@ public class QuestionController : Controller
     public IActionResult Update(string id, UpdateQuestionViewModel request)
     {
         var response = _questionService.Update(id, request);
-        ViewData["Message"] = response.Message;
-        ViewData["Status"] = response.Status;
+        if (response.Status is false)
+        {
+            _notyf.Error(response.Message);
+            return View();
+        }
+
+        _notyf.Success(response.Message);
+
+       
 
         return RedirectToAction("Index", "Question");
     }
@@ -88,8 +105,15 @@ public class QuestionController : Controller
     public IActionResult DeleteQuestion([FromRoute] string id)
     {
         var response = _questionService.Delete(id);
-        ViewData["Message"] = response.Message;
-        ViewData["Status"] = response.Status;
+        if (response.Status is false)
+        {
+            _notyf.Error(response.Message);
+            return View();
+        }
+
+        _notyf.Success(response.Message);
+
+
 
         return RedirectToAction("Index", "Question");
     }
