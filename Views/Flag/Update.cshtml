@@ -4,13 +4,12 @@
 }
 
 <div class="body">
-    @await Html.PartialAsync("_Alert", Model)
 
     @if (Model is not null)
     {
         <div class="row">
             <div class="col-md-6">
-                <form asp-action="UpdateFlag">
+                <form asp-action="Update">
                     <div class="col-md-12 mb-3">
                         <label asp-for="FlagName" class="control-label"></label>
                         <input asp-for="FlagName" type="text" class="form-control" value="@Model.FlagName" />
@@ -19,7 +18,7 @@
 
                     <div class="col-md-12 mb-3">
                         <label asp-for="Description" class="control-label"></label>
-                        <input asp-for="Description" type="text" class="form-control" value="@Model.Description" />
+                        <textarea asp-for="Description" type="text" class="form-control" value="@Model.Description" rows="5" cols="10"></textarea>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
 

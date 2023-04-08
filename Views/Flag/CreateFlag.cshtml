@@ -2,21 +2,23 @@
     ViewData["Title"] = "Create New Flag";
 }
 
-<div class="body">
+@model IdealDiscuss.Models.Flag.CreateFlagViewModel
 
-    @await Html.PartialAsync("_NoModelAlert")
+<div class="body">
 
     <div class="row">
         <div class="col-md-6">
             <form asp-action="CreateFlag">
                 <div class="col-md-12 mb-2">
                     <label for="FlagName" class="form-label">Flag Name:</label>
-                    <input type="text" class="form-control" placeholder="Enter Flag name" name="FlagName">
+                    <input type="text" class="form-control" placeholder="Enter Flag name" asp-for="FlagName">
+                    <span asp-validation-for="FlagName" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-12 mb-2">
                     <label for="Description" class="form-label">Description:</label>
-                    <textarea class="form-control" placeholder="Enter description" name="Description"></textarea>
+                    <textarea class="form-control" placeholder="Enter description" asp-for="Description" rows="5" cols="10"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-12">
