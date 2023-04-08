@@ -29,6 +29,7 @@ public class CommentController : Controller
     public IActionResult GetCommentDetail(string id)
     {
         var response = _commentService.GetComment(id);
+
         if (response.Status is false)
         {
             _notyf.Error(response.Message);
@@ -40,7 +41,6 @@ public class CommentController : Controller
         return RedirectToAction("Index", "Flag");
     }
 
-    [HttpGet]
     public IActionResult Create()
     {
         return View();
@@ -50,55 +50,60 @@ public class CommentController : Controller
     public IActionResult Create(CreateCommentViewModel request)
     {
         var response = _commentService.CreateComment(request);
+
         if(response.Status is false)
         {
             _notyf.Error(response.Message);
-            return View(response);
+            return View();
         }
 
         _notyf.Success(response.Message);
-        return RedirectToAction("Index", "Home");
 
+        return RedirectToAction("Index", "Home");
     }
 
-    public IActionResult Edit(string id)
+    public IActionResult Update(string id)
     {
         var response = _commentService.GetComment(id);
+
         if (response.Status is false)
         {
             _notyf.Error(response.Message);
-            return View(response);
+            return RedirectToAction("Index", "Home");
         }
-        _notyf.Success(response.Message);
-        return RedirectToAction("Index", "Home");
+
+        return View(response.Data);
     }
 
     [HttpPost]
-    public IActionResult Edit(string id, UpdateCommentViewModel request)
+    public IActionResult Update(string id, UpdateCommentViewModel request)
     {
         var response = _commentService.UpdateComment(id, request);
+
         if (response.Status is false)
         {
             _notyf.Error(response.Message);
-            return View(response);
+            return RedirectToAction("Index", "Home");
         }
+
         _notyf.Success(response.Message);
+
         return RedirectToAction("Index", "Home");
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpPost]
     public IActionResult DeleteComment([FromRoute] string id)
     {
         var response = _commentService.DeleteComment(id);
+
         if (response.Status is false)
         {
             _notyf.Error(response.Message);
-            return RedirectToAction("Index", "Comment");
+            return RedirectToAction("Index", "Home");
         }
 
         _notyf.Success(response.Message);
 
-        return RedirectToAction("Index", "Comment");
+        return RedirectToAction("Index", "Home");
     }
 }

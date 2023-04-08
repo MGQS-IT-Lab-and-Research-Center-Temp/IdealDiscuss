@@ -6,8 +6,6 @@
 
 <div class="body">
 
-    @await Html.PartialAsync("_Alert", Model)
-
     @if (Model is not null)
     {
         <div class="card">
@@ -49,13 +47,8 @@
                     </div>
                 }
 
-                @*<a asp-controller="Comment" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">Update</a>
-            &nbsp;
-            <form asp-action="DeleteComment" asp-route-id="@Model.Id">
-            <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
-            &nbsp;*@
                 <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">Back to list</a>
+
             </div>
         </div>
     }

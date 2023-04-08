@@ -6,8 +6,6 @@
 
 <div class="body">
 
-    @await Html.PartialAsync("_Alert", Model)
-
     @if (Model is not null)
     {
         <div class="card">
@@ -59,10 +57,24 @@
                                     @comment.CommentText
                                     <span class="badge bg-dark">@comment.UserName</span>
 
-                                    <a asp-controller="Comment" asp-action="GetCommentDetail"
-                           asp-route-id="@comment.Id">
-                                        View Report
+                                    <a asp-controller="Comment" asp-action="Update"
+                           asp-route-id="@comment.Id" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-edit"></i>
                                     </a>
+
+                                    <form asp-controller="Comment" asp-action="DeleteComment" asp-route-id="@comment.Id" class="del-btn">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a asp-controller="Comment" asp-action="GetCommentDetail"
+                           asp-route-id="@comment.Id">
+                                            View Report
+                                        </a>
+                                    }
 
                                 </li>
                             }
