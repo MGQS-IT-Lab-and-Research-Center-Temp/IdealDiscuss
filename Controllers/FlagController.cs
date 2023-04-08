@@ -1,4 +1,5 @@
-﻿using IdealDiscuss.Models.Flag;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using IdealDiscuss.Models.Flag;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,27 +10,26 @@ namespace IdealDiscuss.Controllers
     public class FlagController : Controller
     {
         private readonly IFlagService _flagService;
+        private readonly INotyfService _notyf;
 
-        public FlagController(IFlagService flagService)
+        public FlagController(IFlagService flagService, INotyfService notyf)
         {
             _flagService = flagService;
+            _notyf = notyf;
         }
 
         public IActionResult Index()
         {
-            var instances = _flagService.GetAllFlag();
+            var response = _flagService.GetAllFlag();
 
-            ViewData["Message"] = instances.Message;
-            ViewData["Status"] = instances.Status;
+            ViewData["Message"] = response.Message;
+            ViewData["Status"] = response.Status;
 
-            return View(instances.Data);
+            return View(response.Data);
         }
 
         public IActionResult CreateFlag()
         {
-            ViewData["Message"] = "";
-            ViewData["Status"] = false;
-
             return View();
         }
 
@@ -37,38 +37,64 @@ namespace IdealDiscuss.Controllers
         public IActionResult CreateFlag(CreateFlagViewModel request)
         {
             var response = _flagService.CreateFlag(request);
-            ViewData["Message"] = response.Message;
-            ViewData["Status"] = response.Status;
 
-            return View(response);
+            if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return View();
+            }
+
+            _notyf.Success(response.Message);
+
+            return RedirectToAction("Index", "Flag"); ;
         }
 
         public IActionResult GetFlagDetail(string id)
         {
             var response = _flagService.GetFlag(id);
-            ViewData["Message"] = response.Message;
-            ViewData["Status"] = response.Status;
-            ViewData["ControllerName"] = "Flag";
-            ViewData["ActionName"] = "Index";
+
+            if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Flag");
+            }
 
             return View(response.Data);
         }
 
-        public IActionResult UpdateFlag(string id)
+        public IActionResult Update(string id)
         {
             var response = _flagService.GetFlag(id);
-            ViewData["Message"] = response.Message;
-            ViewData["Status"] = response.Status;
-            ViewData["ControllerName"] = "Flag";
-            ViewData["ActionName"] = "Index";
 
-            return View(response.Data);
+            if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Flag");
+            }
+
+            var viewModel = new UpdateFlagViewModel
+            {
+                Id = response.Data.Id,
+                FlagName = response.Data.FlagName,
+                Description = response.Data.Description
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
-        public IActionResult UpdateFlag(string id, UpdateFlagViewModel request)
+        public IActionResult Update(string id, UpdateFlagViewModel request)
         {
-            var response = _flagService.UpdateFlag(id,request);
+            var response = _flagService.UpdateFlag(id, request);
+
+            if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return View(request);
+            }
+
+            _notyf.Success(response.Message);
+
             return RedirectToAction("Index", "Flag");
         }
 
@@ -76,6 +102,15 @@ namespace IdealDiscuss.Controllers
         public IActionResult DeleteFlag(string id)
         {
             var response = _flagService.DeleteFlag(id);
+
+            if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Flag");
+            }
+
+            _notyf.Success(response.Message);
+
             return RedirectToAction("Index", "Flag");
         }
     }

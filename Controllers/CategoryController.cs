@@ -12,9 +12,9 @@ namespace IdealDiscuss.Controllers
 
         public CategoryController(ICategoryService categoryService)
         {
-            _categoryService = categoryService; 
+            _categoryService = categoryService;
         }
-        
+
         public IActionResult Index()
         {
             var categories = _categoryService.GetAllCategory();
@@ -23,7 +23,7 @@ namespace IdealDiscuss.Controllers
 
             return View(categories.Data);
         }
-        
+
         public IActionResult Create()
         {
             ViewData["Message"] = "";
@@ -31,7 +31,7 @@ namespace IdealDiscuss.Controllers
 
             return View();
         }
-       
+
         [HttpPost("{id}/delete")]
         public IActionResult DeleteCategory([FromRoute] string id)
         {
@@ -59,19 +59,19 @@ namespace IdealDiscuss.Controllers
             return View(response.Data);
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Update()
         {
             return View();
         }
 
         [HttpPost]
-		public IActionResult Update(string id, UpdateCategoryViewModel updateCategoryDto)
-		{
-			var categoryUpdate = _categoryService.UpdateCategory(id, updateCategoryDto);
-			ViewBag.Message = categoryUpdate.Message;
-			ViewBag.Status = categoryUpdate.Status;
-			return RedirectToAction("Index", "Category");
-		}
-	}
+        public IActionResult Update(string id, UpdateCategoryViewModel updateCategoryDto)
+        {
+            var categoryUpdate = _categoryService.UpdateCategory(id, updateCategoryDto);
+            ViewBag.Message = categoryUpdate.Message;
+            ViewBag.Status = categoryUpdate.Status;
+            return RedirectToAction("Index", "Category");
+        }
+    }
 }

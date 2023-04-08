@@ -3,8 +3,6 @@
     ViewData["Title"] = "SignUp";
 }
 
-@await Html.PartialAsync("_NoModelAlert")
-
 <div class="d-flex justify-content-center">
 
     <form asp-action="SignUp" class="row g-3">
@@ -38,9 +36,3 @@
         </div>
     </form>
 </div>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    }

@@ -7,7 +7,7 @@ namespace IdealDiscuss.Service.Interface
     public interface IUserService
     {
         UserResponseModel GetUser(string userId);
-        BaseResponseModel AddUser(SignUpViewModel request, string roleName = null);
-        UserResponseModel Login(string username, string password);
+        BaseResponseModel Register(SignUpViewModel request, string roleName = null);
+        UserResponseModel Login(LoginViewModel request);
     }
 }

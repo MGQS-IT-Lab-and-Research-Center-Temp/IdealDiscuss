@@ -1,3 +1,5 @@
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using IdealDiscuss.Context;
 using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
@@ -8,8 +10,10 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+
 // Add services to the container.
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();  
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ICommentReportRepository, CommentReportRepository>();
 builder.Services.AddScoped<ICommentReportService, CommentReportService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -26,8 +30,17 @@ builder.Services.AddScoped<IFlagRepository, FlagRepository>();
 builder.Services.AddScoped<IFlagService, FlagService>();
 builder.Services.AddScoped<IQuestionReportRepository, QuestionReportRepository>();
 builder.Services.AddScoped<IQuestionReportService, QuestionReportService>();
+
 builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<IdealDiscussContext>(option => 
+builder.Services.AddRazorPages();
+builder.Services.AddNotyf(config =>
+{
+    config.DurationInSeconds = 10;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.TopRight;
+});
+
+builder.Services.AddDbContext<IdealDiscussContext>(option =>
     option.UseMySQL(builder.Configuration.GetConnectionString("IdealDiscussContext")));
 builder.Services.AddScoped<DbInitializer>();
 
@@ -52,12 +65,11 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.SeedToDatabase();
-
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseNotyf();
 
 app.MapControllerRoute(
     name: "default",
