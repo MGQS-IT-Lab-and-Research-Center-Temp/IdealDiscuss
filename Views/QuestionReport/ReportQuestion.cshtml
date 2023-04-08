@@ -13,8 +13,6 @@
 
 <div class="body">
 
-    @await Html.PartialAsync("_NoModelAlert")
-
     <div class="row">
         <div class="col-md-6">
             <form asp-action="ReportQuestion" asp-controller="QuestionReport">
@@ -23,8 +21,8 @@
                 <div class="col-md-12 mb-3">
                     <select type="checkbox" class="form-control" multiple="multiple"
                             name="FlagIds" required="required"
+                            data-placeholder="Select Flags"
                             asp-items="@ViewBag.FlagLists">
-                        <option value="">--Select Flags--</option>
                     </select>
                 </div>
 
