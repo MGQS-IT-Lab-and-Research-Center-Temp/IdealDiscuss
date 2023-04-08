@@ -1,7 +1,6 @@
 ﻿using IdealDiscuss.Entities;
 using IdealDiscuss.Models;
 using IdealDiscuss.Models.Flag;
-using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -29,13 +28,7 @@ namespace IdealDiscuss.Service.Implementations
 
             if (isFlagExist)
             {
-                response.Message = $"Flag with {request.FlagName} already exist!";
-                return response;
-            }
-
-            if (string.IsNullOrWhiteSpace(request.FlagName))
-            {
-                response.Message = "Flag name is required!";
+                response.Message = $"Flag with name {request.FlagName} already exist!";
                 return response;
             }
 
@@ -43,8 +36,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 FlagName = request.FlagName,
                 Description = request.Description,
-                CreatedBy = createdBy,
-                
+                CreatedBy = createdBy 
             };
 
             try
@@ -81,8 +73,8 @@ namespace IdealDiscuss.Service.Implementations
             {
                 _unitOfWork.Flags.Update(flags);
                 _unitOfWork.SaveChanges();
-                response.Status = true;
                 response.Message = "Flag deleted successfully.";
+                response.Status = true;
 
                 return response;
             }
@@ -181,12 +173,6 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            if (string.IsNullOrWhiteSpace(request.FlagName))
-            {
-                response.Message = "Flag name cannot be null!";
-                return response;
-            }
-
             var flag = _unitOfWork.Flags.Get(flagId);
 
             flag.FlagName = request.FlagName;
@@ -198,6 +184,7 @@ namespace IdealDiscuss.Service.Implementations
                 _unitOfWork.Flags.Update(flag);
                 _unitOfWork.SaveChanges();
                 response.Message = "Flag updated successfully.";
+                response.Status = true;
 
                 return response;
             }

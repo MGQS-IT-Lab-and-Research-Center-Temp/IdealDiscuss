@@ -4,13 +4,10 @@
 }
 
 <h3 class="card-title">
-    <i class="fas fa-text-width"></i>
     @ViewData["Title"]
 </h3>
 
 <div class="card-body">
-
-    @await Html.PartialAsync("_Alert", Model)
 
     @if (Model is not null)
     {
@@ -21,14 +18,12 @@
             <dd class="col-sm-8">@Model.Description</dd>
         </dl>
 
-        <div class="btn-group">
-            <a asp-controller="Flag" asp-action="UpdateFlag" asp-route-id="@Model.Id" class="btn btn-primary">Update</a>
-            &nbsp;
-            <form asp-action="DeleteFlag" asp-route-id="@Model.Id" style="display:inline">
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form>
-            &nbsp;
-            <a asp-controller="Flag" asp-action="Index" class="btn btn-secondary">Back to list</a>
-        </div>
+        <a asp-controller="Flag" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Update</a>
+
+        <form asp-action="DeleteFlag" asp-route-id="@Model.Id" class="del-btn">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+
+        <a asp-controller="Flag" asp-action="Index" class="btn btn-secondary">Back to list</a>
     }
 </div>

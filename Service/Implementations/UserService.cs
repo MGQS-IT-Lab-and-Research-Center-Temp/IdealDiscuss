@@ -19,7 +19,7 @@ namespace IdealDiscuss.Service.Implementations
             _unitOfWork = unitOfWork;
         }
 
-        public BaseResponseModel AddUser(SignUpViewModel request, string roleName)
+        public BaseResponseModel Register(SignUpViewModel request, string roleName)
         {
             var response = new BaseResponseModel();
             string saltString = HashingHelper.GenerateSalt();
@@ -57,7 +57,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 _unitOfWork.Users.Create(user);
                 _unitOfWork.SaveChanges();
-                response.Message = $"User with {request.UserName} added succesfully";
+                response.Message = $"You have succesfully signed up on IdealDiscuss";
                 response.Status = true;
 
                 return response;
@@ -66,7 +66,7 @@ namespace IdealDiscuss.Service.Implementations
             {
                 return new BaseResponseModel
                 {
-                    Message = $"Unable to create user: {ex.Message}"
+                    Message = $"Unable to signup, an error occurred {ex.Message}"
                 };
             }
         }
@@ -95,15 +95,15 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public UserResponseModel Login(string username, string password)
+        public UserResponseModel Login(LoginViewModel model)
         {
             var response = new UserResponseModel();
 
             try
             {
                 var user = _unitOfWork.Users.GetUser(x =>
-                                (x.UserName.ToLower() == username.ToLower()
-                                || x.Email.ToLower() == username.ToLower()));
+                                (x.UserName.ToLower() == model.UserName.ToLower()
+                                || x.Email.ToLower() == model.UserName.ToLower()));
 
                 if (user is null)
                 {
@@ -111,7 +111,7 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                string hashedPassword = HashingHelper.HashPassword(password, user.HashSalt);
+                string hashedPassword = HashingHelper.HashPassword(model.Password, user.HashSalt);
 
                 if (!user.PasswordHash.Equals(hashedPassword))
                 {
@@ -127,7 +127,7 @@ namespace IdealDiscuss.Service.Implementations
                     RoleId = user.RoleId,
                     RoleName = user.Role.RoleName,
                 };
-                response.Message = $"User successfully retrieved";
+                response.Message = $"You are successfully logged in";
                 response.Status = true;
 
                 return response;
