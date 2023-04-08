@@ -1,26 +1,36 @@
 ﻿@model IdealDiscuss.Models.QuestionReport.CreateQuestionReportViewModel
 @{
     ViewData["Title"] = "Create New Question Report";
-    var status = ViewBag.Status == false ? "alert-danger" : "alert-success";
+    var questionId = ViewContext.RouteData.Values["id"];
 }
-@if (ViewBag.Message != null)
-{
-    <div class="alert @status alert-dismissible" questionReport="alert">
-        @ViewBag.Message
-         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+<div class="body">
+
+    @await Html.PartialAsync("_NoModelAlert")
+
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="ReportQuestion" asp-controller="QuestionReport">
+                <input type="hidden" class="form-control" name="CommentId" value="@questionId" />
+
+                <div class="col-md-12 mb-3">
+                    <select type="checkbox" class="form-control" multiple="multiple"
+                            name="FlagIds" required="required"
+                            asp-items="@ViewBag.FlagLists">
+                        <option value="">--Select Flags--</option>
+                    </select>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                    <label asp-for="AdditionalComment" class="control-label"></label>
+                    <textarea asp-for="AdditionalComment" class="form-control"></textarea>
+                    <span asp-validation-for="AdditionalComment" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">Report Comment</button>
+                </div>
+            </form>
+        </div>
     </div>
-}
-<div class="d-flex justify-content-center">
-
-     <form asp-action="ReportQuestion">
-          <div class="col-md-12 mb-2">
-               <label asp-for="AdditionalComment" class="form-label">Additional Comment:</label>
-               <textarea class="form-control" placeholder="Additional Comment" asp-for="AdditionalComment"></textarea>
-               <span asp-validation-for="AdditionalComment" class="text-danger"></span>
-          </div>
-
-          <div class="col-md-12">
-               <button type="submit" class="btn btn-primary">Report Question</button>
-          </div>
-     </form>
 </div>

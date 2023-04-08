@@ -7,10 +7,12 @@ namespace IdealDiscuss.Controllers
     public class QuestionReportController : Controller
     {
         private readonly IQuestionReportService _questionReportService;
+        private readonly IFlagService _flagService;
 
-        public QuestionReportController (IQuestionReportService questionReportService)
+        public QuestionReportController (IQuestionReportService questionReportService,IFlagService flagService)
         {
             _questionReportService = questionReportService;
+            _flagService = flagService;
         }
 
         public IActionResult Index()
@@ -24,6 +26,11 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult ReportQuestion()
         {
+            ViewBag.FlagLists = _flagService.SelectFlags();
+            ViewData["Message"] = "";
+            ViewData["Status"] = false;
+
+
             return View();
         }
 

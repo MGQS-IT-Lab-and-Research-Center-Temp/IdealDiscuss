@@ -67,14 +67,15 @@ namespace IdealDiscuss.Service.Implementations
 
                 _unitOfWork.QuestionReports.Create(questionReport);
 
-                response.Status = true;
-                response.Message = "Report created successfully!";
             }
             catch (Exception ex)
             {
                 response.Message = $"An error occured: {ex.StackTrace}";
             }
 
+            response.Status = true;
+            response.Message = "Report created successfully!";
+            _unitOfWork.SaveChanges();
             return response;
         }
 
@@ -105,6 +106,7 @@ namespace IdealDiscuss.Service.Implementations
 
             response.Status = true;
             response.Message = "Question report deleted successfully!";
+            _unitOfWork.SaveChanges();
             return response;
         }
 
@@ -183,6 +185,7 @@ namespace IdealDiscuss.Service.Implementations
             try
             {
                 _unitOfWork.QuestionReports.Update(questionReport);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
