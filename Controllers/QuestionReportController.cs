@@ -9,10 +9,13 @@ namespace IdealDiscuss.Controllers
     {
         private readonly IQuestionReportService _questionReportService;
         private readonly INotyfService _notyf;
+        private readonly IFlagService _flagService;
+        
         public QuestionReportController (IQuestionReportService questionReportService, INotyfService notyf)
         {
             _questionReportService = questionReportService;
             _notyf = notyf;
+            _flagService = flagService;
         }
 
         public IActionResult Index()
@@ -26,6 +29,11 @@ namespace IdealDiscuss.Controllers
 
         public IActionResult ReportQuestion()
         {
+            ViewBag.FlagLists = _flagService.SelectFlags();
+            ViewData["Message"] = "";
+            ViewData["Status"] = false;
+
+
             return View();
         }
 
@@ -33,12 +41,16 @@ namespace IdealDiscuss.Controllers
         public IActionResult ReportQuestion(CreateQuestionReportViewModel Report)
         {
             var response = _questionReportService.CreateQuestionReport(Report);
+            
             if(response.Status is false)
             {
                 return View(response);
             }
+            
             _notyf.Success(response.Message);
             return RedirectToAction("Index");
+
+            return View();
         }
         
         public IActionResult GetQuestionReport(string id)
