@@ -5,6 +5,12 @@
     var commentId = ViewContext.RouteData.Values["id"];
 }
 
+@section Styles {
+    @{
+        await Html.RenderPartialAsync("_Select2CssPartial");
+    }
+}
+
 <div class="body">
 
     @await Html.PartialAsync("_NoModelAlert")
@@ -17,7 +23,8 @@
                 <div class="col-md-12 mb-3">
                     <select type="checkbox" class="form-control" multiple="multiple"
                             name="FlagIds" required="required"
-                            asp-items="@ViewBag.FlagLists">
+                            asp-items="@ViewBag.FlagLists"
+                            data-placeholder="Select Flag">
                     </select>
                 </div>
 
@@ -34,3 +41,9 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_Select2JsPartial");
+    }
+}
