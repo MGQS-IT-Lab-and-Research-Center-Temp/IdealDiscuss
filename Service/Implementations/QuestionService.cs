@@ -78,11 +78,13 @@ namespace IdealDiscuss.Service.Implementations
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var questionExist = _unitOfWork.Questions.Exists(c => c.Id == questionId);
             var hasComment =  _unitOfWork.Comments.Exists(c => c.Id == questionId);
+
             if (!questionExist)
             {
                 response.Message = "Question does not exist!";
                 return response;
             }
+
             if (hasComment is true)
             {
                 response.Message = $"Could not update the Question";
