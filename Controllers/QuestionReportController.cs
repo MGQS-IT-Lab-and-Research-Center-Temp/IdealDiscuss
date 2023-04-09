@@ -1,4 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using IdealDiscuss.Entities;
 using IdealDiscuss.Models.QuestionReport;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -24,10 +25,13 @@ namespace IdealDiscuss.Controllers
         public IActionResult Index()
         {
             var response = _questionReportService.GetAllQuestionReport();
-            ViewBag.Message = response.Message;
-            ViewBag.status = response.Status;
 
-            return View(response.Data);
+            if (response.Status is false)
+            {
+                return View(response.Data);
+            }
+
+            return RedirectToAction("Index", "QuestionReport");
         }
 
         public IActionResult ReportQuestion()
@@ -49,7 +53,7 @@ namespace IdealDiscuss.Controllers
             
             _notyf.Success(response.Message);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Question");
         }
         
         public IActionResult GetQuestionReport(string id)
@@ -66,30 +70,19 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public IActionResult GetAllQuestionReport()
-        {
-            var response = _questionReportService.GetAllQuestionReport();
-
-            if (response.Status is false)
-            {
-                return View(response);
-            }
-
-            _notyf.Success(response.Message);
-
-            return RedirectToAction("Index", "QuestionReports");
-        }
+        
 
         public IActionResult UpdateQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
             if (response.Status is false)
             {
-                return View(response);
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Question");
+                
             }
-            _notyf.Success(response.Message);
-            return RedirectToAction("Index");
+            _notyf. Success(response.Message);
+            return View(response);
         }
 
         [HttpPost]

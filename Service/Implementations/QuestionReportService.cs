@@ -91,7 +91,7 @@ namespace IdealDiscuss.Service.Implementations
 
             if (!isQuestionReportExist)
             {
-                response.Message = "Comment report does not exist!";
+                response.Message = "Report does not exist!";
                 return response;
             }
 
@@ -117,24 +117,30 @@ namespace IdealDiscuss.Service.Implementations
         public QuestionReportsResponseModel GetAllQuestionReport()
         {
             var response = new QuestionReportsResponseModel();
+            try
+            { 
+                var questionReports = _unitOfWork.QuestionReports.GetAll();
 
-            var questionReports = _unitOfWork.QuestionReports.GetAll();
+                response.Data = questionReports.Select(qr => new QuestionReportViewModel
+                {
+                    Id = qr.Id,
+                    AdditionalComment = qr.AdditionalComment,
+                    QuestionId = qr.Question.Id,
+                    QuestionReporter = qr.User.UserName,
+                    QuestionText = qr.Question.QuestionText,
+                    FlagNames = qr.QuestionReportFlags
+                                    .Select(f => f.Flag.FlagName)
+                                    .ToList()
+                }).ToList();
 
-            response.Data = questionReports.Select(qr => new QuestionReportViewModel
+                response.Status = true;
+                response.Message = "Success";
+            }
+            catch (Exception ex)
             {
-                Id = qr.Id,
-                AdditionalComment = qr.AdditionalComment,
-                QuestionId = qr.Question.Id,
-                QuestionReporter = qr.User.UserName,
-                QuestionText = qr.Question.QuestionText,
-                FlagNames = qr.QuestionReportFlags
-                                .Select(f => f.Flag.FlagName)
-                                .ToList()
-            }).ToList();
-
-            response.Status = true;
-            response.Message = "Success";
-
+                response.Message = $"An error occured: {ex.Message}";
+                return response;
+            }
             return response;
         }
 
@@ -146,7 +152,7 @@ namespace IdealDiscuss.Service.Implementations
 
             if (!isQuestionReportExist)
             {
-                response.Message = $"CommentReport with id {id} does not exist!";
+                response.Message = $"Report with id {id} does not exist!";
                 return response;
             }
 

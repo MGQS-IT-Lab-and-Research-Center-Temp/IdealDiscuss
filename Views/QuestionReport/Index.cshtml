@@ -1,13 +1,9 @@
 ﻿@model List<IdealDiscuss.Models.QuestionReport.QuestionReportViewModel>
 @{
-    ViewData["Title"] = "Flag List";
+    ViewData["Title"] = "Report List";
     int count = 1;
     var status = ViewBag.Status == false ? false : true;
 }
-
-<div>
-     <a asp-controller="QuestionReport" asp-action="ReportQuestion" class="btn btn-outline-primary">Report a question</a>
-</div>
 
  @await Html.PartialAsync("_ListAlert", Model)
 
@@ -34,7 +30,7 @@
                    <td>@item.AdditionalComment</td>
                    <td>
                         <div class="btn-group">
-                             <a asp-controller="QuestionReport" asp-action="GetQuestionReport" asp-route-id="@item.Id" class="btn btn-primary">View</a>
+                             <a asp-controller="QuestionReport" asp-action="GetQuestionReport" asp-route-id="@item.Id" class="btn btn-primary">View Reports</a>
                         </div>
                    </td>
               </tr>

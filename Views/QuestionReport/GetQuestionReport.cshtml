@@ -18,7 +18,7 @@
 	 </dl>
 
 	 <div class="kt-form__actions">
-		  <a class="btn btn-success" asp-action="UpdateQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">update</a>
+		 @* <a class="btn btn-success" asp-action="UpdateQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">update</a>
  
 		  &nbsp;
 		  <a class="btn btn-primary" asp-action="Index" asp-controller="QuestionReport">Back to List</a>
@@ -26,7 +26,7 @@
 		  <hr />
 		  <form asp-action="DeleteQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">
 			   <button type="submit" class="btn btn-danger">Delete</button>
-		  </form>
-		  <a asp-controller="QuestionReport" asp-action="GetAllQuestionReport" asp-route-id="@Model.Id class="btn btn-success">Flag this question</a>
+		  </form>*@
+		  <a asp-controller="Question" asp-action="GetQuestionDetail" asp-route-id="@Model.Id class="btn btn-success">Back to List</a>
 	 </div>
 </div>
