@@ -92,7 +92,7 @@ public class QuestionController : Controller
         {
             _notyf.Error(response.Message);
 
-            return View();
+            return RedirectToAction("Index", "Home");
         }
 
         _notyf.Success(response.Message);

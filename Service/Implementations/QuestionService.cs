@@ -78,6 +78,8 @@ namespace IdealDiscuss.Service.Implementations
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var questionExist = _unitOfWork.Questions.Exists(c => c.Id == questionId);
             var hasComment =  _unitOfWork.Comments.Exists(c => c.Id == questionId);
+            var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var user = _unitOfWork.Users.Get(userIdClaim);
 
             if (!questionExist)
             {
@@ -92,6 +94,11 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             var question = _unitOfWork.Questions.Get(questionId);
+            if(question.UserId != user.Id)
+            {
+                response.Message = "You cannot update this question";
+                return response;
+            }
 
             question.QuestionText = request.QuestionText;
             question.ModifiedBy = modifiedBy;
