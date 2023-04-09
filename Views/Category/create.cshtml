@@ -1,6 +1,14 @@
 ﻿@{
     ViewData["Title"] = "Create New Question Category";
+
 }
+
+@section Styles {
+    @{
+        await Html.RenderPartialAsync("_Select2CssPartial");
+    }
+}
+
 
 <div class="body">
 
@@ -24,4 +32,11 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_Select2JsPartial");
+    }
+}
+
 
