@@ -33,12 +33,10 @@ public class CommentController : Controller
         if (response.Status is false)
         {
             _notyf.Error(response.Message);
-            return View();
+            return RedirectToAction("Index", "Question");
         }
 
-        _notyf.Success(response.Message);
-
-        return RedirectToAction("Index", "Flag");
+        return View(response.Data);
     }
 
     public IActionResult Create()

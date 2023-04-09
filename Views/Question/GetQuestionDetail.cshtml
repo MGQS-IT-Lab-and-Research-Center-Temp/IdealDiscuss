@@ -24,7 +24,7 @@
                         <i class="fas fa-edit"></i>
                     </a>
 
-                    <form asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@Model.Id" method="post" style="display:inline-block">
+                    <form asp-controller="Question" asp-action="DeleteQuestion" asp-route-id="@Model.Id" method="post" class="del-btn">
                         <button type="submit" class="btn btn-danger btn-sm">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -33,13 +33,34 @@
 
                 @if (Model.QuestionReports.Count != 0 && User.IsInRole("Admin"))
                 {
-                    <form asp-controller="Comment" asp-action="DeleteComment" asp-route-id="@Model.Id" method="post" style="display:inline-block">
+                    <form asp-controller="Comment" asp-action="DeleteComment" asp-route-id="@Model.Id" method="post" class="del-btn">
                         <button type="submit" class="btn btn-danger btn-sm">
                             <i class="fas fa-trash"></i>
                         </button>
                     </form>
                 }
+            </div>
 
+            <div class="card-body">
+
+                @if (Model.QuestionReports.Count != 0)
+                {
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            Question Reports:
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+                            @foreach (var report in Model.QuestionReports)
+                            {
+                                <li class="list-group-item">
+                                    @report.AdditionalComment
+                                    <span class="badge bg-dark">@report.QuestionReporter</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
             </div>
 
             <div class="card-body">
@@ -75,7 +96,6 @@
                                             View Report
                                         </a>
                                     }
-
                                 </li>
                             }
                         </ul>

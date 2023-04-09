@@ -21,14 +21,14 @@ namespace IdealDiscuss.Controllers
             _flagService = flagService;
         }
 
-        public IActionResult Index()
-        {
-            var response = _questionReportService.GetAllQuestionReport();
-            ViewBag.Message = response.Message;
-            ViewBag.status = response.Status;
+        //public IActionResult Index()
+        //{
+        //    var response = _questionReportService.GetAllQuestionReport();
+        //    ViewBag.Message = response.Message;
+        //    ViewBag.status = response.Status;
 
-            return View(response.Data);
-        }
+        //    return View(response.Data);
+        //}
 
         public IActionResult ReportQuestion()
         {
@@ -66,30 +66,17 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpGet]
-        public IActionResult GetAllQuestionReport()
-        {
-            var response = _questionReportService.GetAllQuestionReport();
-
-            if (response.Status is false)
-            {
-                return View(response);
-            }
-
-            _notyf.Success(response.Message);
-
-            return RedirectToAction("Index", "QuestionReports");
-        }
-
         public IActionResult UpdateQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
+
             if (response.Status is false)
             {
-                return View(response);
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Question");
             }
-            _notyf.Success(response.Message);
-            return RedirectToAction("Index");
+
+            return RedirectToAction("Index", "Question");
         }
 
         [HttpPost]
@@ -99,11 +86,11 @@ namespace IdealDiscuss.Controllers
 
             if (response.Status is false)
             {
-                return View(response);
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Question");
             }
 
             _notyf.Success(response.Message);
-
             return RedirectToAction("Index", "Question");
         }
 
@@ -111,6 +98,7 @@ namespace IdealDiscuss.Controllers
         public IActionResult DeleteQuestionReport(string id)
         {
             var response = _questionReportService.DeleteQuestionReport(id);
+
             if (response.Status is false)
             {
                 _notyf.Error(response.Message);
@@ -118,6 +106,7 @@ namespace IdealDiscuss.Controllers
             }
 
             _notyf.Success(response.Message);
+
             return RedirectToAction("Index", "Question");
         }
     }
