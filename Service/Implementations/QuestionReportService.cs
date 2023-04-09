@@ -119,7 +119,7 @@ namespace IdealDiscuss.Service.Implementations
             var response = new QuestionReportsResponseModel();
             try
             { 
-                var questionReports = _unitOfWork.QuestionReports.GetAll();
+                var questionReports = _unitOfWork.QuestionReports.GetQuestionReports();
 
                 response.Data = questionReports.Select(qr => new QuestionReportViewModel
                 {
@@ -156,7 +156,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var questionReport = _unitOfWork.QuestionReports.Get(id);
+            var questionReport = _unitOfWork.QuestionReports.GetQuestionReport(id);
 
             response.Message = "Success";
             response.Status = true;
