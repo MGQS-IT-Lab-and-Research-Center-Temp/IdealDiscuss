@@ -41,17 +41,17 @@ namespace IdealDiscuss.Controllers
         public IActionResult ReportQuestion(CreateQuestionReportViewModel Report)
         {
             var response = _questionReportService.CreateQuestionReport(Report);
-            
-            if(response.Status is false)
+
+            if (response.Status is false)
             {
                 return View(response);
             }
-            
+
             _notyf.Success(response.Message);
 
             return RedirectToAction("Index");
         }
-        
+
         public IActionResult GetQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
