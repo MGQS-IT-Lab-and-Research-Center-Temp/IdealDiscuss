@@ -1,4 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using IdealDiscuss.Entities;
 using IdealDiscuss.Models.QuestionReport;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,9 @@ namespace IdealDiscuss.Controllers
 
         //    return View(response.Data);
         //}
+
+            return RedirectToAction("Index", "QuestionReport");
+        }
 
         public IActionResult ReportQuestion()
         {

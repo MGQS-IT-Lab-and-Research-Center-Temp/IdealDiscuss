@@ -9,6 +9,6 @@ namespace IdealDiscuss.Service.Interface
         BaseResponseModel DeleteQuestionReport(string id);
         BaseResponseModel UpdateQuestionReport(string id, UpdateQuestionReportViewModel request);
         QuestionReportResponseModel GetQuestionReport(string id);
-        QuestionReportsResponseModel GetAllQuestionReport();
+        QuestionReportsResponseModel GetQuestionReports(string id);
     }
 }
