@@ -132,8 +132,7 @@ namespace IdealDiscuss.Service.Implementations
                         QuestionId = comment.QuestionId,
                         UserId = comment.UserId,
                         CommentText = comment.CommentText
-                    })
-                    .ToList();
+                    }).ToList();
 
             response.Status = true;
             response.Message = "Success";
@@ -169,10 +168,9 @@ namespace IdealDiscuss.Service.Implementations
                                 Id = c.Id,
                                 CommentReporter = c.User.UserName,
                                 AdditionalComment  = c.AdditionalComment                       
-                            })
-                            .ToList()
-
+                            }).ToList()
             };
+
             return response;
         }
 

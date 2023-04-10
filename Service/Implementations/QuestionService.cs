@@ -194,6 +194,11 @@ namespace IdealDiscuss.Service.Implementations
                             Id = comment.Id,
                             CommentText = comment.CommentText,
                             UserName = comment.User.UserName,
+                        }).ToList(),
+                        QuestionReports = question.QuestionReports
+                        .Select(report => new QuestionReportViewModel 
+                        { 
+                            Id = report.Id
                         }).ToList()
                     }).ToList();
 
