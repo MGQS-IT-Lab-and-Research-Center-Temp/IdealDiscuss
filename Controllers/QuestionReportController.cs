@@ -22,17 +22,17 @@ namespace IdealDiscuss.Controllers
             _flagService = flagService;
         }
 
-        public IActionResult Index()
-        {
-            var response = _questionReportService.GetAllQuestionReport();
+        //public IActionResult Index()
+        //{
+        //    var response = _questionReportService.GetAllQuestionReport();
 
-            if (response.Status is false)
-            {
-                return View(response.Data);
-            }
+        //    if (response.Status is false)
+        //    {
+        //        return View(response.Data);
+        //    }
 
-            return RedirectToAction("Index", "QuestionReport");
-        }
+        //    return RedirectToAction("Index", "QuestionReport");
+        //}
 
         public IActionResult ReportQuestion()
         {
@@ -68,9 +68,7 @@ namespace IdealDiscuss.Controllers
             _notyf.Success(response.Message);
 
             return RedirectToAction("Index");
-        }
-
-        
+        }    
 
         public IActionResult UpdateQuestionReport(string id)
         {

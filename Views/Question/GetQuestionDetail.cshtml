@@ -41,7 +41,45 @@
                                  </div>
                          }
 
-                        <a class="kt-form__actions" asp-controller="QuestionReport" asp-action="Index" asp-route-id="@Model.Id" class="btn btn-secondary">View Report</a>
+                        <div class="card-body">
+
+                        @if (Model.Comments.Count != 0 && User.IsInRole("Admin"))
+                        {
+                                 <div class="card mb-3">
+                                      <div class="card-header bg-light">
+                                           Reports:
+                                      </div>
+                                      <ul class="list-group list-group-flush">
+                                    @foreach (var questionReport in Model.QuestionReports)
+                                    {
+                                               <li class="list-group-item">
+                                            @questionReport.AdditionalComment
+                                                    <span class="badge bg-dark">@questionReport.QuestionReporter</span>
+
+                                                    <a asp-controller="QuestionReport" asp-action="UpdateQuestionReport"
+                                           asp-route-id="@questionReport.Id" class="btn btn-primary btn-sm">
+                                                         <i class="fas fa-edit"></i>
+                                                    </a>
+
+                                                    <form asp-controller="QuestionReport" asp-action="DeleteQuestionReport" asp-route-id="@questionReport.Id" class="del-btn">
+                                                         <button type="submit" class="btn btn-danger btn-sm">
+                                                              <i class="fas fa-trash"></i>
+                                                         </button>
+                                                    </form>
+
+                                               </li>
+                                    }
+                                      </ul>
+                                 </div>
+                        }
+
+                             <div>
+                                  <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">
+                                       Back to list
+                                  </a>
+                             </div>
+
+                        </div>
                    </div>
 
                 @if (Model.Comments.Count == 0 && User.IsInRole("AppUser"))
