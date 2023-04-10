@@ -46,7 +46,7 @@ namespace IdealDiscuss.Controllers
 
             _notyf.Success(response.Message);
 
-            return RedirectToAction("Index", "Flag"); ;
+            return RedirectToAction("Index", "Flag");
         }
 
         public IActionResult GetFlagDetail(string id)

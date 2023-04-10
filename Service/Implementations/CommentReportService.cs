@@ -89,8 +89,8 @@ namespace IdealDiscuss.Service.Implementations
             {
                 _unitOfWork.CommentReports.Create(commentReport);
                 _unitOfWork.SaveChanges();
-                response.Status = true;
                 response.Message = "Comment Report created successfully!";
+                response.Status = true;
 
                 return response;
             }

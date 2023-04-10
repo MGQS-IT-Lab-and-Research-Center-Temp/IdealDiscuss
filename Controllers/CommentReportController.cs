@@ -11,29 +11,29 @@ namespace IdealDiscuss.Controllers
     {
         private readonly ICommentReportService _commentReportService;
         private readonly IFlagService _flagService;
+        private readonly INotyfService _notyf;
 
         public CommentReportController(
             ICommentReportService commentReportService, 
-            IFlagService flagService)
+            IFlagService flagService,
+            INotyfService notyf)
         {
             _commentReportService = commentReportService;
             _flagService = flagService;
+            _notyf = notyf;
         }
 
-   //     public IActionResult Index()
-   //     {
-   //         var response = _commentReportService.GetAllCommentReport();
-			//ViewData["Message"] = response.Message;
-			//ViewData["Status"] = response.Status;
-   //         return View(response.Data);
-   //     }
+       public IActionResult Index()
+       {
+           var response = _commentReportService.GetAllCommentReport();
+			ViewData["Message"] = response.Message;
+			ViewData["Status"] = response.Status;
+           return View(response.Data);
+       }
 
         public IActionResult CreateCommentReport()
         {
             ViewBag.FlagLists = _flagService.SelectFlags();
-            ViewData["Message"] = "";
-            ViewData["Status"] = false;
-
             return View();
         }
 
@@ -41,44 +41,78 @@ namespace IdealDiscuss.Controllers
         public IActionResult CreateCommentReport(CreateCommentReportViewModel request)
         {
             var response = _commentReportService.CreateCommentReport(request);
-			ViewData["Message"] = response.Message;
-			ViewData["Status"] = response.Status;
+			if(response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return View();
+            }
 
-			return View();
+            _notyf.Success(response.Message);
+
+             return RedirectToAction("Index", "Comment");
         }
 
         public IActionResult GetCommentReportDetail(string id)
         {
             var response = _commentReportService.GetCommentReport(id);
-			ViewData["Message"] = response.Message;
-			ViewData["Status"] = response.Status;
 
-			return View(response.Data);
+			 if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return RedirectToAction("GetCommentDetail", "Comment");
+            }
+
+            return View(response.Data);
         }
 
         public IActionResult UpdatecommentReport(string id)
         {
             var response = _commentReportService.GetCommentReport(id);
-            return View(response.Data);
+            
+            if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index","CommentReport");
+            }
+
+            var viewModel = new UpdateCommentReportViewModel
+            {
+                Id = response.Data.Id,
+                AdditionalComment = response.Data.AdditionalComment
+            };
+
+            return View(viewModel);
         }
 
         [HttpPost]
         public IActionResult UpdateCommentReport(string id, UpdateCommentReportViewModel request)
         {
             var response = _commentReportService.UpdateCommentReport(id, request);
-			ViewData["Message"] = response.Message;
-			ViewData["Status"] = response.Status;
-			return RedirectToAction("Index");
+			 if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return View(request);
+            }
+
+             _notyf.Success(response.Message);
+
+            return RedirectToAction("Index", "CommentReport");
         }
 
         [HttpPost]
         public IActionResult DeleteCommentReport(string id)
         {
             var response = _commentReportService.DeleteCommentReport(id);
-			ViewData["Message"] = response.Message;
-			ViewData["Status"] = response.Status;
+            
+            if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "CommentReport");
+            }
 
-            return RedirectToAction("Index");
+            _notyf.Success(response.Message);
+
+            return RedirectToAction("Index", "CommentReport");
         }
     }
 }

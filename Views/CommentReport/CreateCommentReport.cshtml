@@ -12,20 +12,17 @@
 }
 
 <div class="body">
-
-    @await Html.PartialAsync("_NoModelAlert")
-
     <div class="row">
         <div class="col-md-6">
             <form asp-action="CreateCommentReport" asp-controller="CommentReport">
                 <input type="hidden" class="form-control" name="CommentId" value="@commentId" />
 
-                <div class="col-md-12 mb-3">
-                    <select type="checkbox" class="form-control" multiple="multiple"
-                            name="FlagIds" required="required"
-                            asp-items="@ViewBag.FlagLists"
-                            data-placeholder="Select Flag">
+                <div class="col-md-12 mb-2">
+                    <label class="form-label">Flags:</label>
+                    <select asp-for="FlagIds" class="form-control" asp-items="@ViewBag.FlagLists"
+                    data-placeholder="Select Flags" multiple>
                     </select>
+                    <span asp-validation-for="FlagIds" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-12 mb-3">
