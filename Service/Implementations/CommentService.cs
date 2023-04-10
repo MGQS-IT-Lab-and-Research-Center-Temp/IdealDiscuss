@@ -79,6 +79,8 @@ namespace IdealDiscuss.Service.Implementations
         {
             var response = new BaseResponseModel();
             var commentexist = _unitOfWork.Comments.Exists(c => c.Id == commentId);
+            var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var user = _unitOfWork.Users.Get(userIdClaim);
 
             if (!commentexist)
             {
@@ -87,11 +89,18 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             var comment = _unitOfWork.Comments.Get(commentId);
+            if(comment.UserId != user.Id)
+            {
+                response.Message = "You can not delete this Comment!";
+                return response;
+            }
+
             comment.IsDeleted = true;
 
             try
             {
                 _unitOfWork.Comments.Update(comment);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
@@ -170,27 +179,38 @@ namespace IdealDiscuss.Service.Implementations
         public BaseResponseModel UpdateComment(string commentId, UpdateCommentViewModel request)
         {
             var response = new BaseResponseModel();
+            var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var commentexist = _unitOfWork.Comments.Exists(c => c.Id == commentId);
+            var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var user = _unitOfWork.Users.Get(userIdClaim);
 
             if (!commentexist)
             {
                 response.Message = "Comment  does not exist.";
                 return response;
             }
-
             var comment = _unitOfWork.Comments.Get(commentId);
 
-            comment.CommentText = request.CommentText;
+            if (comment.UserId != userIdClaim)
+            {
+                response.Message = "You can not update this comment";
+                return response;
+            }
 
+            comment.CommentText = request.CommentText;
+            comment.ModifiedBy = modifiedBy;
+            
             try
             {
                 _unitOfWork.Comments.Update(comment);
+                _unitOfWork.SaveChanges();
             }
             catch (Exception ex)
             {
                 response.Message = $"Could not update the comment : {ex.Message}";
                 return response;
             }
+            response.Status = true;
             response.Message = "Comment  updated successfully.";
 
             return response;
