@@ -1,5 +1,6 @@
 ﻿using IdealDiscuss.Entities;
 using IdealDiscuss.Models;
+using IdealDiscuss.Models.Question;
 using IdealDiscuss.Models.QuestionReport;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
@@ -25,7 +26,7 @@ namespace IdealDiscuss.Service.Implementations
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             var reporter = _unitOfWork.Users.Get(userIdClaim);
             var question = _unitOfWork.Questions.Get(request.QuestionId);
-       
+
             if (reporter is null)
             {
                 response.Message = "User not found!";
@@ -144,6 +145,38 @@ namespace IdealDiscuss.Service.Implementations
             };
 
             return response;
+        }
+
+        public QuestionReportsResponseModel GetQuestionReports(string id)
+        {
+            var response = new QuestionReportsResponseModel();
+
+            try
+            {
+                var questionWithReports = _unitOfWork.QuestionReports.GetQuestionReports(id);
+
+                response.Data = questionWithReports
+                    .Select(qr => new QuestionReportViewModel
+                    {
+                        Id = qr.Id,
+                        QuestionId = qr.QuestionId,
+                        QuestionReporter = qr.User.UserName,
+                        AdditionalComment = qr.AdditionalComment,
+                        FlagNames = qr.QuestionReportFlags
+                                        .Select(f => f.Flag.FlagName)
+                                        .ToList()
+                    }).ToList();
+
+                response.Status = true;
+                response.Message = "Success";
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Message = $"An error occured: {ex.Message}";
+                return response;
+            }
         }
 
         public BaseResponseModel UpdateQuestionReport(string id, UpdateQuestionReportViewModel request)

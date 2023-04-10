@@ -1,6 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using IdealDiscuss.Entities;
 using IdealDiscuss.Models.QuestionReport;
+using IdealDiscuss.Service.Implementations;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 
@@ -64,6 +64,19 @@ namespace IdealDiscuss.Controllers
             {
                 _notyf.Error(response.Message);
 
+                return RedirectToAction("Index", "Question");
+            }
+
+            return View(response.Data);
+        }
+
+        public IActionResult GetQuestionReports(string id)
+        {
+            var response = _questionReportService.GetQuestionReports(id);
+
+            if (response.Status is false)
+            {
+                _notyf.Error(response.Message);
                 return RedirectToAction("Index", "Question");
             }
 

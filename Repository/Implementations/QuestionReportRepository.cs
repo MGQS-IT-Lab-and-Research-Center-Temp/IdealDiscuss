@@ -23,5 +23,17 @@ namespace IdealDiscuss.Repository.Implementations
 
             return questionReport;
         }
+
+        public List<QuestionReport> GetQuestionReports(string questionId)
+        {
+            var questionWithReports = _context.QuestionReports
+                        .Where(qr => qr.QuestionId.Equals(questionId))
+                        .Include(qr => qr.User)
+                        .Include(qr => qr.QuestionReportFlags)
+                            .ThenInclude(f => f.Flag)
+                        .ToList();
+
+            return questionWithReports;
+        }
     }
 }

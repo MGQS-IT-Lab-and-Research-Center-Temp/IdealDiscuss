@@ -4,6 +4,7 @@ namespace IdealDiscuss.Repository.Interfaces
 {
     public interface IQuestionReportRepository : IRepository<QuestionReport>
     {
-        QuestionReport GetQuestionReport(string id);
+        QuestionReport GetQuestionReport(string reportId);
+        List<QuestionReport> GetQuestionReports(string questionId);
     }
 }

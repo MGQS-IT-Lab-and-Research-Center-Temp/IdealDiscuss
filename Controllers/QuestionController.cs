@@ -117,17 +117,4 @@ public class QuestionController : Controller
 
         return RedirectToAction("Index", "Question");
     }
-
-    public IActionResult GetQuestionReports(string id)
-    {
-        var response = _questionService.GetQuestionReports(id);
-
-        if (response.Status is false)
-        {
-            _notyf.Error(response.Message);
-            return RedirectToAction("Index", "Question");
-        }
-
-        return View(response.Data);
-    }
 }

@@ -12,6 +12,5 @@ namespace IdealDiscuss.Service.Interface
         QuestionsResponseModel GetAllQuestion();
         QuestionsResponseModel GetQuestionsByCategoryId(string categoryId);
         QuestionsResponseModel DisplayQuestion();
-        QuestionResponseModel GetQuestionReports(string id);
     }
 }

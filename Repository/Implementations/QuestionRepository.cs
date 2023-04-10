@@ -70,17 +70,5 @@ namespace IdealDiscuss.Repository.Implementations
 
             return questions;
         }
-
-        public Question GetQuestionReports(string id)
-        {
-            var questionWithReports = _context.Questions
-                .Include(c => c.QuestionReports)
-                .ThenInclude(qr => qr.QuestionReportFlags)
-                .ThenInclude(f => f.Flag)
-                .Where(q => q.Id.Equals(id))
-                .FirstOrDefault();
-
-            return questionWithReports;
-        }
     }
 }

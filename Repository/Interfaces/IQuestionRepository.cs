@@ -10,6 +10,5 @@ namespace IdealDiscuss.Repository.Interfaces
         Question GetQuestion(Expression<Func<Question, bool>> expression);
         List<CategoryQuestion> GetQuestionByCategoryId(string id);
         List<CategoryQuestion> SelectQuestionByCategory();
-        Question GetQuestionReports(string id);
     }
 }

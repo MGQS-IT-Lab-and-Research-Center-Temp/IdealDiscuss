@@ -1,0 +1,47 @@
+﻿@model List<IdealDiscuss.Models.QuestionReport.QuestionReportViewModel>
+
+@{
+    ViewData["Title"] = "View Question Reports";
+    var count = 1;
+}
+
+@if (Model is not null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Flag</th>
+                <th scope="col">Reporter</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td scope="row">@count</td>
+                    <td scope="row">
+                        @foreach(var flag in item.FlagNames)
+                        {
+                            <i class="badge bg-black">@flag</i>
+                        }
+                    </td>
+                    <td scope="row">@item.QuestionReporter</td>
+
+                    <td scope="row">
+                        <a asp-controller="QuestionReport" asp-action="GetQuestionReport" asp-route-id="@item.Id">View Report Detail</a>
+                    </td>
+                </tr>
+                count++;
+            }
+        </tbody>
+    </table>
+
+    <div>
+        <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">
+            Back
+        </a>
+    </div>
+}

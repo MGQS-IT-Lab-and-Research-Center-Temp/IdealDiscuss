@@ -1,6 +1,6 @@
 ﻿@model IdealDiscuss.Models.QuestionReport.QuestionReportViewModel
 @{
-    ViewData["Title"] = "Question Report";
+    ViewData["Title"] = "Question Report Detail";
 }
 
 <h3 class="card-title">
@@ -13,23 +13,21 @@
         <dd class="col-sm-8">@Model.AdditionalComment</dd>
         <dt class="col-sm-4">FlagNames</dt>
         <dt class="col-sm-8">
-            @foreach(var flag in Model.FlagNames)
+            @foreach (var flag in Model.FlagNames)
             {
                 <i class="badge bg-dark">@flag</i>
             }
         </dt>
     </dl>
 
-    <div class="kt-form__actions">
-        @* <a class="btn btn-success" asp-action="UpdateQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">update</a>
+    @* <a class="btn btn-success" asp-action="UpdateQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">update</a>
 
-        &nbsp;
-        <a class="btn btn-primary" asp-action="Index" asp-controller="QuestionReport">Back to List</a>
-        &nbsp;
-        <hr />
-        <form asp-action="DeleteQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">
-        <button type="submit" class="btn btn-danger">Delete</button>
-        </form>*@
-        <a asp-controller="Question" asp-action="GetQuestionReports" asp-route-id="@Model.QuestionId" class="btn btn-success">Back</a>
-    </div>
+    &nbsp;
+    <a class="btn btn-primary" asp-action="Index" asp-controller="QuestionReport">Back to List</a>
+    &nbsp;
+    <hr />
+    <form asp-action="DeleteQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">
+    <button type="submit" class="btn btn-danger">Delete</button>
+    </form>*@
+    <a asp-controller="QuestionReport" asp-action="GetQuestionReports" asp-route-id="@Model.QuestionId" class="btn btn-success">Back</a>
 </div>
