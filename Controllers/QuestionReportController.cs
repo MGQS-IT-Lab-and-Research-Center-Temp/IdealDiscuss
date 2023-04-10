@@ -22,14 +22,14 @@ namespace IdealDiscuss.Controllers
             _flagService = flagService;
         }
 
-        public IActionResult Index()
-        {
-            var response = _questionReportService.GetAllQuestionReport();
+        //public IActionResult Index()
+        //{
+        //    var response = _questionReportService.GetAllQuestionReport();
+        //    ViewBag.Message = response.Message;
+        //    ViewBag.status = response.Status;
 
-            if (response.Status is false)
-            {
-                return View(response.Data);
-            }
+        //    return View(response.Data);
+        //}
 
             return RedirectToAction("Index", "QuestionReport");
         }
@@ -45,17 +45,17 @@ namespace IdealDiscuss.Controllers
         public IActionResult ReportQuestion(CreateQuestionReportViewModel Report)
         {
             var response = _questionReportService.CreateQuestionReport(Report);
-            
-            if(response.Status is false)
+
+            if (response.Status is false)
             {
                 return View(response);
             }
-            
+
             _notyf.Success(response.Message);
 
-            return RedirectToAction("Index", "Question");
+            return RedirectToAction("Index", "Home");
         }
-        
+
         public IActionResult GetQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
@@ -70,19 +70,17 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index");
         }
 
-        
-
         public IActionResult UpdateQuestionReport(string id)
         {
             var response = _questionReportService.GetQuestionReport(id);
+
             if (response.Status is false)
             {
                 _notyf.Error(response.Message);
                 return RedirectToAction("Index", "Question");
-                
             }
-            _notyf. Success(response.Message);
-            return View(response);
+
+            return RedirectToAction("Index", "Question");
         }
 
         [HttpPost]
@@ -92,11 +90,11 @@ namespace IdealDiscuss.Controllers
 
             if (response.Status is false)
             {
-                return View(response);
+                _notyf.Error(response.Message);
+                return RedirectToAction("Index", "Question");
             }
 
             _notyf.Success(response.Message);
-
             return RedirectToAction("Index", "Question");
         }
 
@@ -104,6 +102,7 @@ namespace IdealDiscuss.Controllers
         public IActionResult DeleteQuestionReport(string id)
         {
             var response = _questionReportService.DeleteQuestionReport(id);
+
             if (response.Status is false)
             {
                 _notyf.Error(response.Message);
@@ -111,6 +110,7 @@ namespace IdealDiscuss.Controllers
             }
 
             _notyf.Success(response.Message);
+
             return RedirectToAction("Index", "Question");
         }
     }

@@ -159,7 +159,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateCategory(string categoryId, UpdateCategoryViewModel updateCategoryDto)
+        public BaseResponseModel UpdateCategory(string categoryId, UpdateCategoryViewModel request)
         {
             var response = new BaseResponseModel();
             string modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
@@ -172,7 +172,7 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             var category = _unitOfWork.Categories.Get(categoryId);
-            category.Description = updateCategoryDto.Description;
+            category.Description = request.Description;
             category.ModifiedBy = modifiedBy;
             
             try

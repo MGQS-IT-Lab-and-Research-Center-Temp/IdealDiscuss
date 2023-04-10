@@ -60,8 +60,8 @@ namespace IdealDiscuss.Service.Implementations
             {
                 _unitOfWork.Questions.Create(question);
                 _unitOfWork.SaveChanges();
-                response.Status = true;
                 response.Message = "Question created successfully!";
+                response.Status = true;
 
                 return response;
             }
@@ -77,7 +77,9 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var questionExist = _unitOfWork.Questions.Exists(c => c.Id == questionId);
-            var hasComment =  _unitOfWork.Comments.Exists(c => c.Id == questionId);
+            var hasComment = _unitOfWork.Comments.Exists(c => c.Id == questionId);
+            var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            var user = _unitOfWork.Users.Get(userIdClaim);
 
             if (!questionExist)
             {
@@ -92,6 +94,12 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             var question = _unitOfWork.Questions.Get(questionId);
+
+            if (question.UserId != user.Id)
+            {
+                response.Message = "You cannot update this question";
+                return response;
+            }
 
             question.QuestionText = request.QuestionText;
             question.ModifiedBy = modifiedBy;
@@ -128,21 +136,22 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = "Question does not exist!";
                 return response;
             }
+
             if (hasComment is true)
             {
                 response.Message = $"Could not delete the Question";
                 return response;
             }
 
-                var question = _unitOfWork.Questions.Get(questionId);
+            var question = _unitOfWork.Questions.Get(questionId);
             question.IsDeleted = true;
 
             try
             {
                 _unitOfWork.Questions.Update(question);
                 _unitOfWork.SaveChanges();
-                response.Status = true;
                 response.Message = "Question deleted successfully!";
+                response.Status = true;
 
                 return response;
             }
@@ -185,6 +194,11 @@ namespace IdealDiscuss.Service.Implementations
                             Id = comment.Id,
                             CommentText = comment.CommentText,
                             UserName = comment.User.UserName,
+                        }).ToList(),
+                        QuestionReports = question.QuestionReports
+                        .Select(report => new QuestionReportViewModel 
+                        { 
+                            Id = report.Id
                         }).ToList()
                     }).ToList();
 
