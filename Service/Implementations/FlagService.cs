@@ -13,7 +13,9 @@ namespace IdealDiscuss.Service.Implementations
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FlagService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+        public FlagService(
+            IUnitOfWork unitOfWork, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;

@@ -214,46 +214,6 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public QuestionsResponseModel GetUserQuestions()
-        {
-            var response = new QuestionsResponseModel();
-
-            try
-            {
-                var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-                var user = _unitOfWork.Questions.Get(userIdClaim);
-
-                Expression<Func<Question, bool>> expression = q => (q.UserId == user.Id)
-                                                    && (q.IsDeleted == false);
-                var questions = _unitOfWork.Questions.GetQuestions(expression);
-
-                if (questions.Count == 0)
-                {
-                    response.Message = "No question found!";
-                    return response;
-                }
-
-                response.Data = questions
-                    .Select(question => new QuestionViewModel
-                    {
-                        Id = question.Id,
-                        QuestionText = question.QuestionText,
-                        UserName = question.User.UserName,
-                        ImageUrl = question.ImageUrl,
-                    }).ToList();
-
-                response.Status = true;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.Message = $"An error occured: {ex.StackTrace}";
-                return response;
-            }
-
-            return response;
-        }
-
         public QuestionResponseModel GetQuestion(string id)
         {
             var response = new QuestionResponseModel();
@@ -389,6 +349,41 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             return response;
+        }
+
+        public QuestionResponseModel GetQuestionReports(string id)
+        {
+            var response = new QuestionResponseModel();
+
+            try
+            {
+                var questionWithReports = _unitOfWork.Questions.GetQuestionReports(id);
+
+                response.Data = new QuestionViewModel
+                {
+                    Id = questionWithReports.Id,
+                    QuestionText = questionWithReports.QuestionText,
+                    QuestionReports = questionWithReports.QuestionReports
+                                        .Select(qr => new QuestionReportViewModel
+                                        {
+                                            Id = qr.Id,
+                                            //QuestionReporter = qr.User.UserName,
+                                            AdditionalComment = qr.AdditionalComment,
+                                            FlagNames = qr.QuestionReportFlags
+                                                        .Select(f => f.Flag.FlagName)
+                                                        .ToList()
+                                        }).ToList()
+                };
+                response.Status = true;
+                response.Message = "Success";
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Message = $"An error occured: {ex.Message}";
+                return response;
+            }
         }
     }
 }

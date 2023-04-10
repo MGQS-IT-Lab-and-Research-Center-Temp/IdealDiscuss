@@ -23,7 +23,7 @@ public class QuestionController : Controller
         _questionService = questionService;
         _categoryService = categoryService;
         _httpContextAccessor = httpContextAccessor;
-         _notyf = notyf;
+        _notyf = notyf;
     }
 
     public IActionResult Index()
@@ -81,6 +81,7 @@ public class QuestionController : Controller
     public IActionResult Update(string id)
     {
         var response = _questionService.GetQuestion(id);
+
         return View(response.Data);
     }
 
@@ -88,6 +89,7 @@ public class QuestionController : Controller
     public IActionResult Update(string id, UpdateQuestionViewModel request)
     {
         var response = _questionService.Update(id, request);
+
         if (response.Status is false)
         {
             _notyf.Error(response.Message);
@@ -97,13 +99,14 @@ public class QuestionController : Controller
 
         _notyf.Success(response.Message);
 
-          return RedirectToAction("Index", "Question");
+        return RedirectToAction("Index", "Question");
     }
 
     [HttpPost]
     public IActionResult DeleteQuestion([FromRoute] string id)
     {
         var response = _questionService.Delete(id);
+
         if (response.Status is false)
         {
             _notyf.Error(response.Message);
@@ -112,8 +115,19 @@ public class QuestionController : Controller
 
         _notyf.Success(response.Message);
 
-
-
         return RedirectToAction("Index", "Question");
+    }
+
+    public IActionResult GetQuestionReports(string id)
+    {
+        var response = _questionService.GetQuestionReports(id);
+
+        if (response.Status is false)
+        {
+            _notyf.Error(response.Message);
+            return RedirectToAction("Index", "Question");
+        }
+
+        return View(response.Data);
     }
 }

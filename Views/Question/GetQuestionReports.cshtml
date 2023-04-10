@@ -1,5 +1,59 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IdealDiscuss.Models.Question.QuestionViewModel
+
 @{
+    ViewData["Title"] = "View Question Reports";
 }
+
+<div class="body">
+
+    @if (Model is not null)
+    {
+        <div class="card">
+
+            <div class="card-header">
+
+                <h5>
+                    @Model.QuestionText
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                @if (Model.QuestionReports.Count != 0 && User.IsInRole("Admin"))
+                {
+                    <div class="card mb-3">
+
+                        <div class="card-header bg-light">
+                            Question Reports:
+                        </div>
+
+                        <ul class="list-group list-group-flush">
+
+                            @foreach (var report in Model.QuestionReports)
+                            {
+                                <li class="list-group-item">
+
+                                    @report.AdditionalComment
+
+                                    @foreach (var flag in report.FlagNames)
+                                    {
+                                        <i class="badge bg-info">@flag</i>
+                                    }
+
+                                    <span class="badge bg-dark">@report.QuestionReporter</span>
+
+                                    <a asp-controller="QuestionReport" asp-action="GetQuestionReport" asp-route-id="@report.Id">View Report Detail</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+                <div>
+                    <a asp-controller="Question" asp-action="Index" class="btn btn-secondary">
+                        Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

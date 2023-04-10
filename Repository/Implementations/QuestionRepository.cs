@@ -70,15 +70,17 @@ namespace IdealDiscuss.Repository.Implementations
 
             return questions;
         }
-        public List<QuestionReport> GetQuestionReports(string id)
-        {
-            var questionReports = _context.QuestionReports
-                .Include(u => u.User)
-                .Include(c => c.Question)
-                .Where(q => q.QuestionId.Equals(id))
-                .ToList();
 
-            return questionReports;
+        public Question GetQuestionReports(string id)
+        {
+            var questionWithReports = _context.Questions
+                .Include(c => c.QuestionReports)
+                .ThenInclude(qr => qr.QuestionReportFlags)
+                .ThenInclude(f => f.Flag)
+                .Where(q => q.Id.Equals(id))
+                .FirstOrDefault();
+
+            return questionWithReports;
         }
     }
 }

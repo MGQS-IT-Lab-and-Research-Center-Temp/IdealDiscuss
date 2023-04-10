@@ -4,6 +4,11 @@
     var questionId = ViewContext.RouteData.Values["id"];
 }
 
+@section Styles {
+    @{
+        await Html.RenderPartialAsync("_Select2CssPartial");
+    }
+}
 
 <div class="body">
 
@@ -15,7 +20,7 @@
                 <div class="col-md-12 mb-3">
                     <select type="checkbox" class="form-control" multiple="multiple"
                             name="FlagIds" required="required"
-                            data-placeholder="Select Flags"
+                            data-placeholder="Select Question Flags"
                             asp-items="@ViewBag.FlagLists">
                     </select>
                 </div>
@@ -33,3 +38,9 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_Select2JsPartial");
+    }
+}

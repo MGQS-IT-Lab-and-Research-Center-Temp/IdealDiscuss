@@ -10,8 +10,8 @@ namespace IdealDiscuss.Service.Interface
         BaseResponseModel Update(string questionId, UpdateQuestionViewModel updatequestionDto);
         QuestionResponseModel GetQuestion(string questionId);
         QuestionsResponseModel GetAllQuestion();
-        QuestionsResponseModel GetUserQuestions();
         QuestionsResponseModel GetQuestionsByCategoryId(string categoryId);
         QuestionsResponseModel DisplayQuestion();
+        QuestionResponseModel GetQuestionReports(string id);
     }
 }

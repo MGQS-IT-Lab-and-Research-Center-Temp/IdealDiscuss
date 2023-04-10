@@ -114,36 +114,6 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public QuestionReportsResponseModel GetQuestionReports(string id)
-        {
-            var response = new QuestionReportsResponseModel();
-            try
-            { 
-                var questionReports = _unitOfWork.Questions.GetQuestionReports(id);
-
-                response.Data = questionReports.Select(qr => new QuestionReportViewModel
-                {
-                    Id = qr.Id,
-                    AdditionalComment = qr.AdditionalComment,
-                    QuestionId = qr.Question.Id,
-                    QuestionReporter = qr.User.UserName,
-                    QuestionText = qr.Question.QuestionText,
-                    FlagNames = qr.QuestionReportFlags
-                                    .Select(f => f.Flag.FlagName)
-                                    .ToList()
-                }).ToList();
-
-                response.Status = true;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.Message = $"An error occured: {ex.Message}";
-                return response;
-            }
-            return response;
-        }
-
         public QuestionReportResponseModel GetQuestionReport(string id)
         {
             var response = new QuestionReportResponseModel();
@@ -156,7 +126,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var questionReport = _unitOfWork.QuestionReports.Get(id);
+            var questionReport = _unitOfWork.QuestionReports.GetQuestionReport(id);
 
             response.Message = "Success";
             response.Status = true;

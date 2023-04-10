@@ -1,32 +1,35 @@
 ﻿@model IdealDiscuss.Models.QuestionReport.QuestionReportViewModel
 @{
-	ViewData["Title"] = "Question Reports";
+    ViewData["Title"] = "Question Report";
 }
 
 <h3 class="card-title">
-	 Question Reports
+    @ViewData["Title"]
 </h3>
 
 <div class="card-body">
-	 <dl class="row">
-		  <dt class="col-sm-4">QuestionId</dt>
-		  <dd class="col-sm-8">@Model.QuestionId</dd>
-		  <dt class="col-sm-4">AdditionalComment</dt>
-		  <dd class="col-sm-8">@Model.AdditionalComment</dd>
-		  <dt class="col-sm-8">@Model.FlagNames</dt>
-		  <dd class="col-sm-8">FlagNames</dd>
-	 </dl>
+    <dl class="row">
+        <dt class="col-sm-4">AdditionalComment</dt>
+        <dd class="col-sm-8">@Model.AdditionalComment</dd>
+        <dt class="col-sm-4">FlagNames</dt>
+        <dt class="col-sm-8">
+            @foreach(var flag in Model.FlagNames)
+            {
+                <i class="badge bg-dark">@flag</i>
+            }
+        </dt>
+    </dl>
 
-	 <div class="kt-form__actions">
-		 @* <a class="btn btn-success" asp-action="UpdateQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">update</a>
- 
-		  &nbsp;
-		  <a class="btn btn-primary" asp-action="Index" asp-controller="QuestionReport">Back to List</a>
-		  &nbsp;
-		  <hr />
-		  <form asp-action="DeleteQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">
-			   <button type="submit" class="btn btn-danger">Delete</button>
-		  </form>*@
-		  <a asp-controller="Question" asp-action="GetQuestionDetail" asp-route-id="@Model.Id class="btn btn-success">Back to List</a>
-	 </div>
+    <div class="kt-form__actions">
+        @* <a class="btn btn-success" asp-action="UpdateQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">update</a>
+
+        &nbsp;
+        <a class="btn btn-primary" asp-action="Index" asp-controller="QuestionReport">Back to List</a>
+        &nbsp;
+        <hr />
+        <form asp-action="DeleteQuestionReport" asp-controller="QuestionReport" asp-route-id="@Model.Id">
+        <button type="submit" class="btn btn-danger">Delete</button>
+        </form>*@
+        <a asp-controller="Question" asp-action="GetQuestionReports" asp-route-id="@Model.QuestionId" class="btn btn-success">Back</a>
+    </div>
 </div>

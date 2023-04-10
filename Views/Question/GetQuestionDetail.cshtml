@@ -16,33 +16,7 @@
 
                 <h5>
                     @Model.QuestionText
-
-                   </h5>
-
-                   <div class="card-body">
-
-                    @if (Model.QuestionReports.Count != 0 && User.IsInRole("Admin"))
-                         {
-                                 <div class="card mb-3">
-                                      <div class="card-header bg-light">
-                                           Reports:
-                                      </div>
-                                      <ul class="list-group list-group-flush">
-
-                                     @foreach (var report in Model.QuestionReports)
-                                     {
-                                               <li class="list-group-item">
-                                             @report.AdditionalComment
-                                                    <span class="badge bg-dark">@report.QuestionReporter</span>
-                                                    <a asp-controller="QuestionReport" asp-action="GetQuestionReport" asp-route-id="@report.Id">View Report Detail</a>
-                                               </li>
-                                     }
-                                      </ul>
-                                 </div>
-                         }
-
-                        <a class="kt-form__actions" asp-controller="QuestionReport" asp-action="Index" asp-route-id="@Model.Id" class="btn btn-secondary">View Report</a>
-                   </div>
+                </h5>
 
                 @if (Model.Comments.Count == 0 && User.IsInRole("AppUser"))
                 {

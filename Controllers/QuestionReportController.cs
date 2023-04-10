@@ -31,8 +31,8 @@ namespace IdealDiscuss.Controllers
         //    return View(response.Data);
         //}
 
-            return RedirectToAction("Index", "QuestionReport");
-        }
+        //    return RedirectToAction("Index", "QuestionReport");
+        //}
 
         public IActionResult ReportQuestion()
         {
@@ -62,12 +62,12 @@ namespace IdealDiscuss.Controllers
 
             if (response.Status is false)
             {
-                return View(response);
+                _notyf.Error(response.Message);
+
+                return RedirectToAction("Index", "Question");
             }
 
-            _notyf.Success(response.Message);
-
-            return RedirectToAction("Index");
+            return View(response.Data);
         }
 
         public IActionResult UpdateQuestionReport(string id)
