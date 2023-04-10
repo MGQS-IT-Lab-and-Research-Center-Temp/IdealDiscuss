@@ -60,8 +60,8 @@ namespace IdealDiscuss.Service.Implementations
             {
                 _unitOfWork.Questions.Create(question);
                 _unitOfWork.SaveChanges();
-                response.Status = true;
                 response.Message = "Question created successfully!";
+                response.Status = true;
 
                 return response;
             }
@@ -77,7 +77,7 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var questionExist = _unitOfWork.Questions.Exists(c => c.Id == questionId);
-            var hasComment =  _unitOfWork.Comments.Exists(c => c.Id == questionId);
+            var hasComment = _unitOfWork.Comments.Exists(c => c.Id == questionId);
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             var user = _unitOfWork.Users.Get(userIdClaim);
 
@@ -94,7 +94,8 @@ namespace IdealDiscuss.Service.Implementations
             }
 
             var question = _unitOfWork.Questions.Get(questionId);
-            if(question.UserId != user.Id)
+
+            if (question.UserId != user.Id)
             {
                 response.Message = "You cannot update this question";
                 return response;
