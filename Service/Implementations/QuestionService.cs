@@ -77,7 +77,7 @@ namespace IdealDiscuss.Service.Implementations
             var response = new BaseResponseModel();
             var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
             var questionExist = _unitOfWork.Questions.Exists(c => c.Id == questionId);
-            var hasComment =  _unitOfWork.Comments.Exists(c => c.Id == questionId);
+            var hasComment = _unitOfWork.Comments.Exists(c => c.Id == questionId);
 
             if (!questionExist)
             {
@@ -128,21 +128,22 @@ namespace IdealDiscuss.Service.Implementations
                 response.Message = "Question does not exist!";
                 return response;
             }
+
             if (hasComment is true)
             {
                 response.Message = $"Could not delete the Question";
                 return response;
             }
 
-                var question = _unitOfWork.Questions.Get(questionId);
+            var question = _unitOfWork.Questions.Get(questionId);
             question.IsDeleted = true;
 
             try
             {
                 _unitOfWork.Questions.Update(question);
                 _unitOfWork.SaveChanges();
-                response.Status = true;
                 response.Message = "Question deleted successfully!";
+                response.Status = true;
 
                 return response;
             }

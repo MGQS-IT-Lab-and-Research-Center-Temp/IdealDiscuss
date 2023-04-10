@@ -48,6 +48,7 @@ public class QuestionController : Controller
     public IActionResult Create(CreateQuestionViewModel request)
     {
         var response = _questionService.Create(request);
+
         if (response.Status is false)
         {
             _notyf.Error(response.Message);
@@ -56,8 +57,7 @@ public class QuestionController : Controller
 
         _notyf.Success(response.Message);
 
-        return RedirectToAction("Index"); ;
-        
+        return RedirectToAction("Index", "Question");
     }
 
     public IActionResult GetQuestionByCategory(string id)

@@ -49,7 +49,7 @@ namespace IdealDiscuss.Controllers
 
             _notyf.Success(response.Message);
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         public IActionResult GetQuestionReport(string id)
