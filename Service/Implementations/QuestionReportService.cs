@@ -114,12 +114,12 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public QuestionReportsResponseModel GetAllQuestionReport()
+        public QuestionReportsResponseModel GetQuestionReports(string id)
         {
             var response = new QuestionReportsResponseModel();
             try
             { 
-                var questionReports = _unitOfWork.QuestionReports.GetAll();
+                var questionReports = _unitOfWork.Questions.GetQuestionReports(id);
 
                 response.Data = questionReports.Select(qr => new QuestionReportViewModel
                 {
