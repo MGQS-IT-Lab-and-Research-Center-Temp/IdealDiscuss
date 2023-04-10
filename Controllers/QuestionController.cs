@@ -91,14 +91,13 @@ public class QuestionController : Controller
         if (response.Status is false)
         {
             _notyf.Error(response.Message);
-            return View();
+
+            return RedirectToAction("Index", "Home");
         }
 
         _notyf.Success(response.Message);
 
-       
-
-        return RedirectToAction("Index", "Question");
+          return RedirectToAction("Index", "Question");
     }
 
     [HttpPost]
