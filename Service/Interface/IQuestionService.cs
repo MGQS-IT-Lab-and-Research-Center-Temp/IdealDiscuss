@@ -5,12 +5,12 @@ namespace IdealDiscuss.Service.Interface
 {
     public interface IQuestionService
     {
-        BaseResponseModel Create(CreateQuestionViewModel createQuestionDto);
-        BaseResponseModel Delete(string questionId);
-        BaseResponseModel Update(string questionId, UpdateQuestionViewModel updatequestionDto);
-        QuestionResponseModel GetQuestion(string questionId);
-        QuestionsResponseModel GetAllQuestion();
-        QuestionsResponseModel GetQuestionsByCategoryId(string categoryId);
-        QuestionsResponseModel DisplayQuestion();
+        Task<BaseResponseModel> Create(CreateQuestionViewModel createQuestionDto);
+        Task<BaseResponseModel> Delete(string questionId);
+        Task<BaseResponseModel> Update(string questionId, UpdateQuestionViewModel updatequestionDto);
+        Task<QuestionResponseModel> GetQuestion(string questionId);
+        Task<QuestionsResponseModel> GetAllQuestion();
+        Task<QuestionsResponseModel> GetQuestionsByCategoryId(string categoryId);
+        Task<QuestionsResponseModel> DisplayQuestion();
     }
 }

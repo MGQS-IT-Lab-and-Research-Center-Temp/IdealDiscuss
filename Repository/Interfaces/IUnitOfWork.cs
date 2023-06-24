@@ -10,5 +10,5 @@ public interface IUnitOfWork : IDisposable
     IFlagRepository Flags { get; }
     IQuestionReportRepository QuestionReports { get; }
     ICommentReportRepository CommentReports { get; }
-    int SaveChanges();
+    Task<int> SaveChangesAsync();
 }

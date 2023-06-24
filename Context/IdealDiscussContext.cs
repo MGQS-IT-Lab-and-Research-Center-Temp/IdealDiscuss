@@ -27,7 +27,9 @@ namespace IdealDiscuss.Context
                 }
 
                 if (entry.State == EntityState.Modified)
+                {
                     ((BaseEntity)entry.Entity).LastModified = DateTime.Now;
+                }
             }
 
             foreach (var entry in ChangeTracker.Entries().Where(e => e.Entity is ISoftDeletable && e.State == EntityState.Deleted))

@@ -2,12 +2,11 @@
 using IdealDiscuss.Models.Auth;
 using IdealDiscuss.Models.User;
 
-namespace IdealDiscuss.Service.Interface
+namespace IdealDiscuss.Service.Interface;
+
+public interface IUserService
 {
-    public interface IUserService
-    {
-        UserResponseModel GetUser(string userId);
-        BaseResponseModel Register(SignUpViewModel request, string roleName = null);
-        UserResponseModel Login(LoginViewModel request);
-    }
+    Task<UserResponseModel> GetUser(string userId);
+    Task<BaseResponseModel> Register(SignUpViewModel request, string roleName = null);
+    Task<UserResponseModel> Login(LoginViewModel request);
 }

@@ -25,13 +25,15 @@
                     <span class="visually-hidden">Comments Count</span>
                 </span>
             </button>
+
             <a asp-controller="Comment" asp-action="Create" asp-route-id="@question.Id" class="btn btn-success btn-sm">
                 Add Comment
             </a>
+
             @if (question.UserId != User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value || User.IsInRole("Admin"))
             {
                 <a asp-controller="QuestionReport" asp-action="ReportQuestion" asp-route-id="@question.Id" class="btn btn-danger btn-sm">
-                   Report Question
+                    Report Question
                 </a>
             }
         </div>

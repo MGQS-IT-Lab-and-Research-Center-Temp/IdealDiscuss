@@ -26,9 +26,9 @@ public class QuestionController : Controller
         _notyf = notyf;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        var questions = _questionService.GetAllQuestion();
+        var questions = await _questionService.GetAllQuestion();
         ViewData["Message"] = questions.Message;
         ViewData["Status"] = questions.Status;
 
@@ -45,9 +45,9 @@ public class QuestionController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(CreateQuestionViewModel request)
+    public async Task<IActionResult> Create(CreateQuestionViewModel request)
     {
-        var response = _questionService.Create(request);
+        var response = await _questionService.Create(request);
 
         if (response.Status is false)
         {
@@ -60,35 +60,35 @@ public class QuestionController : Controller
         return RedirectToAction("Index", "Question");
     }
 
-    public IActionResult GetQuestionByCategory(string id)
+    public async Task<IActionResult> GetQuestionByCategory(string id)
     {
-        var response = _questionService.GetQuestionsByCategoryId(id);
+        var response = await _questionService.GetQuestionsByCategoryId(id);
         ViewData["Message"] = response.Message;
         ViewData["Status"] = response.Status;
 
         return View(response.Data);
     }
 
-    public IActionResult GetQuestionDetail(string id)
+    public async Task<IActionResult> GetQuestionDetail(string id)
     {
-        var response = _questionService.GetQuestion(id);
+        var response = await _questionService.GetQuestion(id);
         ViewData["Message"] = response.Message;
         ViewData["Status"] = response.Status;
 
         return View(response.Data);
     }
 
-    public IActionResult Update(string id)
+    public async Task<IActionResult> Update(string id)
     {
-        var response = _questionService.GetQuestion(id);
+        var response = await _questionService.GetQuestion(id);
 
         return View(response.Data);
     }
 
     [HttpPost]
-    public IActionResult Update(string id, UpdateQuestionViewModel request)
+    public async Task<IActionResult> Update(string id, UpdateQuestionViewModel request)
     {
-        var response = _questionService.Update(id, request);
+        var response = await _questionService.Update(id, request);
 
         if (response.Status is false)
         {
@@ -103,9 +103,9 @@ public class QuestionController : Controller
     }
 
     [HttpPost]
-    public IActionResult DeleteQuestion([FromRoute] string id)
+    public async Task<IActionResult> DeleteQuestion([FromRoute] string id)
     {
-        var response = _questionService.Delete(id);
+        var response = await _questionService.Delete(id);
 
         if (response.Status is false)
         {

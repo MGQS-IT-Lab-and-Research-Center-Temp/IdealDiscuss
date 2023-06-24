@@ -5,6 +5,6 @@ namespace IdealDiscuss.Repository.Interfaces
 {
     public interface IUserRepository : IRepository<User>
     {
-        User GetUser(Expression<Func<User, bool>> expression);
+        Task<User> GetUser(Expression<Func<User, bool>> expression);
     }
 }

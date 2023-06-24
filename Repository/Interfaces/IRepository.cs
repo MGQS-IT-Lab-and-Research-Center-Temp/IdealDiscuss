@@ -5,16 +5,16 @@ namespace IdealDiscuss.Repository
 {
     public interface IRepository<T> where T : BaseEntity, new()
     {
-        T Create(T entity);
-        T Get(string id);
-        T Update(T entity);
-        void Remove(T entity);
-        List<T> GetAllByIds(List<string> ids);
-        T Get(Expression<Func<T, bool>> expression);
-        List<T> GetAll();
-        List<T> GetAll(Expression<Func<T, bool>> expression = null);
-        bool Exists(Expression<Func<T, bool>> expression);
-        IReadOnlyList<T> SelectAll();
-        IReadOnlyList<T> SelectAll(Expression<Func<T, bool>> expression = null);
+        Task<T> CreateAsync(T entity);
+        Task<T> GetAsync(string id);
+        Task<T> GetAsync(Expression<Func<T, bool>> expression);
+        Task<T> UpdateAsync(T entity);
+        Task RemoveAsync(T entity);
+        Task<List<T>> GetAllByIdsAsync(List<string> ids);
+        Task<List<T>> GetAllAsync();
+        Task<List<T>> GetAllAsync(Expression<Func<T, bool>> expression = null);
+        Task<bool> ExistsAsync(Expression<Func<T, bool>> expression);
+        Task<IReadOnlyList<T>> SelectAll();
+        Task<IReadOnlyList<T>> SelectAll(Expression<Func<T, bool>> expression = null);
     }
 }

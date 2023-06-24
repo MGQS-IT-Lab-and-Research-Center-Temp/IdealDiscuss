@@ -8,118 +8,117 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace IdealDiscuss.Controllers
+namespace IdealDiscuss.Controllers;
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly IUserService _userService;
+    private readonly IQuestionService _questionService;
+    private readonly INotyfService _notyf;
+
+    public HomeController(
+        IUserService userService,
+        IQuestionService questionService,
+        INotyfService notyf)
     {
-        private readonly IUserService _userService;
-        private readonly IQuestionService _questionService;
-        private readonly INotyfService _notyf;
+        _userService = userService;
+        _questionService = questionService;
+        _notyf = notyf;
+    }
 
-        public HomeController(
-            IUserService userService,
-            IQuestionService questionService,
-            INotyfService notyf)
+    [Authorize]
+    public async Task<IActionResult> Index()
+    {
+        var questions = await _questionService.DisplayQuestion();
+        ViewData["Message"] = questions.Message;
+        ViewData["Status"] = questions.Status;
+
+        return View(questions.Data);
+    }
+
+    public IActionResult SignUp()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> SignUp(SignUpViewModel model)
+    {
+        var response = await _userService.Register(model);
+
+        if (response.Status is false)
         {
-            _userService = userService;
-            _questionService = questionService;
-            _notyf = notyf;
+            _notyf.Error(response.Message);
+
+            return View(model);
         }
 
-        [Authorize]
-        public IActionResult Index()
-        {
-            var questions = _questionService.DisplayQuestion();
-            ViewData["Message"] = questions.Message;
-            ViewData["Status"] = questions.Status;
+        _notyf.Success(response.Message);
 
-            return View(questions.Data);
-        }
+        return RedirectToAction("Index", "Home");
+    }
 
-        public IActionResult SignUp()
+    [RedirectIfAuthenticated]
+    public IActionResult Login()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginViewModel model)
+    {
+        var response = await _userService.Login(model);
+        var user = response.Data;
+
+        if (response.Status == false)
         {
+            _notyf.Error(response.Message);
+
             return View();
         }
 
-        [HttpPost]
-        public IActionResult SignUp(SignUpViewModel model)
+        var claims = new List<Claim>
         {
-            var response = _userService.Register(model);
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.GivenName, user.UserName),
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.RoleName),
+        };
 
-            if (response.Status is false)
-            {
-                _notyf.Error(response.Message);
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                return View(model);
-            }
+        var authenticationProperties = new AuthenticationProperties();
 
-            _notyf.Success(response.Message);
+        var principal = new ClaimsPrincipal(claimsIdentity);
 
-            return RedirectToAction("Index", "Home");
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authenticationProperties);
+
+        _notyf.Success(response.Message);
+
+        if (user.RoleName == "Admin")
+        {
+            return RedirectToAction("AdminDashboard", "Home");
         }
 
-        [RedirectIfAuthenticated]
-        public IActionResult Login()
-        {
-            return View();
-        }
+        return RedirectToAction("Index", "Home");
+    }
 
-        [HttpPost]
-        public IActionResult Login(LoginViewModel model)
-        {
-            var response = _userService.Login(model);
-            var user = response.Data;
+    public IActionResult LogOut()
+    {
+        HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        _notyf.Success("You have successfully signed out!");
+        return RedirectToAction("Login", "Home");
+    }
 
-            if (response.Status == false)
-            {
-                _notyf.Error(response.Message);
+    [Authorize(Roles = "Admin")]
+    public IActionResult AdminDashboard()
+    {
+        return View();
+    }
 
-                return View();
-            }
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.GivenName, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.RoleName),
-            };
-
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var authenticationProperties = new AuthenticationProperties();
-
-            var principal = new ClaimsPrincipal(claimsIdentity);
-
-            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authenticationProperties);
-
-            _notyf.Success(response.Message);
-
-            if (user.RoleName == "Admin")
-            {
-                return RedirectToAction("AdminDashboard", "Home");
-            }
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        public IActionResult LogOut()
-        {
-            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            _notyf.Success("You have successfully signed out!");
-            return RedirectToAction("Login", "Home");
-        }
-
-        [Authorize(Roles = "Admin")]
-        public IActionResult AdminDashboard()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+    public IActionResult Privacy()
+    {
+        return View();
     }
 }

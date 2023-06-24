@@ -16,29 +16,27 @@ public class QuestionService : IQuestionService
     private readonly IUnitOfWork _unitOfWork;
 
     public QuestionService(
-        IHttpContextAccessor httpContextAccessor, 
+        IHttpContextAccessor httpContextAccessor,
         IUnitOfWork unitOfWork)
     {
         _httpContextAccessor = httpContextAccessor;
         _unitOfWork = unitOfWork;
     }
 
-    public BaseResponseModel Create(CreateQuestionViewModel request)
+    public async Task<BaseResponseModel> Create(CreateQuestionViewModel request)
     {
         var response = new BaseResponseModel();
-        var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
         var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-        var user = _unitOfWork.Users.Get(userIdClaim);
+        var user = await _unitOfWork.Users.GetAsync(userIdClaim);
 
         var question = new Question
         {
             UserId = user.Id,
             QuestionText = request.QuestionText,
-            ImageUrl = request.ImageUrl,
-            CreatedBy = createdBy,
+            ImageUrl = request.ImageUrl
         };
 
-        var categories = _unitOfWork.Categories.GetAllByIds(request.CategoryIds);
+        var categories = await _unitOfWork.Categories.GetAllByIdsAsync(request.CategoryIds);
 
         var categoryQuestions = new HashSet<CategoryQuestion>();
 
@@ -49,8 +47,7 @@ public class QuestionService : IQuestionService
                 CategoryId = category.Id,
                 QuestionId = question.Id,
                 Category = category,
-                Question = question,
-                CreatedBy = createdBy
+                Question = question
             };
 
             categoryQuestions.Add(categoryQuestion);
@@ -60,8 +57,8 @@ public class QuestionService : IQuestionService
 
         try
         {
-            _unitOfWork.Questions.Create(question);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.Questions.CreateAsync(question);
+            await _unitOfWork.SaveChangesAsync();
             response.Message = "Question created successfully!";
             response.Status = true;
 
@@ -74,14 +71,13 @@ public class QuestionService : IQuestionService
         }
     }
 
-    public BaseResponseModel Update(string questionId, UpdateQuestionViewModel request)
+    public async Task<BaseResponseModel> Update(string questionId, UpdateQuestionViewModel request)
     {
         var response = new BaseResponseModel();
-        var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-        var questionExist = _unitOfWork.Questions.Exists(c => c.Id == questionId);
-        var hasComment = _unitOfWork.Comments.Exists(c => c.Id == questionId);
+        var questionExist = await _unitOfWork.Questions.ExistsAsync(c => c.Id == questionId);
+        var hasComment = await _unitOfWork.Comments.ExistsAsync(c => c.Id == questionId);
         var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-        var user = _unitOfWork.Users.Get(userIdClaim);
+        var user = await _unitOfWork.Users.GetAsync(userIdClaim);
 
         if (!questionExist)
         {
@@ -95,7 +91,7 @@ public class QuestionService : IQuestionService
             return response;
         }
 
-        var question = _unitOfWork.Questions.Get(questionId);
+        var question = await _unitOfWork.Questions.GetAsync(questionId);
 
         if (question.UserId != user.Id)
         {
@@ -104,12 +100,11 @@ public class QuestionService : IQuestionService
         }
 
         question.QuestionText = request.QuestionText;
-        question.ModifiedBy = modifiedBy;
 
         try
         {
-            _unitOfWork.Questions.Update(question);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.Questions.UpdateAsync(question);
+            await _unitOfWork.SaveChangesAsync();
             response.Message = "Question updated successfully!";
             response.Status = true;
             return response;
@@ -121,7 +116,7 @@ public class QuestionService : IQuestionService
         }
     }
 
-    public BaseResponseModel Delete(string questionId)
+    public async Task<BaseResponseModel> Delete(string questionId)
     {
         var response = new BaseResponseModel();
 
@@ -130,8 +125,8 @@ public class QuestionService : IQuestionService
                                     && q.IsDeleted == false
                                     && q.IsClosed == false));
 
-        var questionExist = _unitOfWork.Questions.Exists(expression);
-        var hasComment = _unitOfWork.Comments.Exists(c => c.Id == questionId);
+        var questionExist = await _unitOfWork.Questions.ExistsAsync(expression);
+        var hasComment = await _unitOfWork.Comments.ExistsAsync(c => c.Id == questionId);
 
         if (!questionExist)
         {
@@ -145,13 +140,13 @@ public class QuestionService : IQuestionService
             return response;
         }
 
-        var question = _unitOfWork.Questions.Get(questionId);
+        var question = await _unitOfWork.Questions.GetAsync(questionId);
         question.IsDeleted = true;
 
         try
         {
-            _unitOfWork.Questions.Update(question);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.Questions.UpdateAsync(question);
+            await _unitOfWork.SaveChangesAsync();
             response.Message = "Question deleted successfully!";
             response.Status = true;
 
@@ -164,7 +159,7 @@ public class QuestionService : IQuestionService
         }
     }
 
-    public QuestionsResponseModel GetAllQuestion()
+    public async Task<QuestionsResponseModel> GetAllQuestion()
     {
         var response = new QuestionsResponseModel();
 
@@ -174,7 +169,7 @@ public class QuestionService : IQuestionService
             var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             Expression<Func<Question, bool>> expression = q => q.UserId == userIdClaim;
 
-            var questions = IsInRole ? _unitOfWork.Questions.GetQuestions() : _unitOfWork.Questions.GetQuestions(expression);
+            var questions = IsInRole ? await _unitOfWork.Questions.GetQuestions() : await _unitOfWork.Questions.GetQuestions(expression);
 
             if (questions.Count == 0)
             {
@@ -198,8 +193,8 @@ public class QuestionService : IQuestionService
                         UserName = comment.User.UserName,
                     }).ToList(),
                     QuestionReports = question.QuestionReports
-                    .Select(report => new QuestionReportViewModel 
-                    { 
+                    .Select(report => new QuestionReportViewModel
+                    {
                         Id = report.Id
                     }).ToList()
                 }).ToList();
@@ -216,10 +211,10 @@ public class QuestionService : IQuestionService
         return response;
     }
 
-    public QuestionResponseModel GetQuestion(string id)
+    public async Task<QuestionResponseModel> GetQuestion(string id)
     {
         var response = new QuestionResponseModel();
-        var questionExist = _unitOfWork.Questions.Exists(q => q.Id == id && q.IsDeleted == false);
+        var questionExist = await _unitOfWork.Questions.ExistsAsync(q => q.Id == id && q.IsDeleted == false);
         var IsInRole = _httpContextAccessor.HttpContext.User.IsInRole("Admin");
         var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
         var question = new Question();
@@ -230,7 +225,7 @@ public class QuestionService : IQuestionService
             return response;
         }
 
-        question = IsInRole ? _unitOfWork.Questions.GetQuestion(q => q.Id == id && !q.IsDeleted) : _unitOfWork.Questions.GetQuestion(q => q.Id == id
+        question = IsInRole ? await _unitOfWork.Questions.GetQuestion(q => q.Id == id && !q.IsDeleted) : await _unitOfWork.Questions.GetQuestion(q => q.Id == id
                                             && q.UserId == userIdClaim
                                             && !q.IsDeleted);
 
@@ -271,13 +266,13 @@ public class QuestionService : IQuestionService
         return response;
     }
 
-    public QuestionsResponseModel GetQuestionsByCategoryId(string categoryId)
+    public async Task<QuestionsResponseModel> GetQuestionsByCategoryId(string categoryId)
     {
         var response = new QuestionsResponseModel();
 
         try
         {
-            var questions = _unitOfWork.Questions.GetQuestionByCategoryId(categoryId);
+            var questions = await _unitOfWork.Questions.GetQuestionByCategoryId(categoryId);
 
             if (questions.Count == 0)
             {
@@ -285,14 +280,13 @@ public class QuestionService : IQuestionService
                 return response;
             }
 
-            response.Data = questions
-                                .Select(question => new QuestionViewModel
-                                {
-                                    Id = question.Id,
-                                    QuestionText = question.Question.QuestionText,
-                                    UserName = question.Question.User.UserName,
-                                    ImageUrl = question.Question.ImageUrl,
-                                }).ToList();
+            response.Data = questions.Select(question => new QuestionViewModel
+            {
+                Id = question.Id,
+                QuestionText = question.Question.QuestionText,
+                UserName = question.Question.User.UserName,
+                ImageUrl = question.Question.ImageUrl,
+            }).ToList();
 
             response.Status = true;
             response.Message = "Success";
@@ -306,13 +300,13 @@ public class QuestionService : IQuestionService
         return response;
     }
 
-    public QuestionsResponseModel DisplayQuestion()
+    public async Task<QuestionsResponseModel> DisplayQuestion()
     {
         var response = new QuestionsResponseModel();
 
         try
         {
-            var questions = _unitOfWork.Questions.GetQuestions();
+            var questions = await _unitOfWork.Questions.GetQuestions();
 
             if (questions.Count == 0)
             {
