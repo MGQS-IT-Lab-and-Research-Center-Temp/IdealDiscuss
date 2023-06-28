@@ -4,7 +4,6 @@ using IdealDiscuss.Models.Category;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Linq.Expressions;
 
 namespace IdealDiscuss.Service.Implementations;
 
@@ -77,7 +76,7 @@ public class CategoryService : ICategoryService
 
         try
         {
-            await _unitOfWork.Categories.UpdateAsync(category);
+            await _unitOfWork.Categories.RemoveAsync(category);
             await _unitOfWork.SaveChangesAsync();
             response.Status = true;
             response.Message = "Category successfully deleted.";
@@ -193,7 +192,7 @@ public class CategoryService : ICategoryService
         }
     }
 
-    public async Task<IReadOnlyList<SelectListItem>> SelectCategories()
+    public async Task<IEnumerable<SelectListItem>> SelectCategories()
     {
         var categories = await _unitOfWork.Categories.SelectAll();
 

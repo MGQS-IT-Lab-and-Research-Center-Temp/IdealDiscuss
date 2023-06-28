@@ -35,9 +35,9 @@ public class QuestionController : Controller
         return View(questions.Data);
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        ViewBag.Categories = _categoryService.SelectCategories();
+        ViewBag.Categories = await _categoryService.SelectCategories();
         ViewData["Message"] = "";
         ViewData["Status"] = false;
 

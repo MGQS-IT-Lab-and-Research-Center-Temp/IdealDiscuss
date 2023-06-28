@@ -18,9 +18,9 @@ namespace IdealDiscuss.Controllers
             _notyf = notyfService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var response = _categoryService.GetAllCategory();
+            var response = await _categoryService.GetAllCategory();
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
 
@@ -33,9 +33,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateCategoryViewModel request)
+        public async Task<IActionResult> Create(CreateCategoryViewModel request)
         {
-            var response = _categoryService.CreateCategory(request);
+            var response = await _categoryService.CreateCategory(request);
 
 			if (response.Status is false)
 			{
@@ -48,9 +48,9 @@ namespace IdealDiscuss.Controllers
 			return RedirectToAction("Index", "Category"); ;
 		}
 
-        public IActionResult GetCategory(string id)
+        public async Task<IActionResult> GetCategory(string id)
         {
-            var response = _categoryService.GetCategory(id);
+            var response = await _categoryService.GetCategory(id);
 
 			if (response.Status is false)
 			{
@@ -70,9 +70,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(string id, UpdateCategoryViewModel request)
+        public async Task<IActionResult> Update(string id, UpdateCategoryViewModel request)
         {
-            var response = _categoryService.UpdateCategory(id, request);
+            var response = await _categoryService.UpdateCategory(id, request);
 
 			if (response.Status is false)
 			{
@@ -86,9 +86,9 @@ namespace IdealDiscuss.Controllers
 		}
 
         [HttpPost]
-        public IActionResult DeleteCategory([FromRoute] string id)
+        public async Task<IActionResult> DeleteCategory([FromRoute] string id)
         {
-            var response = _categoryService.DeleteCategory(id);
+            var response = await _categoryService.DeleteCategory(id);
 
             if (response.Status is false)
             {

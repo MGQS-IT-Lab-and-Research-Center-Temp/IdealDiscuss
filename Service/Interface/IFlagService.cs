@@ -2,15 +2,14 @@
 using IdealDiscuss.Models.Flag;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace IdealDiscuss.Service.Interface
+namespace IdealDiscuss.Service.Interface;
+
+public interface IFlagService
 {
-    public interface IFlagService
-    {
-        BaseResponseModel CreateFlag(CreateFlagViewModel createFlagDto);
-        BaseResponseModel DeleteFlag(string flagId);
-        BaseResponseModel UpdateFlag(string flagId, UpdateFlagViewModel FlagDto);
-        FlagResponseModel GetFlag(string flagId);
-        FlagsResponseModel GetAllFlag();
-        IEnumerable<SelectListItem> SelectFlags();
-    }
+    Task<BaseResponseModel> CreateFlag(CreateFlagViewModel createFlagDto);
+    Task<BaseResponseModel> DeleteFlag(string flagId);
+    Task<BaseResponseModel> UpdateFlag(string flagId, UpdateFlagViewModel FlagDto);
+    Task<FlagResponseModel> GetFlag(string flagId);
+    Task<FlagsResponseModel> GetAllFlag();
+    Task<IEnumerable<SelectListItem>> SelectFlags();
 }

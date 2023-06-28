@@ -11,5 +11,5 @@ public interface ICategoryService
     Task<BaseResponseModel> UpdateCategory(string categoryId, UpdateCategoryViewModel updateCategoryDto);
     Task<CategoryResponseModel> GetCategory(string categoryId);
     Task<CategoriesResponseModel> GetAllCategory();
-    Task<IReadOnlyList<SelectListItem>> SelectCategories();
+    Task<IEnumerable<SelectListItem>> SelectCategories();
 }

@@ -68,12 +68,12 @@ public abstract class BaseRepository<T> : IRepository<T> where T : BaseEntity, n
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyList<T>> SelectAll()
+    public async Task<IEnumerable<T>> SelectAll()
     {
         return await _context.Set<T>().ToListAsync();
     }
 
-    public async Task<IReadOnlyList<T>> SelectAll(Expression<Func<T, bool>> expression = null)
+    public async Task<IEnumerable<T>> SelectAll(Expression<Func<T, bool>> expression = null)
     {
         return await _context.Set<T>().Where(expression).ToListAsync();
     }

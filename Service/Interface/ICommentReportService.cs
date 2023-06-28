@@ -1,14 +1,13 @@
 ﻿using IdealDiscuss.Models;
 using IdealDiscuss.Models.CommentReport;
 
-namespace IdealDiscuss.Service.Interface
+namespace IdealDiscuss.Service.Interface;
+
+public interface ICommentReportService
 {
-    public interface ICommentReportService
-    {
-        BaseResponseModel CreateCommentReport(CreateCommentReportViewModel request);
-        BaseResponseModel DeleteCommentReport(string id);
-        BaseResponseModel UpdateCommentReport(string id, UpdateCommentReportViewModel request);
-        CommentReportResponseModel GetCommentReport(string id);
-        CommentReportsResponseModel GetAllCommentReport();
-    }
+    Task<BaseResponseModel> CreateCommentReport(CreateCommentReportViewModel request);
+    Task<BaseResponseModel> DeleteCommentReport(string id);
+    Task<BaseResponseModel> UpdateCommentReport(string id, UpdateCommentReportViewModel request);
+    Task<CommentReportResponseModel> GetCommentReport(string id);
+    Task<CommentReportsResponseModel> GetAllCommentReport();
 }

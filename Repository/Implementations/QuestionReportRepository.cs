@@ -3,37 +3,36 @@ using IdealDiscuss.Entities;
 using IdealDiscuss.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdealDiscuss.Repository.Implementations
+namespace IdealDiscuss.Repository.Implementations;
+
+public class QuestionReportRepository : BaseRepository<QuestionReport> , IQuestionReportRepository
 {
-    public class QuestionReportRepository : BaseRepository<QuestionReport> , IQuestionReportRepository
+    public QuestionReportRepository(IdealDiscussContext context) : base(context)
     {
-        public QuestionReportRepository(IdealDiscussContext context) : base(context)
-        {
-        }
+    }
 
-        public QuestionReport GetQuestionReport(string id)
-        {
-            var questionReport = _context.QuestionReports
-                .Include(u => u.User)
-                .Include(c => c.Question)
-                .Include(crf => crf.QuestionReportFlags)
-                .ThenInclude(f => f.Flag)
-                .Where(cr => cr.Id.Equals(id))
-                .FirstOrDefault();
+    public async Task<QuestionReport> GetQuestionReport(string id)
+    {
+        var questionReport = await _context.QuestionReports
+            .Include(u => u.User)
+            .Include(c => c.Question)
+            .Include(crf => crf.QuestionReportFlags)
+            .ThenInclude(f => f.Flag)
+            .Where(cr => cr.Id.Equals(id))
+            .FirstOrDefaultAsync();
 
-            return questionReport;
-        }
+        return questionReport;
+    }
 
-        public List<QuestionReport> GetQuestionReports(string questionId)
-        {
-            var questionWithReports = _context.QuestionReports
-                        .Where(qr => qr.QuestionId.Equals(questionId))
-                        .Include(qr => qr.User)
-                        .Include(qr => qr.QuestionReportFlags)
-                            .ThenInclude(f => f.Flag)
-                        .ToList();
+    public async Task<List<QuestionReport>> GetQuestionReports(string questionId)
+    {
+        var questionWithReports = await _context.QuestionReports
+                    .Where(qr => qr.QuestionId.Equals(questionId))
+                    .Include(qr => qr.User)
+                    .Include(qr => qr.QuestionReportFlags)
+                        .ThenInclude(f => f.Flag)
+                    .ToListAsync();
 
-            return questionWithReports;
-        }
+        return questionWithReports;
     }
 }

@@ -1,10 +1,9 @@
 ﻿using IdealDiscuss.Entities;
 
-namespace IdealDiscuss.Repository.Interfaces
+namespace IdealDiscuss.Repository.Interfaces;
+
+public interface IQuestionReportRepository : IRepository<QuestionReport>
 {
-    public interface IQuestionReportRepository : IRepository<QuestionReport>
-    {
-        QuestionReport GetQuestionReport(string reportId);
-        List<QuestionReport> GetQuestionReports(string questionId);
-    }
+    Task<QuestionReport> GetQuestionReport(string reportId);
+    Task<List<QuestionReport>> GetQuestionReports(string questionId);
 }

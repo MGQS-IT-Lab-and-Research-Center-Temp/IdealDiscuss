@@ -6,9 +6,9 @@ namespace IdealDiscuss.Service.Interface;
 
 public interface ICommentService
 {
-    BaseResponseModel CreateComment(CreateCommentViewModel request);
-    BaseResponseModel DeleteComment(string commentId);
-    BaseResponseModel UpdateComment(string commentId, UpdateCommentViewModel request);
-    CommentResponseModel GetComment(string commentId);
-    CommentsResponseModel GetAllComment();
+    Task<BaseResponseModel> CreateComment(CreateCommentViewModel request);
+    Task<BaseResponseModel> DeleteComment(string commentId);
+    Task<BaseResponseModel> UpdateComment(string commentId, UpdateCommentViewModel request);
+    Task<CommentResponseModel> GetComment(string commentId);
+    Task<CommentsResponseModel> GetAllComment();
 }

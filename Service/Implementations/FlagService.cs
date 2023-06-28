@@ -14,19 +14,17 @@ namespace IdealDiscuss.Service.Implementations
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         public FlagService(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
             IHttpContextAccessor httpContextAccessor)
         {
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public BaseResponseModel CreateFlag(CreateFlagViewModel request)
+        public async Task<BaseResponseModel> CreateFlag(CreateFlagViewModel request)
         {
             var response = new BaseResponseModel();
-            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;        
-
-            var isFlagExist = _unitOfWork.Flags.Exists(c => c.FlagName == request.FlagName);
+            var isFlagExist = await _unitOfWork.Flags.ExistsAsync(c => c.FlagName == request.FlagName);
 
             if (isFlagExist)
             {
@@ -37,14 +35,13 @@ namespace IdealDiscuss.Service.Implementations
             var flag = new Flag()
             {
                 FlagName = request.FlagName,
-                Description = request.Description,
-                CreatedBy = createdBy 
+                Description = request.Description
             };
 
             try
             {
-                _unitOfWork.Flags.Create(flag);
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.Flags.CreateAsync(flag);
+                await _unitOfWork.SaveChangesAsync();
                 response.Status = true;
                 response.Message = "Flag created successfully.";
 
@@ -57,10 +54,10 @@ namespace IdealDiscuss.Service.Implementations
             }
         }
 
-        public BaseResponseModel DeleteFlag(string flagId)
+        public async Task<BaseResponseModel> DeleteFlag(string flagId)
         {
             var response = new BaseResponseModel();
-            var flagExist = _unitOfWork.Flags.Exists(x => x.Id == flagId);
+            var flagExist = await _unitOfWork.Flags.ExistsAsync(x => x.Id == flagId);
 
             if (!flagExist)
             {
@@ -68,13 +65,12 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var flags = _unitOfWork.Flags.Get(flagId);
-            flags.IsDeleted = true;
+            var flags = await _unitOfWork.Flags.GetAsync(flagId);
 
             try
             {
-                _unitOfWork.Flags.Update(flags);
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.Flags.RemoveAsync(flags);
+                await _unitOfWork.SaveChangesAsync();
                 response.Message = "Flag deleted successfully.";
                 response.Status = true;
 
@@ -87,13 +83,13 @@ namespace IdealDiscuss.Service.Implementations
             }
         }
 
-        public FlagsResponseModel GetAllFlag()
+        public async Task<FlagsResponseModel> GetAllFlag()
         {
             var response = new FlagsResponseModel();
 
             try
             {
-                var flags = _unitOfWork.Flags.GetAll(f => f.IsDeleted == false);
+                var flags = await _unitOfWork.Flags.GetAllAsync(f => f.IsDeleted == false);
 
                 if (flags is null || flags.Count == 0)
                 {
@@ -121,10 +117,10 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public FlagResponseModel GetFlag(string flagId)
+        public async Task<FlagResponseModel> GetFlag(string flagId)
         {
             var response = new FlagResponseModel();
-            var flagExist = _unitOfWork.Flags.Exists(f =>
+            var flagExist = await _unitOfWork.Flags.ExistsAsync(f =>
                                 (f.Id == flagId)
                                 && (f.Id == flagId
                                 && f.IsDeleted == false));
@@ -137,7 +133,7 @@ namespace IdealDiscuss.Service.Implementations
 
             try
             {
-                var flags = _unitOfWork.Flags.Get(flagId);
+                var flags = await _unitOfWork.Flags.GetAsync(flagId);
 
                 response.Message = "Success";
                 response.Status = true;
@@ -157,17 +153,14 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public BaseResponseModel UpdateFlag(string flagId, UpdateFlagViewModel request)
+        public async Task<BaseResponseModel> UpdateFlag(string flagId, UpdateFlagViewModel request)
         {
             var response = new BaseResponseModel();
-            var modifiedBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-            
-            Expression<Func<Flag, bool>> expression = f =>
+
+            var isFlagExist = await _unitOfWork.Flags.ExistsAsync(f =>
                                                 (f.Id == flagId)
                                                 && (f.Id == flagId
-                                                && f.IsDeleted == false);
-
-            var isFlagExist = _unitOfWork.Flags.Exists(expression);
+                                                && f.IsDeleted == false));
 
             if (!isFlagExist)
             {
@@ -175,16 +168,15 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var flag = _unitOfWork.Flags.Get(flagId);
+            var flag = await _unitOfWork.Flags.GetAsync(flagId);
 
             flag.FlagName = request.FlagName;
             flag.Description = request.Description;
-            flag.ModifiedBy = modifiedBy;
 
             try
             {
-                _unitOfWork.Flags.Update(flag);
-                _unitOfWork.SaveChanges();
+                await _unitOfWork.Flags.UpdateAsync(flag);
+                await _unitOfWork.SaveChangesAsync();
                 response.Message = "Flag updated successfully.";
                 response.Status = true;
 
@@ -197,9 +189,11 @@ namespace IdealDiscuss.Service.Implementations
             }
         }
 
-        public IEnumerable<SelectListItem> SelectFlags()
+        public async Task<IEnumerable<SelectListItem>> SelectFlags()
         {
-            return _unitOfWork.Flags.SelectAll().Select(f => new SelectListItem()
+            var flags = await _unitOfWork.Flags.SelectAll();
+
+            return flags.Select(f => new SelectListItem()
             {
                 Text = f.FlagName,
                 Value = f.Id

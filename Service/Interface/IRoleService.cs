@@ -1,14 +1,13 @@
 ﻿using IdealDiscuss.Models;
 using IdealDiscuss.Models.Role;
 
-namespace IdealDiscuss.Service.Interface
+namespace IdealDiscuss.Service.Interface;
+
+public interface IRoleService
 {
-    public interface IRoleService
-    {
-        BaseResponseModel CreateRole(CreateRoleViewModel request);
-        BaseResponseModel DeleteRole(string roleId);
-        BaseResponseModel UpdateRole(string roleId, UpdateRoleViewModel request);
-        RoleResponseModel GetRole(string roleId);
-        RolesResponseModel GetAllRole();
-    }
+    Task<BaseResponseModel> CreateRole(CreateRoleViewModel request);
+    Task<BaseResponseModel> DeleteRole(string roleId);
+    Task<BaseResponseModel> UpdateRole(string roleId, UpdateRoleViewModel request);
+    Task<RoleResponseModel> GetRole(string roleId);
+    Task<RolesResponseModel> GetAllRole();
 }

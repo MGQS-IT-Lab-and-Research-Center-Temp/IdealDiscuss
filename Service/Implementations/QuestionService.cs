@@ -120,12 +120,11 @@ public class QuestionService : IQuestionService
     {
         var response = new BaseResponseModel();
 
-        Expression<Func<Question, bool>> expression = (q => (q.Id == questionId)
+        var questionExist = await _unitOfWork.Questions.ExistsAsync(q => (q.Id == questionId)
                                     && (q.Id == questionId
                                     && q.IsDeleted == false
                                     && q.IsClosed == false));
 
-        var questionExist = await _unitOfWork.Questions.ExistsAsync(expression);
         var hasComment = await _unitOfWork.Comments.ExistsAsync(c => c.Id == questionId);
 
         if (!questionExist)
@@ -145,7 +144,7 @@ public class QuestionService : IQuestionService
 
         try
         {
-            await _unitOfWork.Questions.UpdateAsync(question);
+            await _unitOfWork.Questions.RemoveAsync(question);
             await _unitOfWork.SaveChangesAsync();
             response.Message = "Question deleted successfully!";
             response.Status = true;
@@ -217,7 +216,6 @@ public class QuestionService : IQuestionService
         var questionExist = await _unitOfWork.Questions.ExistsAsync(q => q.Id == id && q.IsDeleted == false);
         var IsInRole = _httpContextAccessor.HttpContext.User.IsInRole("Admin");
         var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-        var question = new Question();
 
         if (!questionExist)
         {
@@ -225,7 +223,7 @@ public class QuestionService : IQuestionService
             return response;
         }
 
-        question = IsInRole ? await _unitOfWork.Questions.GetQuestion(q => q.Id == id && !q.IsDeleted) : await _unitOfWork.Questions.GetQuestion(q => q.Id == id
+        var question = IsInRole ? await _unitOfWork.Questions.GetQuestion(q => q.Id == id && !q.IsDeleted) : await _unitOfWork.Questions.GetQuestion(q => q.Id == id
                                             && q.UserId == userIdClaim
                                             && !q.IsDeleted);
 

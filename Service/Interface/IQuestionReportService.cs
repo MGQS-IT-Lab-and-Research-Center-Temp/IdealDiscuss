@@ -1,15 +1,13 @@
 ﻿using IdealDiscuss.Models;
-using IdealDiscuss.Models.Question;
 using IdealDiscuss.Models.QuestionReport;
 
-namespace IdealDiscuss.Service.Interface
+namespace IdealDiscuss.Service.Interface;
+
+public interface IQuestionReportService
 {
-    public interface IQuestionReportService
-    {
-        BaseResponseModel CreateQuestionReport(CreateQuestionReportViewModel request);
-        BaseResponseModel DeleteQuestionReport(string id);
-        BaseResponseModel UpdateQuestionReport(string id, UpdateQuestionReportViewModel request);
-        QuestionReportResponseModel GetQuestionReport(string reportId);
-        QuestionReportsResponseModel GetQuestionReports(string questionId);
-    }
+    Task<BaseResponseModel> CreateQuestionReport(CreateQuestionReportViewModel request);
+    Task<BaseResponseModel> DeleteQuestionReport(string id);
+    Task<BaseResponseModel> UpdateQuestionReport(string id, UpdateQuestionReportViewModel request);
+    Task<QuestionReportResponseModel> GetQuestionReport(string reportId);
+    Task<QuestionReportsResponseModel> GetQuestionReports(string questionId);
 }

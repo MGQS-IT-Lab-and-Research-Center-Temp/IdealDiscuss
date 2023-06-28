@@ -4,7 +4,7 @@ namespace IdealDiscuss.Repository.Interfaces
 {
     public interface ICommentReportRepository : IRepository<CommentReport>
     {
-        List<CommentReport> GetCommentReports();
-        CommentReport GetCommentReport(string id);
+        Task<List<CommentReport>> GetCommentReports();
+        Task<CommentReport> GetCommentReport(string id);
     }
 }

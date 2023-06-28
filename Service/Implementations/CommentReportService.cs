@@ -5,107 +5,164 @@ using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using System.Security.Claims;
 
-namespace IdealDiscuss.Service.Implementations
-{
-    public class CommentReportService : ICommentReportService
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+namespace IdealDiscuss.Service.Implementations;
 
-        public CommentReportService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+public class CommentReportService : ICommentReportService
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public CommentReportService(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+    {
+        _unitOfWork = unitOfWork;
+        _httpContextAccessor = httpContextAccessor;
+    }
+
+    public async Task<BaseResponseModel> CreateCommentReport(CreateCommentReportViewModel request)
+    {
+        var response = new BaseResponseModel();
+        var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        var reporter = await _unitOfWork.Users.GetAsync(userIdClaim);
+        var comment = await _unitOfWork.Comments.GetAsync(request.CommentId);
+        var reportExist = await _unitOfWork.CommentReports.ExistsAsync(cr =>
+                                    cr.UserId == reporter.Id && cr.CommentId == comment.Id);
+
+        if (reportExist)
         {
-            _unitOfWork = unitOfWork;
-            _httpContextAccessor = httpContextAccessor;
+            response.Message = "This comment was already reported by you";
+            return response;
         }
 
-        public BaseResponseModel CreateCommentReport(CreateCommentReportViewModel request)
+        if (reporter is null)
         {
-            var response = new BaseResponseModel();
-            var createdBy = _httpContextAccessor.HttpContext.User.Identity.Name;
-            var userIdClaim = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-            var reporter = _unitOfWork.Users.Get(userIdClaim);
-            var comment = _unitOfWork.Comments.Get(request.CommentId);
-            var reportExist = _unitOfWork.CommentReports.Exists(cr =>
-                                        cr.UserId == reporter.Id
-                                        && cr.CommentId == comment.Id);
+            response.Message = "User not found.";
+            return response;
+        }
 
-            if (reportExist)
-            {
-                response.Message = "This comment was already reported by you";
-                return response;
-            }
+        if (comment is null)
+        {
+            response.Message = "Comment does not exist!";
+            return response;
+        }
 
-            if (reporter is null)
-            {
-                response.Message = "User not found.";
-                return response;
-            }
+        if (request.FlagIds is null)
+        {
+            response.Message = "One or more flagId required to report this comment!";
+            return response;
+        }
 
-            if (comment is null)
-            {
-                response.Message = "Comment does not exist!";
-                return response;
-            }
+        var commentReport = new CommentReport
+        {
+            UserId = reporter.Id,
+            User = reporter,
+            CommentId = comment.Id,
+            Comment = comment,
+            AdditionalComment = request.AdditionalComment
+        };
 
-            if (request.FlagIds is null)
-            {
-                response.Message = "One or more flagId required to report this comment!";
-                return response;
-            }
+        var flags = await _unitOfWork.Flags.GetAllByIdsAsync(request.FlagIds);
 
-            var commentReport = new CommentReport
+        var commentFlags = new HashSet<CommentReportFlag>();
+
+        foreach (var flag in flags)
+        {
+            var commentReportFlag = new CommentReportFlag
             {
-                UserId = reporter.Id,
-                User = reporter,
-                CommentId = comment.Id,
-                Comment = comment,
-                AdditionalComment = request.AdditionalComment,
-                CreatedBy = createdBy,
-               
+                FlagId = flag.Id,
+                CommentReportId = commentReport.Id,
+                Flag = flag,
+                CommentReport = commentReport
             };
 
-            var flags = _unitOfWork.Flags.GetAllByIds(request.FlagIds);
-
-            var commentFlags = new HashSet<CommentReportFlag>();
-
-            foreach (var flag in flags)
-            {
-                var commentReportFlag = new CommentReportFlag
-                {
-                    FlagId = flag.Id,
-                    CommentReportId = commentReport.Id,
-                    Flag = flag,
-                    CommentReport = commentReport,
-                    CreatedBy = createdBy,
-                    
-                };
-
-                commentFlags.Add(commentReportFlag);
-            }
-
-            commentReport.CommentReportFlags = commentFlags;
-
-            try
-            {
-                _unitOfWork.CommentReports.Create(commentReport);
-                _unitOfWork.SaveChanges();
-                response.Status = true;
-                response.Message = "Comment Report created successfully!";
-
-                return response;
-            }
-            catch (Exception ex)
-            {
-                response.Message = $"Failed to create comment report: {ex.Message}";
-                return response;
-            }
+            commentFlags.Add(commentReportFlag);
         }
 
-        public BaseResponseModel DeleteCommentReport(string id)
-        {
-            var response = new BaseResponseModel();
+        commentReport.CommentReportFlags = commentFlags;
 
-            var commentReport = _unitOfWork.CommentReports.Get(id);
+        try
+        {
+            await _unitOfWork.CommentReports.CreateAsync(commentReport);
+            await _unitOfWork.SaveChangesAsync();
+            response.Status = true;
+            response.Message = "Comment Report created successfully!";
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.Message = $"Failed to create comment report: {ex.Message}";
+            return response;
+        }
+    }
+
+    public async Task<BaseResponseModel> DeleteCommentReport(string id)
+    {
+        var response = new BaseResponseModel();
+
+        var commentReport = await _unitOfWork.CommentReports.GetAsync(id);
+
+        if (commentReport is null)
+        {
+            response.Message = $"CommentReport with id {id} does not exist!";
+            return response;
+        }
+
+        try
+        {
+            await _unitOfWork.CommentReports.RemoveAsync(commentReport);
+            await _unitOfWork.SaveChangesAsync();
+
+            response.Status = true;
+            response.Message = "Comment report deleted successfully!";
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.Message = $"Comment report delete failed: {ex.Message}";
+            return response;
+        }
+    }
+
+    public async Task<CommentReportsResponseModel> GetAllCommentReport()
+    {
+        var response = new CommentReportsResponseModel();
+
+        try
+        {
+            var commentReports = await _unitOfWork.CommentReports.GetCommentReports();
+
+            response.Data = commentReports.Select(commentReport => new CommentReportViewModel
+            {
+                Id = commentReport.Id,
+                AdditionalComment = commentReport.AdditionalComment,
+                CommentId = commentReport.Comment.Id,
+                CommentReporter = commentReport.User.UserName,
+                CommentText = commentReport.Comment.CommentText,
+                FlagNames = commentReport.CommentReportFlags
+                    .Select(f => f.Flag.FlagName)
+                    .ToList(),
+            }).ToList();
+
+            response.Status = true;
+            response.Message = "Success";
+        }
+        catch (Exception ex)
+        {
+            response.Message = $"An error occured: {ex.Message}";
+            return response;
+        }
+
+        return response;
+    }
+
+    public async Task<CommentReportResponseModel> GetCommentReport(string id)
+    {
+        var response = new CommentReportResponseModel();
+
+        try
+        {
+            var commentReport = await _unitOfWork.CommentReports.GetCommentReport(id);
 
             if (commentReport is null)
             {
@@ -113,120 +170,54 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            commentReport.IsDeleted = true;
-
-            try
+            response.Message = "Success";
+            response.Status = true;
+            response.Data = new CommentReportViewModel
             {
-                _unitOfWork.CommentReports.Update(commentReport);
-                _unitOfWork.SaveChanges();
-
-                response.Status = true;
-                response.Message = "Comment report deleted successfully!";
-
-                return response;
-            }
-            catch (Exception ex)
-            {
-                response.Message = $"Comment report delete failed: {ex.Message}";
-                return response;
-            }
+                Id = id,
+                AdditionalComment = commentReport.AdditionalComment,
+                CommentId = commentReport.Comment.Id,
+                CommentReporter = commentReport.User.UserName,
+                CommentText = commentReport.Comment.CommentText,
+                FlagNames = commentReport.CommentReportFlags
+                                .Select(f => f.Flag.FlagName)
+                                .ToList()
+            };
         }
-
-        public CommentReportsResponseModel GetAllCommentReport()
+        catch (Exception ex)
         {
-            var response = new CommentReportsResponseModel();
-
-            try
-            {
-                var commentReports = _unitOfWork.CommentReports.GetCommentReports();
-
-                response.Data = commentReports.Select(commentReport => new CommentReportViewModel
-                {
-                    Id = commentReport.Id,
-                    AdditionalComment = commentReport.AdditionalComment,
-                    CommentId = commentReport.Comment.Id,
-                    CommentReporter = commentReport.User.UserName,
-                    CommentText = commentReport.Comment.CommentText,
-                    FlagNames = commentReport.CommentReportFlags
-                        .Select(f => f.Flag.FlagName)
-                        .ToList(),
-                }).ToList();
-
-                response.Status = true;
-                response.Message = "Success";
-            }
-            catch (Exception ex)
-            {
-                response.Message = $"An error occured: {ex.Message}";
-                return response;
-            }
-
+            response.Message = ex.StackTrace;
             return response;
         }
 
-        public CommentReportResponseModel GetCommentReport(string id)
+        return response;
+    }
+
+    public async Task<BaseResponseModel> UpdateCommentReport(string id, UpdateCommentReportViewModel request)
+    {
+        var response = new BaseResponseModel();
+        var commentReport = await _unitOfWork.CommentReports.GetAsync(id);
+
+        if (commentReport is null)
         {
-            var response = new CommentReportResponseModel();
-
-            try
-            {
-                var commentReport = _unitOfWork.CommentReports.GetCommentReport(id);
-
-                if (commentReport is null)
-                {
-                    response.Message = $"CommentReport with id {id} does not exist!";
-                    return response;
-                }
-
-                response.Message = "Success";
-                response.Status = true;
-                response.Data = new CommentReportViewModel
-                {
-                    Id = id,
-                    AdditionalComment = commentReport.AdditionalComment,
-                    CommentId = commentReport.Comment.Id,
-                    CommentReporter = commentReport.User.UserName,
-                    CommentText = commentReport.Comment.CommentText,
-                    FlagNames = commentReport.CommentReportFlags
-                                    .Select(f => f.Flag.FlagName)
-                                    .ToList(),
-                };
-            }
-            catch (Exception ex)
-            {
-                response.Message = ex.StackTrace;
-                return response;
-            }
-
+            response.Message = $"CommentReport with id {id} does not exist!";
             return response;
         }
 
-        public BaseResponseModel UpdateCommentReport(string id, UpdateCommentReportViewModel request)
+        commentReport.AdditionalComment = request.AdditionalComment;
+
+        try
         {
-            var response = new BaseResponseModel();
-            var commentReport = _unitOfWork.CommentReports.Get(id);
+            await _unitOfWork.CommentReports.UpdateAsync(commentReport);
+            await _unitOfWork.SaveChangesAsync();
+            response.Message = "Comment report updated successfully!";
 
-            if (commentReport is null)
-            {
-                response.Message = $"CommentReport with id {id} does not exist!";
-                return response;
-            }
-
-            commentReport.AdditionalComment = request.AdditionalComment;
-
-            try
-            {
-                _unitOfWork.CommentReports.Update(commentReport);
-                _unitOfWork.SaveChanges();
-                response.Message = "Comment report updated successfully!";
-
-                return response;
-            }
-            catch (Exception ex)
-            {
-                response.Message = $"Could not update the comment report: {ex.Message}";
-                return response;
-            }
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.Message = $"Could not update the comment report: {ex.Message}";
+            return response;
         }
     }
 }

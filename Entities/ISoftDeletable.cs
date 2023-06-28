@@ -1,7 +1,6 @@
-﻿namespace IdealDiscuss.Entities
+﻿namespace IdealDiscuss.Entities;
+
+public interface ISoftDeletable
 {
-    public interface ISoftDeletable
-    {
-        public bool IsDeleted { get; set; }
-    }
+    public bool IsDeleted { get; set; }
 }
