@@ -26,9 +26,9 @@ public class CommentController : Controller
     //    return View(response.Data);
     //}
 
-    public IActionResult GetCommentDetail(string id)
+    public async Task<IActionResult> GetCommentDetail(string id)
     {
-        var response = _commentService.GetComment(id);
+        var response = await _commentService.GetComment(id);
 
         if (response.Status is false)
         {
@@ -45,9 +45,9 @@ public class CommentController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(CreateCommentViewModel request)
+    public async Task<IActionResult> Create(CreateCommentViewModel request)
     {
-        var response = _commentService.CreateComment(request);
+        var response = await _commentService.CreateComment(request);
 
         if(response.Status is false)
         {
@@ -60,9 +60,9 @@ public class CommentController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    public IActionResult Update(string id)
+    public async Task<IActionResult> Update(string id)
     {
-        var response = _commentService.GetComment(id);
+        var response = await _commentService.GetComment(id);
 
         if (response.Status is false)
         {
@@ -74,9 +74,9 @@ public class CommentController : Controller
     }
 
     [HttpPost]
-    public IActionResult Update(string id, UpdateCommentViewModel request)
+    public async Task<IActionResult> Update(string id, UpdateCommentViewModel request)
     {
-        var response = _commentService.UpdateComment(id, request);
+        var response = await _commentService.UpdateComment(id, request);
 
         if (response.Status is false)
         {
@@ -90,9 +90,9 @@ public class CommentController : Controller
     }
 
     [HttpPost]
-    public IActionResult DeleteComment([FromRoute] string id)
+    public async Task<IActionResult> DeleteComment([FromRoute] string id)
     {
-        var response = _commentService.DeleteComment(id);
+        var response = await _commentService.DeleteComment(id);
 
         if (response.Status is false)
         {

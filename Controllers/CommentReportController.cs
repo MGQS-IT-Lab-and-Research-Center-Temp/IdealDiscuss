@@ -28,9 +28,9 @@ namespace IdealDiscuss.Controllers
    //         return View(response.Data);
    //     }
 
-        public IActionResult CreateCommentReport()
+        public async Task<IActionResult> CreateCommentReport()
         {
-            ViewBag.FlagLists = _flagService.SelectFlags();
+            ViewBag.FlagLists = await _flagService.SelectFlags();
             ViewData["Message"] = "";
             ViewData["Status"] = false;
 
@@ -38,43 +38,43 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateCommentReport(CreateCommentReportViewModel request)
+        public async Task<IActionResult> CreateCommentReport(CreateCommentReportViewModel request)
         {
-            var response = _commentReportService.CreateCommentReport(request);
+            var response = await _commentReportService.CreateCommentReport(request);
 			ViewData["Message"] = response.Message;
 			ViewData["Status"] = response.Status;
 
 			return View();
         }
 
-        public IActionResult GetCommentReportDetail(string id)
+        public async Task<IActionResult> GetCommentReportDetail(string id)
         {
-            var response = _commentReportService.GetCommentReport(id);
+            var response = await _commentReportService.GetCommentReport(id);
 			ViewData["Message"] = response.Message;
 			ViewData["Status"] = response.Status;
 
 			return View(response.Data);
         }
 
-        public IActionResult UpdatecommentReport(string id)
+        public async Task<IActionResult> UpdatecommentReport(string id)
         {
-            var response = _commentReportService.GetCommentReport(id);
+            var response = await _commentReportService.GetCommentReport(id);
             return View(response.Data);
         }
 
         [HttpPost]
-        public IActionResult UpdateCommentReport(string id, UpdateCommentReportViewModel request)
+        public async Task<IActionResult> UpdateCommentReport(string id, UpdateCommentReportViewModel request)
         {
-            var response = _commentReportService.UpdateCommentReport(id, request);
+            var response = await _commentReportService.UpdateCommentReport(id, request);
 			ViewData["Message"] = response.Message;
 			ViewData["Status"] = response.Status;
 			return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public IActionResult DeleteCommentReport(string id)
+        public async Task<IActionResult> DeleteCommentReport(string id)
         {
-            var response = _commentReportService.DeleteCommentReport(id);
+            var response = await _commentReportService.DeleteCommentReport(id);
 			ViewData["Message"] = response.Message;
 			ViewData["Status"] = response.Status;
 

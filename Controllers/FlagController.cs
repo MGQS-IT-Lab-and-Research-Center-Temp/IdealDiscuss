@@ -18,9 +18,9 @@ namespace IdealDiscuss.Controllers
             _notyf = notyf;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var response = _flagService.GetAllFlag();
+            var response = await _flagService.GetAllFlag();
 
             ViewData["Message"] = response.Message;
             ViewData["Status"] = response.Status;
@@ -34,9 +34,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateFlag(CreateFlagViewModel request)
+        public async Task<IActionResult> CreateFlag(CreateFlagViewModel request)
         {
-            var response = _flagService.CreateFlag(request);
+            var response = await _flagService.CreateFlag(request);
 
             if (response.Status is false)
             {
@@ -49,9 +49,9 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index", "Flag"); ;
         }
 
-        public IActionResult GetFlagDetail(string id)
+        public async Task<IActionResult> GetFlagDetail(string id)
         {
-            var response = _flagService.GetFlag(id);
+            var response = await _flagService.GetFlag(id);
 
             if (response.Status is false)
             {
@@ -62,9 +62,9 @@ namespace IdealDiscuss.Controllers
             return View(response.Data);
         }
 
-        public IActionResult Update(string id)
+        public async Task<IActionResult> Update(string id)
         {
-            var response = _flagService.GetFlag(id);
+            var response = await _flagService.GetFlag(id);
 
             if (response.Status is false)
             {
@@ -83,9 +83,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(string id, UpdateFlagViewModel request)
+        public async Task<IActionResult> Update(string id, UpdateFlagViewModel request)
         {
-            var response = _flagService.UpdateFlag(id, request);
+            var response = await _flagService.UpdateFlag(id, request);
 
             if (response.Status is false)
             {
@@ -99,9 +99,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteFlag(string id)
+        public async Task<IActionResult> DeleteFlag(string id)
         {
-            var response = _flagService.DeleteFlag(id);
+            var response = await _flagService.DeleteFlag(id);
 
             if (response.Status is false)
             {

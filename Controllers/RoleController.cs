@@ -18,9 +18,9 @@ namespace IdealDiscuss.Controllers
             _notyf = notyf;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var roles = _roleService.GetAllRole();
+            var roles = await _roleService.GetAllRole();
 
             ViewData["Message"] = roles.Message;
             ViewData["Status"] = roles.Status;
@@ -34,9 +34,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CreateRoleViewModel request)
+        public async Task<IActionResult> Create(CreateRoleViewModel request)
         {
-            var response = _roleService.CreateRole(request);
+            var response = await _roleService.CreateRole(request);
 
             if (response.Status is false)
             {
@@ -50,9 +50,9 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index", "Role");
         }
 
-        public IActionResult GetRoleDetail(string id)
+        public async Task<IActionResult> GetRoleDetail(string id)
         {
-            var response = _roleService.GetRole(id);
+            var response = await _roleService.GetRole(id);
 
             if (response.Status is false)
             {
@@ -63,9 +63,9 @@ namespace IdealDiscuss.Controllers
             return View(response.Data);
         }
 
-        public IActionResult Update(string id)
+        public async Task<IActionResult> Update(string id)
         {
-            var response = _roleService.GetRole(id);
+            var response = await _roleService.GetRole(id);
 
             if (response.Status is false)
             {
@@ -84,9 +84,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(string id, UpdateRoleViewModel request)
+        public async Task<IActionResult> Update(string id, UpdateRoleViewModel request)
         {
-            var response = _roleService.UpdateRole(id, request);
+            var response = await _roleService.UpdateRole(id, request);
 
             if (response.Status is false)
             {
@@ -100,9 +100,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteRole([FromRoute] string id)
+        public async Task<IActionResult> DeleteRole([FromRoute] string id)
         {
-            var response = _roleService.DeleteRole(id);
+            var response = await _roleService.DeleteRole(id);
 
             if (response.Status is false)
             {

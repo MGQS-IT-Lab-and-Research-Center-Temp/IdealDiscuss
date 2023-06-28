@@ -34,17 +34,17 @@ namespace IdealDiscuss.Controllers
         //    return RedirectToAction("Index", "QuestionReport");
         //}
 
-        public IActionResult ReportQuestion()
+        public async Task<IActionResult> ReportQuestion()
         {
-            ViewBag.FlagLists = _flagService.SelectFlags();
+            ViewBag.FlagLists = await _flagService.SelectFlags();
 
             return View();
         }
 
         [HttpPost]
-        public IActionResult ReportQuestion(CreateQuestionReportViewModel Report)
+        public async Task<IActionResult> ReportQuestion(CreateQuestionReportViewModel Report)
         {
-            var response = _questionReportService.CreateQuestionReport(Report);
+            var response = await _questionReportService.CreateQuestionReport(Report);
 
             if (response.Status is false)
             {
@@ -56,9 +56,9 @@ namespace IdealDiscuss.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult GetQuestionReport(string id)
+        public async Task<IActionResult> GetQuestionReport(string id)
         {
-            var response = _questionReportService.GetQuestionReport(id);
+            var response = await _questionReportService.GetQuestionReport(id);
 
             if (response.Status is false)
             {
@@ -70,9 +70,9 @@ namespace IdealDiscuss.Controllers
             return View(response.Data);
         }
 
-        public IActionResult GetQuestionReports(string id)
+        public async Task<IActionResult> GetQuestionReports(string id)
         {
-            var response = _questionReportService.GetQuestionReports(id);
+            var response = await _questionReportService.GetQuestionReports(id);
 
             if (response.Status is false)
             {
@@ -83,9 +83,9 @@ namespace IdealDiscuss.Controllers
             return View(response.Data);
         }
 
-        public IActionResult UpdateQuestionReport(string id)
+        public async Task<IActionResult> UpdateQuestionReport(string id)
         {
-            var response = _questionReportService.GetQuestionReport(id);
+            var response = await _questionReportService.GetQuestionReport(id);
 
             if (response.Status is false)
             {
@@ -97,9 +97,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateQuestionReport(string id, UpdateQuestionReportViewModel request)
+        public async Task<IActionResult> UpdateQuestionReport(string id, UpdateQuestionReportViewModel request)
         {
-            var response = _questionReportService.UpdateQuestionReport(id, request);
+            var response = await _questionReportService.UpdateQuestionReport(id, request);
 
             if (response.Status is false)
             {
@@ -112,9 +112,9 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteQuestionReport(string id)
+        public async Task<IActionResult> DeleteQuestionReport(string id)
         {
-            var response = _questionReportService.DeleteQuestionReport(id);
+            var response = await _questionReportService.DeleteQuestionReport(id);
 
             if (response.Status is false)
             {
