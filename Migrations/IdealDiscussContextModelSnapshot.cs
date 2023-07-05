@@ -37,7 +37,7 @@ namespace IdealDiscuss.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")
@@ -73,7 +73,7 @@ namespace IdealDiscuss.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")
@@ -104,7 +104,7 @@ namespace IdealDiscuss.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")
@@ -149,7 +149,7 @@ namespace IdealDiscuss.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")
@@ -185,7 +185,7 @@ namespace IdealDiscuss.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")
@@ -220,7 +220,7 @@ namespace IdealDiscuss.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")
@@ -254,7 +254,7 @@ namespace IdealDiscuss.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")
@@ -294,7 +294,7 @@ namespace IdealDiscuss.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")
@@ -334,7 +334,7 @@ namespace IdealDiscuss.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")
@@ -365,7 +365,7 @@ namespace IdealDiscuss.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")
@@ -405,7 +405,7 @@ namespace IdealDiscuss.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("LastModified")
+                    b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ModifiedBy")

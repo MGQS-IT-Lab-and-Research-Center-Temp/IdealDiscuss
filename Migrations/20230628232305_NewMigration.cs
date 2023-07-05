@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace IdealDiscuss.Migrations
 {
-    public partial class NewMigrationPlan : Migration
+    public partial class NewMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -19,11 +19,11 @@ namespace IdealDiscuss.Migrations
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -38,11 +38,11 @@ namespace IdealDiscuss.Migrations
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
                     FlagName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "longtext", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -57,11 +57,11 @@ namespace IdealDiscuss.Migrations
                     Id = table.Column<string>(type: "varchar(255)", nullable: false),
                     RoleName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -79,11 +79,11 @@ namespace IdealDiscuss.Migrations
                     PasswordHash = table.Column<string>(type: "longtext", nullable: true),
                     Email = table.Column<string>(type: "longtext", nullable: false),
                     RoleId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -106,11 +106,11 @@ namespace IdealDiscuss.Migrations
                     QuestionText = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false),
                     ImageUrl = table.Column<string>(type: "varchar(255)", nullable: true),
                     IsClosed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -130,11 +130,11 @@ namespace IdealDiscuss.Migrations
                 {
                     CategoryId = table.Column<string>(type: "varchar(255)", nullable: false),
                     QuestionId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -162,11 +162,11 @@ namespace IdealDiscuss.Migrations
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false),
                     QuestionId = table.Column<string>(type: "varchar(255)", nullable: false),
                     CommentText = table.Column<string>(type: "text", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -194,11 +194,11 @@ namespace IdealDiscuss.Migrations
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false),
                     QuestionId = table.Column<string>(type: "varchar(255)", nullable: false),
                     AdditionalComment = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -226,11 +226,11 @@ namespace IdealDiscuss.Migrations
                     UserId = table.Column<string>(type: "varchar(255)", nullable: false),
                     CommentId = table.Column<string>(type: "varchar(255)", nullable: false),
                     AdditionalComment = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -256,11 +256,11 @@ namespace IdealDiscuss.Migrations
                 {
                     QuestionReportId = table.Column<string>(type: "varchar(255)", nullable: false),
                     FlagId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -286,11 +286,11 @@ namespace IdealDiscuss.Migrations
                 {
                     CommentReportId = table.Column<string>(type: "varchar(255)", nullable: false),
                     FlagId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedBy = table.Column<string>(type: "longtext", nullable: true),
                     ModifiedBy = table.Column<string>(type: "longtext", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    LastModified = table.Column<DateTime>(type: "datetime(6)", nullable: true)
                 },
                 constraints: table =>
                 {
