@@ -4,6 +4,9 @@
     ViewData["Title"] = "Question List";
     int count = 1;
 }
+<div>
+    <a asp-controller="Question" asp-action="CreateQuestion" class="btn btn-outline-primary">Add New Question</a>
+</div>
 
 @await Html.PartialAsync("_ListAlert", Model)
 
