@@ -1,0 +1,8 @@
+2023-08-05 22:24:30.246 +01:00 [INF] Now listening on: https://localhost:7172
+2023-08-05 22:24:30.294 +01:00 [INF] Now listening on: http://localhost:5172
+2023-08-05 22:24:30.299 +01:00 [INF] Application started. Press Ctrl+C to shut down.
+2023-08-05 22:24:30.300 +01:00 [INF] Hosting environment: Development
+2023-08-05 22:24:30.301 +01:00 [INF] Content root path: C:\Users\Abbas Joda\source\repos\IdealDiscuss\
+2023-08-05 22:24:31.193 +01:00 [WRN] Compiling a query which loads related collections for more than one collection navigation, either via 'Include' or through projection, but no 'QuerySplittingBehavior' has been configured. By default, Entity Framework will use 'QuerySplittingBehavior.SingleQuery', which can potentially result in slow query performance. See https://go.microsoft.com/fwlink/?linkid=2134277 for more information. To identify the query that's triggering this warning call 'ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))'.
+2023-08-05 22:25:28.722 +01:00 [INF] IdealDiscuss.DTOs.Flag.FlagCreateDto
+2023-08-05 22:26:16.705 +01:00 [INF] Application is shutting down...

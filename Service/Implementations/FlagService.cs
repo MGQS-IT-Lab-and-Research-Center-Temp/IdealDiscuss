@@ -1,28 +1,33 @@
-﻿using IdealDiscuss.Entities;
+﻿using AutoMapper;
+using IdealDiscuss.DTOs.Flag;
+using IdealDiscuss.Entities;
 using IdealDiscuss.Models;
 using IdealDiscuss.Models.Flag;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Linq.Expressions;
 
 namespace IdealDiscuss.Service.Implementations
 {
     public class FlagService : IFlagService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMapper _mapper;
+        private readonly ILogger<FlagService> _logger;  
 
         public FlagService(
             IUnitOfWork unitOfWork,
-            IHttpContextAccessor httpContextAccessor)
+            IMapper mapper,
+            ILogger<FlagService> logger)
         {
             _unitOfWork = unitOfWork;
-            _httpContextAccessor = httpContextAccessor;
+            _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<BaseResponseModel> CreateFlag(CreateFlagViewModel request)
+        public async Task<BaseResponseModel> CreateFlag(FlagCreateDto request)
         {
+            _logger.LogInformation(request.ToString());
             var response = new BaseResponseModel();
             var isFlagExist = await _unitOfWork.Flags.ExistsAsync(c => c.FlagName == request.FlagName);
 
@@ -32,11 +37,7 @@ namespace IdealDiscuss.Service.Implementations
                 return response;
             }
 
-            var flag = new Flag()
-            {
-                FlagName = request.FlagName,
-                Description = request.Description
-            };
+            var flag = _mapper.Map<Flag>(request);
 
             try
             {
@@ -49,7 +50,8 @@ namespace IdealDiscuss.Service.Implementations
             }
             catch (Exception ex)
             {
-                response.Message = $"Failed to create Flag. {ex.Message}";
+                _logger.LogError(ex, "Exception:");
+                response.Message = $"Failed to create Flag!";
                 return response;
             }
         }
@@ -97,20 +99,14 @@ namespace IdealDiscuss.Service.Implementations
                     return response;
                 }
 
-                response.Data = flags
-                   .Select(f => new FlagViewModel
-                   {
-                       Id = f.Id,
-                       FlagName = f.FlagName,
-                       Description = f.Description
-                   }).ToList();
+                response.Data = _mapper.Map<List<FlagListDto>>(flags);
 
                 response.Status = true;
                 response.Message = "Success";
             }
             catch (Exception ex)
             {
-                response.Message = ex.StackTrace;
+                response.Message = $"Error: {ex.InnerException}";
                 return response;
             }
 
@@ -137,12 +133,7 @@ namespace IdealDiscuss.Service.Implementations
 
                 response.Message = "Success";
                 response.Status = true;
-                response.Data = new FlagViewModel
-                {
-                    Id = flags.Id,
-                    FlagName = flags.FlagName,
-                    Description = flags.Description
-                };
+                response.Data = _mapper.Map<FlagDetailDto>(flags);
             }
             catch (Exception ex)
             {
@@ -153,7 +144,7 @@ namespace IdealDiscuss.Service.Implementations
             return response;
         }
 
-        public async Task<BaseResponseModel> UpdateFlag(string flagId, UpdateFlagViewModel request)
+        public async Task<BaseResponseModel> UpdateFlag(string flagId, FlagUpdateDto request)
         {
             var response = new BaseResponseModel();
 
@@ -161,20 +152,17 @@ namespace IdealDiscuss.Service.Implementations
                                                 (f.Id == flagId)
                                                 && (f.Id == flagId
                                                 && f.IsDeleted == false));
-
             if (!isFlagExist)
             {
                 response.Message = "Flag does not exist!";
                 return response;
             }
 
-            var flag = await _unitOfWork.Flags.GetAsync(flagId);
-
-            flag.FlagName = request.FlagName;
-            flag.Description = request.Description;
-
             try
             {
+                var flag = await _unitOfWork.Flags.GetAsync(flagId);
+
+                _mapper.Map(request, flag);
                 await _unitOfWork.Flags.UpdateAsync(flag);
                 await _unitOfWork.SaveChangesAsync();
                 response.Message = "Flag updated successfully.";

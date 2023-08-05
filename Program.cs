@@ -1,14 +1,34 @@
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using IdealDiscuss.Context;
+using IdealDiscuss.MapperConfig;
 using IdealDiscuss.Repository.Implementations;
 using IdealDiscuss.Repository.Interfaces;
 using IdealDiscuss.Service.Implementations;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
+builder.Services.AddNotyf(config =>
+{
+    config.DurationInSeconds = 10;
+    config.IsDismissable = true;
+    config.Position = NotyfPosition.TopRight;
+});
+
+builder.Services.AddDbContext<IdealDiscussContext>(option =>
+    option.UseMySQL(builder.Configuration.GetConnectionString("IdealDiscussContext")));
+builder.Services.AddScoped<DbInitializer>();
+
+builder.Services.AddAutoMapper(typeof(MapConfig));
+
+builder.Host.UseSerilog((ctx, lc) =>
+    lc.WriteTo.Console().ReadFrom.Configuration(ctx.Configuration));
 
 // Add services to the container.
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -28,19 +48,6 @@ builder.Services.AddScoped<IFlagRepository, FlagRepository>();
 builder.Services.AddScoped<IFlagService, FlagService>();
 builder.Services.AddScoped<IQuestionReportRepository, QuestionReportRepository>();
 builder.Services.AddScoped<IQuestionReportService, QuestionReportService>();
-
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
-builder.Services.AddNotyf(config =>
-{
-    config.DurationInSeconds = 10;
-    config.IsDismissable = true;
-    config.Position = NotyfPosition.TopRight;
-});
-
-builder.Services.AddDbContext<IdealDiscussContext>(option =>
-    option.UseMySQL(builder.Configuration.GetConnectionString("IdealDiscussContext")));
-builder.Services.AddScoped<DbInitializer>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(config =>

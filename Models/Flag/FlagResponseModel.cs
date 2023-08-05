@@ -1,11 +1,13 @@
-﻿namespace IdealDiscuss.Models.Flag;
+﻿using IdealDiscuss.DTOs.Flag;
+
+namespace IdealDiscuss.Models.Flag;
 
 public class FlagResponseModel : BaseResponseModel
 {
-    public FlagViewModel Data { get; set; }
+    public FlagDetailDto Data { get; set; }
 }
 
 public class FlagsResponseModel : BaseResponseModel
 {
-    public List<FlagViewModel> Data { get; set; }
+    public List<FlagListDto> Data { get; set; }
 }

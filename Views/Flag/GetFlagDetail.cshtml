@@ -1,4 +1,4 @@
-﻿@model IdealDiscuss.Models.Flag.FlagViewModel
+﻿@model IdealDiscuss.DTOs.Flag.FlagDetailDto
 @{
     ViewData["Title"] = "Flag Details";
 }
@@ -16,6 +16,8 @@
             <dd class="col-sm-8">@Model.FlagName</dd>
             <dt class="col-sm-4">Description</dt>
             <dd class="col-sm-8">@Model.Description</dd>
+            <dt class="col-sm-4">Date Created</dt>
+            <dd class="col-sm-8">@Model.DateCreated</dd>
         </dl>
 
         <a asp-controller="Flag" asp-action="Update" asp-route-id="@Model.Id" class="btn btn-primary">Update</a>

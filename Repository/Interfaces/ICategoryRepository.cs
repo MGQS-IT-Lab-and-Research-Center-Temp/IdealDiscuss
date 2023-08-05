@@ -4,6 +4,5 @@ namespace IdealDiscuss.Repository.Interfaces
 {
     public interface ICategoryRepository : IRepository<Category>
     {
-        
     }
 }

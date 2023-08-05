@@ -8,7 +8,7 @@ namespace IdealDiscuss.Repository.Implementations;
 public class CommentReportRepository : BaseRepository<CommentReport>, ICommentReportRepository
 {
     public CommentReportRepository(IdealDiscussContext context) : base(context)
-    {  
+    {
     }
 
     public async Task<CommentReport> GetCommentReport(string id)
@@ -27,11 +27,11 @@ public class CommentReportRepository : BaseRepository<CommentReport>, ICommentRe
     public async Task<List<CommentReport>> GetCommentReports()
     {
         var commentReports = await _context.CommentReports
-            .Include(c => c.User)
-            .Include(c => c.Comment)
-            .Include(c => c.CommentReportFlags)
-            .ThenInclude(c => c.Flag)
-            .ToListAsync();
+                .Include(c => c.User)
+                .Include(c => c.Comment)
+                .Include(c => c.CommentReportFlags)
+                .ThenInclude(c => c.Flag)
+                .ToListAsync();
 
         return commentReports;
     }

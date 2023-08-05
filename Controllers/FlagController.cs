@@ -1,4 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using IdealDiscuss.DTOs.Flag;
 using IdealDiscuss.Models.Flag;
 using IdealDiscuss.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -34,7 +35,7 @@ namespace IdealDiscuss.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateFlag(CreateFlagViewModel request)
+        public async Task<IActionResult> CreateFlag(FlagCreateDto request)
         {
             var response = await _flagService.CreateFlag(request);
 
@@ -72,18 +73,11 @@ namespace IdealDiscuss.Controllers
                 return RedirectToAction("Index", "Flag");
             }
 
-            var viewModel = new UpdateFlagViewModel
-            {
-                Id = response.Data.Id,
-                FlagName = response.Data.FlagName,
-                Description = response.Data.Description
-            };
-
-            return View(viewModel);
+            return View(response.Data);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(string id, UpdateFlagViewModel request)
+        public async Task<IActionResult> Update(string id, FlagUpdateDto request)
         {
             var response = await _flagService.UpdateFlag(id, request);
 
